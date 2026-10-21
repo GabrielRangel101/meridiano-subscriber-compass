@@ -5,7 +5,7 @@ import { canRecoverReactRuntime, isStaleReactRuntime } from "@/lib/react-runtime
 const RECOVERY_KEY = "gazeta-react-runtime-recovery";
 /** A class boundary can recover a stale dispatcher without calling any hooks. */
 export class ReactRuntimeBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
-  state: { error: Error | null } = { error: null };
+  override state: { error: Error | null } = { error: null };
 
   static getDerivedStateFromError(error: Error) { return { error }; }
 
