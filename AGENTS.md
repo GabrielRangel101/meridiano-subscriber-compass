@@ -10,3 +10,5 @@
 <!-- LOVABLE:END -->
 
 - src/engine/* is a verbatim, tested data engine (synthetic dataset via generateDataset); never edit it. tsconfig has noUncheckedIndexedAccess=false so it compiles unchanged.
+- UI reads data only via src/lib/dashboard-data.ts (module singleton over the engine); dashboard components in src/components/dashboard are presentational — no business math there.
+- Design tokens live in src/styles.css as full hsl() values (user request), mapped in @theme inline; categorical chart colors are --cat-1..6.
