@@ -2,8 +2,10 @@
 import { useMemo } from "react";
 import { monthLabel } from "@/engine/calendar";
 import { generateDataset } from "@/engine/generate";
-import { buildSeries, churnReasons, composition, funnelByChannel, kpi, projectActive, subscriberFlow, toWaffle } from "@/engine/metrics";
-import type { Kpi } from "@/engine/metrics";
+import { atRisk, buildSeries, churnReasons, composition, correlationMatrix, CRITICAL_RISK, funnelByChannel, kpi, lagCorrelation, peopleMap, projectActive, subscriberFlow, toWaffle } from "@/engine/metrics";
+import type { AtRiskRow, CorrelationMatrix, Kpi, MonthPoint, SeriesKey } from "@/engine/metrics";
+import { generateInsights } from "@/engine/insights";
+import type { Insight, Severity } from "@/engine/insights";
 import { fmtBRL, fmtBRLCompact, fmtInt, fmtPP, fmtPct, fmtSignedInt, fmtSignedPct } from "./format";
 
 export type Direction = "up" | "down" | "flat";
@@ -41,6 +43,16 @@ function compute() {
   const proj = projectActive(series, ds.meta.goalActive, ds.meta.goalMonth);
   const comp = composition(ds, m, "plan");
   const waffle = toWaffle(comp);
+  // Each expensive engine entry point runs once, inside the shared memoized computation.
+  const risk = atRisk(ds, m);
+  const people = peopleMap(ds, m, 60);
+  const insights = generateInsights(ds);
+  const correlations = {
+    diff: correlationView(correlationMatrix(series, CORRELATION_KEYS, "diff")),
+    level: correlationView(correlationMatrix(series, CORRELATION_KEYS, "level")),
+  };
+  const changes = CHANGE_KEYS.map((key) => monthlyChange(series, key, m)).sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
+  const drivers = DRIVER_ORDER.map((key) => ({ key, color: DRIVER_COLORS[key], count: people.filter((p) => p.driver === key).length }));
 
   const kActive = kpi(series, "active", m);
   const kChurn = kpi(series, "churnRate", m);
@@ -106,6 +118,16 @@ function compute() {
     waffle,
     kpis,
     goalLabel: monthLabel(ds.meta.goalMonth).toLowerCase(),
+    risk,
+    people,
+    drivers,
+    criticalRisk: CRITICAL_RISK,
+    correlations,
+    lag: lagCorrelation(series, "paidShareNew", "churnRate", 3),
+    changes,
+    insights: insights.map((insight) => ({ ...insight, displayValue: formatInsightValue(insight) })),
+    severityCounts: SEVERITIES.map((key) => ({ key, count: insights.filter((i) => i.severity === key).length })),
+    topics: [...new Set(insights.map((i) => i.topic))].map((key) => ({ key, count: insights.filter((i) => i.topic === key).length })),
   };
 }
 
@@ -195,3 +217,42 @@ export const NATURE_COLORS: Record<string, string> = {
   Involuntário: "var(--danger)",
   "Fim de contrato": "var(--cat-3)",
 };
+
+export const METRIC_LABELS: Record<SeriesKey, string> = {
+  newSubs: "novas assinaturas", cancelled: "cancelamentos", churnRate: "churn", nps: "NPS",
+  arpu: "ticket médio", mrr: "MRR", avgEngagement: "engajamento", paidShareNew: "peso da mídia paga", active: "base ativa", upgrades: "upgrades",
+};
+const CORRELATION_KEYS: SeriesKey[] = ["newSubs", "cancelled", "churnRate", "nps", "arpu", "avgEngagement", "paidShareNew", "mrr"];
+const CHANGE_KEYS: SeriesKey[] = ["active", "newSubs", "cancelled", "churnRate", "mrr", "arpu", "nps", "avgEngagement"];
+export const SEVERITIES: Severity[] = ["perigo", "atenção", "positivo", "info"];
+export const DRIVER_ORDER: AtRiskRow["driver"][] = ["promoção acabando", "baixo engajamento", "renovação anual", "canal de risco", "geral"];
+export const DRIVER_COLORS: Record<AtRiskRow["driver"], string> = {
+  "promoção acabando": "var(--cat-3)", "baixo engajamento": "var(--danger)", "renovação anual": "var(--cat-2)", "canal de risco": "var(--cat-4)", geral: "var(--cat-6)",
+};
+export const INSIGHT_TARGETS: Record<Insight["topic"], string> = {
+  base: "evolution-card", churn: "evolution-card", meta: "evolution-card", coortes: "funnel-card", canais: "funnel-card", pagamento: "reasons-card", correlação: "correlation-card", risco: "risk-card", editorias: "risk-card", preço: "kpi-section", nps: "kpi-section",
+};
+
+export function correlationView(cm: CorrelationMatrix) {
+  const pairs = cm.keys.flatMap((a, i) => cm.keys.slice(i + 1).map((b, offset) => ({ a, b, i, j: i + offset + 1, r: cm.r[i][i + offset + 1] })));
+  const strongest = [...pairs].sort((a, b) => Math.abs(b.r) - Math.abs(a.r))[0];
+  return { ...cm, edges: pairs.filter((p) => Math.abs(p.r) >= 0.35), strongest };
+}
+
+export function monthlyChange(series: MonthPoint[], key: SeriesKey, m: number) {
+  const metric = kpi(series, key, m);
+  const before = metric.spark.at(-2) ?? metric.value;
+  const value = key === "nps" || key === "churnRate" ? metric.value - before : metric.mom;
+  const unit = key === "nps" ? "pontos" : key === "churnRate" ? "p.p." : "%";
+  const formatted = key === "nps" ? `${fmtSignedInt(value)} pts` : key === "churnRate" ? fmtPP(value) : fmtSignedPct(value);
+  return { key, label: METRIC_LABELS[key], value, unit, formatted, dir: dirOf(value), good: value === 0 ? null : (value > 0) === !(key === "cancelled" || key === "churnRate") };
+}
+
+export function formatInsightValue(i: Insight): string | null {
+  if (i.value === null) return null;
+  if (i.topic === "correlação") return `r = ${i.value.toFixed(2).replace(".", ",")}`;
+  if (i.topic === "coortes" || i.topic === "canais" || i.id === "reajuste") return fmtPP(i.value);
+  if (i.topic === "nps") return `${fmtSignedInt(i.value)} pts`;
+  if (["churn", "pagamento"].includes(i.topic) || i.id === "penhasco-promo") return fmtPct(i.value);
+  return fmtInt(i.value);
+}

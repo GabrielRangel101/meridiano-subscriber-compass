@@ -13,7 +13,15 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
-    // Pré-empacota junto com o React para evitar cópia duplicada do React após instalar pacotes.
-    optimizeDeps: { include: ["framer-motion", "recharts", "d3-sankey"] },
+    // Discover the complete UI runtime together: late dependency discovery changes
+    // cache generations and can leave an open preview using two React dispatchers.
+    optimizeDeps: {
+      include: [
+        "react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime",
+        "framer-motion", "recharts", "d3-sankey", "lucide-react",
+        "@radix-ui/react-slot", "@radix-ui/react-tooltip",
+        "class-variance-authority", "clsx", "tailwind-merge",
+      ],
+    },
   },
 });
