@@ -44,8 +44,8 @@ export function AiMode() {
         setError("Não foi possível concluir a análise. Tente outra pergunta."); setBusy(false);
       }
     };
-    if ("requestIdleCallback" in window) window.requestIdleCallback(run, { timeout: 100 });
-    else window.setTimeout(run, 0);
+    if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(run, { timeout: 100 });
+    else globalThis.setTimeout(run, 0);
   }
   return <Dialog.Root open={open} onOpenChange={setOpen}>
     <Dialog.Trigger asChild><Button className="bg-gradient-primary rounded-full px-5 py-2.5 h-auto self-start sm:self-auto"><Sparkles aria-hidden />Modo IA</Button></Dialog.Trigger>

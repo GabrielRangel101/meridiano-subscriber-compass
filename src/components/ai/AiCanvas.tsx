@@ -22,7 +22,7 @@ export function AiCanvas({ items, busy, reduced, mobile, onAsk, onHide }: { item
       group.querySelectorAll<HTMLElement>("[data-card]").forEach(card => {
         const cr = card.getBoundingClientRect();
         const tx = cr.left + cr.width / 2 - box.left, ty = cr.top - box.top;
-        result.push({ id: `${group.dataset.group}-${card.dataset.card}`, d: `M ${x} ${y} C ${x} ${y + 48}, ${tx} ${ty - 48}, ${tx} ${ty}` });
+        result.push({ id: `${group.dataset['group']}-${card.dataset['card']}`, d: `M ${x} ${y} C ${x} ${y + 48}, ${tx} ${ty - 48}, ${tx} ${ty}` });
       });
     });
     setPaths(result);
