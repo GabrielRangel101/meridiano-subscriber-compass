@@ -1,4 +1,4 @@
 - [x] Conferir 2B em 1440px e 390px.
 - [x] Acrescentar rede de correlação e variações memoizadas.
 - [x] Acrescentar mapa de risco, detalhes e insights com filtros/âncoras.
-- [ ] Testar regras, interações e disposição nos dois tamanhos.
+- [x] Testar regras, interações e disposição nos dois tamanhos.
