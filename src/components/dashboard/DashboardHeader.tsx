@@ -1,5 +1,5 @@
-import { CalendarDays, ShieldCheck, Sparkles } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { CalendarDays, ShieldCheck } from "lucide-react";
+import { AiMode } from "@/components/ai/AiMode";
 
 export function DashboardHeader({ brand, monthLabel }: { brand: string; monthLabel: string }) {
   return (
@@ -18,22 +18,7 @@ export function DashboardHeader({ brand, monthLabel }: { brand: string; monthLab
           </span>
         </div>
       </div>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <span tabIndex={0} className="inline-flex self-start rounded-full sm:self-auto">
-            <button
-              type="button"
-              disabled
-              aria-disabled
-              className="bg-gradient-primary inline-flex cursor-not-allowed items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-primary-foreground opacity-80 shadow-lg"
-            >
-              <Sparkles className="size-4" aria-hidden />
-              Modo IA
-            </button>
-          </span>
-        </TooltipTrigger>
-        <TooltipContent>em breve</TooltipContent>
-      </Tooltip>
+      <AiMode />
     </header>
   );
 }

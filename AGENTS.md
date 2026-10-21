@@ -9,10 +9,11 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 
-- src/engine/* is a verbatim, tested data engine (synthetic dataset via generateDataset); never edit it. tsconfig has noUncheckedIndexedAccess=false so it compiles unchanged.
+- src/engine/* is a verbatim, tested data engine including the user-provided ask.ts; never edit existing engine files. tsconfig has noUncheckedIndexedAccess=false and exactOptionalPropertyTypes=false so the literal engine compiles unchanged while strict remains enabled.
 - UI reads data only via src/lib/dashboard-data.ts (module singleton over the engine); dashboard components in src/components/dashboard are presentational — no business math there.
 - Design tokens live in src/styles.css as full hsl() values (user request), mapped in @theme inline; categorical chart colors are --cat-1..6.
 - Correlation modes, risk summaries, people samples, deltas and insight view-models are computed in the shared dashboard singleton; engine entry points may internally recompute risk and must remain untouched.
 - Insight navigation targets stable card IDs; chart geometry and local avatar hashing are presentation-only calculations.
 - Motion preferences that affect SSR markup use a hydration-safe reduced-motion fallback to prevent first-render mismatches and hidden content.
-- Prebundle React, its renderer/JSX runtimes and dashboard UI dependencies together in Vite to avoid late cache-generation changes mixing React dispatchers in an open preview.
+- Prebundle React, its renderer/JSX runtimes and all directly imported dashboard/AI UI dependencies (including Radix Dialog) together in Vite to avoid late cache-generation changes mixing dispatchers. The hook-free shell boundary recovers stale React dispatcher errors with one reload per minute and never loops.
+- AI UI lives in src/components/ai; scheduled, cached answers use the shared dashboard singleton, keeping all business numbers inside answer() and the existing dashboard untouched.
