@@ -2,3 +2,6 @@
 - [x] Acrescentar rede de correlação e variações memoizadas.
 - [x] Acrescentar mapa de risco, detalhes e insights com filtros/âncoras.
 - [x] Testar regras, interações e disposição nos dois tamanhos.
+- [ ] Copiar ask.ts literalmente e testar as doze intenções.
+- [ ] Ligar Modo IA com canvas, conversa e renderizadores locais.
+- [ ] Validar fluxo completo em 1440px e 390px.
