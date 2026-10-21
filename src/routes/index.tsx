@@ -9,14 +9,15 @@ import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { WaffleCard } from "@/components/dashboard/WaffleCard";
 import { useDashboardData } from "@/lib/dashboard-data";
+import { SynergySection } from "@/components/dashboard/SynergySection";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Visão geral · Gazeta Meridiano Subscription Intelligence" },
-      { name: "description", content: "Painel de assinaturas digitais da Gazeta Meridiano: base ativa, churn, MRR, NPS e projeção vs meta (dados sintéticos)." },
+      { name: "description", content: "Painel de assinaturas digitais da Gazeta Meridiano: base ativa, churn, MRR, correlações, assinantes em risco e insights de regras com dados sintéticos." },
       { property: "og:title", content: "Visão geral · Gazeta Meridiano Subscription Intelligence" },
-      { property: "og:description", content: "Base ativa, churn, MRR, NPS e projeção vs meta de um jornal fictício." },
+      { property: "og:description", content: "Base ativa, receita, sinergia entre métricas, risco em 90 dias e insights de um jornal fictício." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -35,7 +36,7 @@ function Index() {
         <main className="mx-auto flex max-w-[1440px] flex-col gap-6 px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
           <DashboardHeader brand={ds.meta.brand} monthLabel={current.label} />
 
-          <section aria-label="Indicadores principais" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <section id="kpi-section" aria-label="Indicadores principais" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {kpis.map((k, i) => (
               <KpiCard key={k.id} kpi={k} index={i} />
             ))}
@@ -46,6 +47,7 @@ function Index() {
             <WaffleCard comp={comp} waffle={waffle} monthLabel={current.label} index={6} />
             <FlowBars series={series} events={ds.meta.events} index={7} />
             <PeriodSection index={8} />
+            <SynergySection data={data} />
           </div>
           <DashboardFooter />
         </main>
