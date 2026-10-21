@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { EvolutionChart } from "@/components/dashboard/EvolutionChart";
 import { FlowBars } from "@/components/dashboard/FlowBars";
+import { PeriodSection } from "@/components/dashboard/PeriodSection";
+import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { WaffleCard } from "@/components/dashboard/WaffleCard";
 import { useDashboardData } from "@/lib/dashboard-data";
@@ -43,7 +45,9 @@ function Index() {
             <EvolutionChart data={data} index={5} />
             <WaffleCard comp={comp} waffle={waffle} monthLabel={current.label} index={6} />
             <FlowBars series={series} events={ds.meta.events} index={7} />
+            <PeriodSection index={8} />
           </div>
+          <DashboardFooter />
         </main>
       </TooltipProvider>
     </MotionConfig>

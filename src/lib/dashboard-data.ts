@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import { monthLabel } from "@/engine/calendar";
 import { generateDataset } from "@/engine/generate";
-import { buildSeries, composition, kpi, projectActive, toWaffle } from "@/engine/metrics";
+import { buildSeries, churnReasons, composition, funnelByChannel, kpi, projectActive, subscriberFlow, toWaffle } from "@/engine/metrics";
 import type { Kpi } from "@/engine/metrics";
 import { fmtBRL, fmtBRLCompact, fmtInt, fmtPP, fmtPct, fmtSignedInt, fmtSignedPct } from "./format";
 
@@ -127,4 +127,71 @@ export const PLAN_COLORS: Record<string, string> = {
   Anual: "var(--cat-2)",
   "Combo Streaming": "var(--cat-3)",
   Estudante: "var(--cat-4)",
+};
+
+// ------------------------------------------------------------------ período (Sankey, motivos, funil)
+
+export const PERIOD_OPTIONS = [
+  { n: 3, label: "Últimos 3 meses" },
+  { n: 6, label: "Últimos 6 meses" },
+  { n: 12, label: "12 meses" },
+] as const;
+export type PeriodN = (typeof PERIOD_OPTIONS)[number]["n"];
+
+const NATURE_ORDER = ["Voluntário", "Involuntário", "Fim de contrato"];
+
+function computePeriod(n: PeriodN) {
+  const { ds, m, series } = getDashboardData();
+  const m0 = m - n + 1;
+  const m1 = m;
+  const flow = subscriberFlow(ds, m0, m1);
+  const outcomeGroup = new Map(flow.nodes.map((nd) => [nd.id, nd]));
+  const sumTo = (pred: (id: string) => boolean) => flow.links.filter((l) => pred(l.target)).reduce((a, l) => a + l.value, 0);
+  const flowSummary = {
+    cancelled: sumTo((id) => outcomeGroup.get(id)?.group === "negativo"),
+    upgrades: sumTo((id) => id === "out:upgrade"),
+    stayed: sumTo((id) => id === "out:stay"),
+  };
+
+  const reasons = churnReasons(ds, m0, m1);
+  const natureRank = (n: string) => {
+    const i = NATURE_ORDER.indexOf(n);
+    return i === -1 ? 99 : i;
+  };
+  const byNature = [...reasons.byNature].sort((a, b) => natureRank(a.nature) - natureRank(b.nature));
+  const reasonRows = [...reasons.rows].sort((a, b) => natureRank(a.nature) - natureRank(b.nature) || b.count - a.count);
+
+  const funnel = funnelByChannel(ds, m0, m1);
+  const byOverall = [...funnel].sort((a, b) => b.overall - a.overall);
+
+  return {
+    n,
+    m0,
+    m1,
+    rangeLabel: `${series[m0].label} – ${series[m1].label}`,
+    flow,
+    flowSummary,
+    reasons: { total: reasons.total, byNature, rows: reasonRows },
+    funnel,
+    bestChannel: byOverall[0]?.channel ?? null,
+    worstChannel: byOverall[byOverall.length - 1]?.channel ?? null,
+  };
+}
+
+export type PeriodData = ReturnType<typeof computePeriod>;
+const periodCache = new Map<PeriodN, PeriodData>();
+export function getPeriodData(n: PeriodN): PeriodData {
+  let p = periodCache.get(n);
+  if (!p) periodCache.set(n, (p = computePeriod(n)));
+  return p;
+}
+export function usePeriodData(n: PeriodN): PeriodData {
+  return useMemo(() => getPeriodData(n), [n]);
+}
+
+/** Cores por natureza do cancelamento; motivos usam tons da cor da natureza */
+export const NATURE_COLORS: Record<string, string> = {
+  Voluntário: "var(--cat-1)",
+  Involuntário: "var(--danger)",
+  "Fim de contrato": "var(--cat-3)",
 };
