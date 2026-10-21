@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- src/engine/* is a verbatim, tested data engine (synthetic dataset via generateDataset); never edit it. tsconfig has noUncheckedIndexedAccess=false so it compiles unchanged.
