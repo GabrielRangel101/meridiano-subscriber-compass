@@ -15,5 +15,5 @@
 - Correlation modes, risk summaries, people samples, deltas and insight view-models are computed in the shared dashboard singleton; engine entry points may internally recompute risk and must remain untouched.
 - Insight navigation targets stable card IDs; chart geometry and local avatar hashing are presentation-only calculations.
 - Motion preferences that affect SSR markup use a hydration-safe reduced-motion fallback to prevent first-render mismatches and hidden content.
-- Prebundle React, its renderer/JSX runtimes and dashboard UI dependencies together in Vite to avoid late cache-generation changes mixing React dispatchers in an open preview.
+- Prebundle React, its renderer/JSX runtimes and all directly imported dashboard/AI UI dependencies (including Radix Dialog) together in Vite to avoid late cache-generation changes mixing dispatchers. The hook-free shell boundary recovers stale React dispatcher errors with one reload per minute and never loops.
 - AI UI lives in src/components/ai; scheduled, cached answers use the shared dashboard singleton, keeping all business numbers inside answer() and the existing dashboard untouched.
