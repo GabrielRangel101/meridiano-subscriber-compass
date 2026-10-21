@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useMotionPreference } from "@/hooks/use-motion-preference";
 
 const W = 160;
 const R = 64;
@@ -24,7 +25,7 @@ const BANDS = [
 ];
 
 export function Gauge({ value }: { value: number }) {
-  const reduce = useReducedMotion();
+  const reduce = useMotionPreference();
   const rotation = 90 - angleOf(value); // ponteiro desenhado apontando para cima
   const band = BANDS.find((b) => value <= b.to) ?? BANDS[2];
   return (

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useMotionPreference } from "@/hooks/use-motion-preference";
 import { Button } from "@/components/ui/button";
 import type { DashboardData } from "@/lib/dashboard-data";
 import { METRIC_LABELS } from "@/lib/dashboard-data";
@@ -11,7 +12,7 @@ export function CorrelationNetwork({ data }: { data: DashboardData }) {
   const [mode, setMode] = useState<"diff" | "level">("diff");
   const [node, setNode] = useState<number | null>(null);
   const [edge, setEdge] = useState<string | null>(null);
-  const reduce = useReducedMotion();
+  const reduce = useMotionPreference();
   const cm = data.correlations[mode];
   const points = cm.keys.map((key, i) => {
     const a = -Math.PI / 2 + i * Math.PI / 4;

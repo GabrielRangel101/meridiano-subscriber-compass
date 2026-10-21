@@ -14,3 +14,4 @@
 - Design tokens live in src/styles.css as full hsl() values (user request), mapped in @theme inline; categorical chart colors are --cat-1..6.
 - Correlation modes, risk summaries, people samples, deltas and insight view-models are computed in the shared dashboard singleton; engine entry points may internally recompute risk and must remain untouched.
 - Insight navigation targets stable card IDs; chart geometry and local avatar hashing are presentation-only calculations.
+- Motion preferences that affect SSR markup use a hydration-safe reduced-motion fallback to prevent first-render mismatches and hidden content.

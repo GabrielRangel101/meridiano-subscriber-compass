@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useMotionPreference } from "@/hooks/use-motion-preference";
 import { useMemo, useState } from "react";
 import type { CompositionRow } from "@/engine/metrics";
 import { PLAN_COLORS } from "@/lib/dashboard-data";
@@ -17,7 +18,7 @@ export function WaffleCard({
   monthLabel: string;
   index: number;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useMotionPreference();
   const [focus, setFocus] = useState<string | null>(null);
   const cells = useMemo(() => waffle.flatMap((w) => Array.from({ length: w.cells }, () => w.key)), [waffle]);
   const summary = comp.map((c) => `${c.key} ${fmtPct(c.share, 0)}`).join(", ");
