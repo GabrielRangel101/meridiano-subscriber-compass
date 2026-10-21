@@ -12,4 +12,8 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    // Pré-empacota junto com o React para evitar cópia duplicada do React após instalar pacotes.
+    optimizeDeps: { include: ["framer-motion", "recharts", "d3-sankey"] },
+  },
 });
