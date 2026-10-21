@@ -30,7 +30,7 @@ export function Gauge({ value }: { value: number }) {
   return (
     <svg
       viewBox={`0 0 ${W} 86`}
-      className="h-14 w-full"
+      className="h-20 w-full"
       role="img"
       aria-label={`Medidor de NPS: ${Math.round(value)} em escala de −100 a +100, zona ${band.name}`}
     >
@@ -38,7 +38,7 @@ export function Gauge({ value }: { value: number }) {
         <path key={b.name} d={arc(b.from, b.to)} stroke={b.color} strokeWidth={10} fill="none" strokeLinecap="butt" opacity={0.85} />
       ))}
       <motion.g
-        style={{ originX: `${CX}px`, originY: `${CY}px` }}
+        style={{ transformBox: "view-box", transformOrigin: `${CX}px ${CY}px` }}
         initial={{ rotate: reduce ? rotation : -90 }}
         animate={{ rotate: rotation }}
         transition={{ duration: reduce ? 0 : 0.9, ease: [0.22, 1, 0.36, 1] }}

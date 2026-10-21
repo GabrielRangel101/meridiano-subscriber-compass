@@ -101,7 +101,7 @@ export function EvolutionChart({ data, index }: { data: DashboardData; index: nu
               x={current.label}
               stroke="var(--foreground)"
               strokeOpacity={0.5}
-              label={{ value: "HOJE", position: "insideTopRight", fill: "var(--foreground)", fontSize: 10, fontWeight: 600 }}
+              label={{ value: "HOJE", position: "insideBottomRight", fill: "var(--foreground)", fontSize: 10, fontWeight: 600 }}
             />
             {eventMarkers(ds.meta.events, monthLabel, (e, x) => setHover({ e, x: x ?? 0 }))}
             <Area
