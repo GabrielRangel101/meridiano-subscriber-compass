@@ -62,7 +62,7 @@ export function RiskMap({ data }: { data: DashboardData }) {
             <circle cx={n.x} cy={n.y} r={n.r + 4} fill="transparent" />
             <circle cx={n.x} cy={n.y} r={n.r} fill={`var(--cat-${n.h % 6 + 1})`} stroke={selected?.id === n.p.id ? 'var(--foreground)' : DRIVER_COLORS[n.p.driver]} strokeWidth={selected?.id === n.p.id ? 3 : 2} />
             <text x={n.x} y={n.y} dy="0.35em" textAnchor="middle" fill="var(--primary-foreground)" fontSize={n.r * 0.78} fontWeight={600} pointerEvents="none">{initials(n.p.name)}</text>
-            <title>{n.p.name}: engajamento {n.p.engagement}, risco {n.p.risk}%, MRR {fmtBRL(n.p.mrr)}</title>
+            <title>{`${n.p.name}: engajamento ${n.p.engagement}, risco ${n.p.risk}%, MRR ${fmtBRL(n.p.mrr)}`}</title>
           </g>)}
         </svg>
         {hover && <div className="pointer-events-none absolute left-2 right-2 top-14 z-10 max-w-80"><SubscriberDetail compact person={hover} /></div>}

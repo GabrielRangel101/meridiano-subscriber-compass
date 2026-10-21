@@ -16,7 +16,7 @@ export function CorrelationNetwork({ data }: { data: DashboardData }) {
   const cm = data.correlations[mode];
   const points = cm.keys.map((key, i) => {
     const a = -Math.PI / 2 + i * Math.PI / 4;
-    return { key, x: 240 + Math.cos(a) * 132, y: 208 + Math.sin(a) * 132, lx: 240 + Math.cos(a) * 168, ly: 208 + Math.sin(a) * 168 };
+    return { key, x: 240 + Math.cos(a) * 132, y: 208 + Math.sin(a) * 132, lx: 240 + Math.cos(a) * (key === 'paidShareNew' ? 182 : 168), ly: 208 + Math.sin(a) * 168 };
   });
   return (
     <Reveal id="correlation-card" index={12} className="min-w-0 lg:col-span-6" aria-labelledby="correlation-title">
