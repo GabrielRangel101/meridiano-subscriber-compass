@@ -15,3 +15,4 @@
 - Correlation modes, risk summaries, people samples, deltas and insight view-models are computed in the shared dashboard singleton; engine entry points may internally recompute risk and must remain untouched.
 - Insight navigation targets stable card IDs; chart geometry and local avatar hashing are presentation-only calculations.
 - Motion preferences that affect SSR markup use a hydration-safe reduced-motion fallback to prevent first-render mismatches and hidden content.
+- Prebundle React, its renderer/JSX runtimes and dashboard UI dependencies together in Vite to avoid late cache-generation changes mixing React dispatchers in an open preview.
