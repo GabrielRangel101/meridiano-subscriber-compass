@@ -1,49 +1,51 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
-import { generateDataset } from "@/engine/generate";
-import { buildSeries } from "@/engine/metrics";
-import { generateInsights } from "@/engine/insights";
+import { MotionConfig } from "framer-motion";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { EvolutionChart } from "@/components/dashboard/EvolutionChart";
+import { FlowBars } from "@/components/dashboard/FlowBars";
+import { KpiCard } from "@/components/dashboard/KpiCard";
+import { WaffleCard } from "@/components/dashboard/WaffleCard";
+import { useDashboardData } from "@/lib/dashboard-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Gazeta Meridiano · Subscription Intelligence" },
-      { name: "description", content: "Analytics de assinaturas digitais da Gazeta Meridiano (dados sintéticos)." },
-      { property: "og:title", content: "Gazeta Meridiano · Subscription Intelligence" },
-      { property: "og:description", content: "Analytics de assinaturas digitais da Gazeta Meridiano (dados sintéticos)." },
+      { title: "Visão geral · Gazeta Meridiano Subscription Intelligence" },
+      { name: "description", content: "Painel de assinaturas digitais da Gazeta Meridiano: base ativa, churn, MRR, NPS e projeção vs meta (dados sintéticos)." },
+      { property: "og:title", content: "Visão geral · Gazeta Meridiano Subscription Intelligence" },
+      { property: "og:description", content: "Base ativa, churn, MRR, NPS e projeção vs meta de um jornal fictício." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
 });
 
 function Index() {
-  const { ds, last, insights } = useMemo(() => {
-    const ds = generateDataset();
-    const series = buildSeries(ds);
-    return { ds, last: series[series.length - 1], insights: generateInsights(ds) };
-  }, []);
+  const data = useDashboardData();
+  const { ds, current, kpis, comp, waffle, series } = data;
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-16">
-      <p className="text-sm text-muted-foreground">Subscription Intelligence · validação do motor</p>
-      <h1 className="mt-1 text-3xl font-semibold text-foreground">{ds.meta.brand}</h1>
-      <p className="mt-4 text-foreground">
-        {last.label}: <strong>{last.active.toLocaleString("pt-BR")}</strong> ativos · churn{" "}
-        <strong>{(last.churnRate * 100).toFixed(1).replace(".", ",")}%</strong> · MRR{" "}
-        <strong>{last.mrr.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong>
-      </p>
-      <h2 className="mt-8 text-lg font-semibold text-foreground">Principais insights</h2>
-      <ul className="mt-3 space-y-3">
-        {insights.slice(0, 3).map((i) => (
-          <li key={i.id} className="rounded-md border border-border p-4">
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">{i.severity}</p>
-            <p className="mt-1 font-medium text-foreground">{i.title}</p>
-            <p className="mt-1 text-sm text-muted-foreground">{i.text}</p>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <MotionConfig reducedMotion="user">
+      <TooltipProvider delayDuration={150}>
+        <div className="paper-blobs" aria-hidden />
+        <main className="mx-auto flex max-w-[1440px] flex-col gap-6 px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
+          <DashboardHeader brand={ds.meta.brand} monthLabel={current.label} />
+
+          <section aria-label="Indicadores principais" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {kpis.map((k, i) => (
+              <KpiCard key={k.id} kpi={k} index={i} />
+            ))}
+          </section>
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+            <EvolutionChart data={data} index={5} />
+            <WaffleCard comp={comp} waffle={waffle} monthLabel={current.label} index={6} />
+            <FlowBars series={series} events={ds.meta.events} index={7} />
+          </div>
+        </main>
+      </TooltipProvider>
+    </MotionConfig>
   );
 }
