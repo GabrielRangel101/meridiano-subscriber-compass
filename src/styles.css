@@ -105,6 +105,17 @@
 
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
   --shadow-glass: 0 1px 2px hsl(243 47% 20% / 0.04), 0 12px 32px -12px hsl(243 47% 20% / 0.12);
+  --shadow-highlight: 0 0 0 4px hsl(243 75% 59% / 0.25), var(--shadow-glass);
+}
+
+[id$="-card"], #kpi-section { scroll-margin-top: 24px; }
+.insight-highlight { animation: insight-highlight 1.2s ease-in-out; }
+@keyframes insight-highlight {
+  0%, 100% { box-shadow: var(--shadow-glass); }
+  30%, 65% { box-shadow: var(--shadow-highlight); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .insight-highlight { animation: none; outline: 3px solid var(--primary); }
 }
 
 @layer base {

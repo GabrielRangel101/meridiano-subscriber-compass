@@ -12,3 +12,5 @@
 - src/engine/* is a verbatim, tested data engine (synthetic dataset via generateDataset); never edit it. tsconfig has noUncheckedIndexedAccess=false so it compiles unchanged.
 - UI reads data only via src/lib/dashboard-data.ts (module singleton over the engine); dashboard components in src/components/dashboard are presentational — no business math there.
 - Design tokens live in src/styles.css as full hsl() values (user request), mapped in @theme inline; categorical chart colors are --cat-1..6.
+- Correlation modes, risk summaries, people samples, deltas and insight view-models are computed in the shared dashboard singleton; engine entry points may internally recompute risk and must remain untouched.
+- Insight navigation targets stable card IDs; chart geometry and local avatar hashing are presentation-only calculations.

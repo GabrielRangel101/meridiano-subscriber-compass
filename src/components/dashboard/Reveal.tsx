@@ -15,6 +15,7 @@ export function Reveal({
   children: ReactNode;
   as?: "section" | "article" | "div";
   "aria-labelledby"?: string;
+  id?: string;
 }) {
   const Comp = motion[as];
   return (

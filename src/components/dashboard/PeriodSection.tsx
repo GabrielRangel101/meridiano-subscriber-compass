@@ -56,7 +56,7 @@ export function PeriodSection({ index }: { index: number }) {
           </AnimatePresence>
         </Reveal>
 
-        <Reveal index={index + 1} className="min-w-0 lg:col-span-4" aria-labelledby="reasons-title">
+        <Reveal id="reasons-card" index={index + 1} className="min-w-0 lg:col-span-4" aria-labelledby="reasons-title">
           <h3 id="reasons-title" className="font-display text-xl font-medium text-foreground">
             Motivos de cancelamento
           </h3>
@@ -68,7 +68,7 @@ export function PeriodSection({ index }: { index: number }) {
           </AnimatePresence>
         </Reveal>
 
-        <Reveal index={index + 2} className="min-w-0 lg:col-span-12" aria-labelledby="funnel-title">
+        <Reveal id="funnel-card" index={index + 2} className="min-w-0 lg:col-span-12" aria-labelledby="funnel-title">
           <h3 id="funnel-title" className="font-display text-xl font-medium text-foreground">
             Funil por canal
           </h3>

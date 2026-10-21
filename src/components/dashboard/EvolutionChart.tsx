@@ -40,7 +40,7 @@ export function EvolutionChart({ data, index }: { data: DashboardData; index: nu
   const goal = ds.meta.goalActive;
 
   return (
-    <Reveal index={index} className="lg:col-span-8" aria-labelledby="evo-title">
+    <Reveal id="evolution-card" index={index} className="lg:col-span-8" aria-labelledby="evo-title">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <h2 id="evo-title" className="font-display text-xl font-medium text-foreground">
