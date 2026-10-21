@@ -1,24 +1,41 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
+import { generateDataset } from "@/engine/generate";
+import { monthLabel } from "@/engine/calendar";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Gazeta Meridiano · Subscription Intelligence" },
+      { name: "description", content: "Analytics de assinaturas digitais da Gazeta Meridiano (dados sintéticos)." },
+      { property: "og:title", content: "Gazeta Meridiano · Subscription Intelligence" },
+      { property: "og:description", content: "Analytics de assinaturas digitais da Gazeta Meridiano (dados sintéticos)." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const ds = useMemo(() => generateDataset(), []);
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="mx-auto max-w-2xl px-6 py-16">
+      <p className="text-sm text-muted-foreground">Subscription Intelligence · fase 1</p>
+      <h1 className="mt-1 text-3xl font-semibold text-foreground">{ds.meta.brand}</h1>
+      <p className="mt-4 text-foreground">
+        Total de assinantes no dataset:{" "}
+        <strong>{ds.subscribers.length.toLocaleString("pt-BR")}</strong>
+      </p>
+      <h2 className="mt-8 text-lg font-semibold text-foreground">Eventos</h2>
+      <ul className="mt-3 divide-y divide-border rounded-md border border-border">
+        {ds.meta.events.map((e) => (
+          <li key={e.label} className="flex justify-between px-4 py-2 text-sm">
+            <span className="text-foreground">{e.label}</span>
+            <span className="text-muted-foreground">{monthLabel(e.month)}</span>
+          </li>
+        ))}
+      </ul>
+    </main>
   );
 }
