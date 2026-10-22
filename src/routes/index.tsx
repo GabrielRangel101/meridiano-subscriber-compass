@@ -3,6 +3,7 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/shell/AppShell";
 import { AiLayer } from "@/components/ai/AiLayer";
+import { CommandBar } from "@/components/shell/CommandBar";
 import { AcquisitionView, OverviewView, RetentionView, RiskView, SimulatorPage } from "@/components/views/DashboardViews";
 import { parseView, useDashboardData, useWindowData } from "@/lib/dashboard-data";
 import type { ViewId } from "@/lib/dashboard-data";
@@ -41,6 +42,7 @@ function Index() {
           </AnimatePresence>
         </AppShell>
         <AiLayer />
+        <CommandBar />
       </TooltipProvider>
     </MotionConfig>
   );

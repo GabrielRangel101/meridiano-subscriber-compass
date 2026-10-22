@@ -1,8 +1,9 @@
-import { CalendarDays, ShieldCheck, Sparkles } from "lucide-react";
+import { CalendarDays, Search, ShieldCheck, Sparkles } from "lucide-react";
 import { aiStore, useAi } from "@/components/ai/ai-store";
 import { InfoTip } from "@/components/dashboard/DashCard";
 import type { ViewId } from "@/lib/dashboard-data";
 import { cn } from "@/lib/utils";
+import { commandStore } from "./command-store";
 import { NavTabs } from "./NavTabs";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -28,6 +29,11 @@ export function TopBar({ brand, monthLabel, view }: { brand: string; monthLabel:
           LGPD
           <InfoTip label="Sobre os dados" text="Dados sintéticos gerados por simulação determinística (seed fixa), no navegador. Nenhuma informação real de assinantes. Funil: compras reais do dataset; etapas anteriores estimadas por taxas de conversão do canal." />
         </span>
+        <button type="button" onClick={() => commandStore.toggle()} aria-label="Abrir barra de comandos" className={cn(chip, "hidden gap-2 text-muted-foreground hover:text-foreground sm:inline-flex")}>
+          <Search className="size-3.5" aria-hidden />
+          Buscar
+          <kbd className="rounded border px-1 text-[10px]">Ctrl K</kbd>
+        </button>
         <button
           type="button"
           aria-pressed={active}

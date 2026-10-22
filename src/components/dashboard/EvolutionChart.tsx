@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { GlassTooltip } from "./ChartTooltip";
 import { DashCard } from "./DashCard";
 import { EventLegend, EventPopover, eventMarkers } from "./EventMarkers";
+import { MonthNotePanel, noteMarker, useMonthNote } from "./MonthNote";
 
 interface Row {
   label: string;
@@ -30,20 +31,22 @@ export function EvolutionChart({ data, className }: { data: DashboardData; class
   }, [series, proj, current]);
 
   const goal = ds.meta.goalActive;
+  const mn = useMonthNote(series, ds.meta.events);
 
   return (
     <DashCard
       id="evolution-card"
       ai="evolution"
       title="Evolução de assinantes"
-      info={`Base ativa mensal e projeção linear até ${goalLabel}. Marcadores indicam campanhas, reajustes e eventos.`}
+      info={`Base ativa mensal e projeção linear até ${goalLabel}. Marcadores indicam campanhas, reajustes e eventos. Clique em um mês para ler a nota do Meridiano.`}
       actions={<div className="hidden md:block"><EventLegend /></div>}
       className={className}
     >
-      <div className="relative min-h-0 flex-1" role="img" aria-label={`Gráfico de linha: assinantes ativos de ${series[0].label} a ${current.label}, com projeção até ${goalLabel} e meta de ${fmtInt(goal)}.`}>
+      <div className="relative min-h-0 flex-1 cursor-pointer" role="img" aria-label={`Gráfico de linha: assinantes ativos de ${series[0].label} a ${current.label}, com projeção até ${goalLabel} e meta de ${fmtInt(goal)}.`}>
         <EventPopover event={hover.e} x={hover.x} />
+        {mn.note && <MonthNotePanel note={mn.note} onClose={mn.close} />}
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={rows} margin={{ top: 26, right: 8, bottom: 0, left: 0 }}>
+          <ComposedChart data={rows} onClick={mn.onChartClick} margin={{ top: 26, right: 8, bottom: 0, left: 0 }}>
             <defs>
               <linearGradient id="evo-fill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.35} />
@@ -72,6 +75,7 @@ export function EvolutionChart({ data, className }: { data: DashboardData; class
             />
             <ReferenceLine y={goal} stroke="var(--accent)" strokeWidth={1.5} strokeDasharray="6 4" label={{ value: `Meta ${fmtInt(goal)} · ${goalLabel}`, position: "insideTopLeft", fill: "var(--warning)", fontSize: 11, fontWeight: 600 }} />
             <ReferenceLine x={current.label} stroke="var(--foreground)" strokeOpacity={0.4} label={{ value: "HOJE", position: "insideBottomRight", fill: "var(--foreground)", fontSize: 10, fontWeight: 600 }} />
+            {noteMarker(mn.selected)}
             {eventMarkers(ds.meta.events, monthLabel, (e, x) => setHover({ e, x: x ?? 0 }))}
             <Area type="monotone" dataKey="active" stroke="var(--primary)" strokeWidth={2.25} fill="url(#evo-fill)" isAnimationActive={!reduce} animationDuration={900} connectNulls={false} />
             <Line type="monotone" dataKey="projection" stroke="var(--primary-glow)" strokeWidth={2} strokeDasharray="6 5" dot={false} isAnimationActive={!reduce} animationBegin={700} />

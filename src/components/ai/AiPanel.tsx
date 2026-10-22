@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUp, Check, ChevronDown, ChevronUp, Trash2, X } from "lucide-react";
-import { getAiAnswer } from "@/lib/dashboard-data";
+import { getAiAnswer, getDashboardData } from "@/lib/dashboard-data";
 import { useMotionPreference } from "@/hooks/use-motion-preference";
 import { cn } from "@/lib/utils";
 import { aiStore, useAi, type AiExchange } from "./ai-store";
@@ -76,6 +76,8 @@ export function AiPanel({ mobile }: { mobile: boolean }) {
   const [q, setQ] = useState("");
   const bodyRef = useRef<HTMLDivElement>(null);
   const suggestions = useMemo(() => getAiAnswer("?").followUps.slice(0, 3), []);
+  const agenda = useMemo(() => getDashboardData().agenda, []);
+  const edition = useMemo(() => getDashboardData().current.label, []);
   useEffect(() => { bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight, behavior: reduced ? "instant" : "smooth" }); }, [s.exchanges, reduced]);
   const collapsed = s.collapsed;
 
@@ -103,7 +105,21 @@ export function AiPanel({ mobile }: { mobile: boolean }) {
         <>
           <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
             {s.exchanges.length === 0 ? (
-              <p className="text-xs leading-relaxed text-muted-foreground">Clique num card destacado para analisá-lo, ou pergunte sobre o quadro. Tudo roda no navegador, com dados sintéticos.</p>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[hsl(38_85%_62%)]">Pauta do dia · edição {edition}</p>
+                <ol className="mt-2 flex flex-col gap-1.5">
+                  {agenda.map((a, i) => (
+                    <li key={a.id}>
+                      <button type="button" disabled={s.busy} onClick={() => aiStore.ask(a.question, `Pauta: ${a.title}`)} className="flex w-full items-start gap-2 rounded-lg border border-white/10 bg-white/5 px-2.5 py-2 text-left hover:bg-white/10 disabled:opacity-50">
+                        <span className="font-display text-lg leading-none text-[hsl(8_74%_62%)]">{i + 1}</span>
+                        <span className="min-w-0 flex-1 text-xs leading-snug text-foreground">{a.title}</span>
+                        {a.displayValue && <strong className="shrink-0 text-xs tabular-nums text-foreground">{a.displayValue}</strong>}
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+                <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">Os três achados mais graves do motor de regras. Clique num para aprofundar, num card destacado para analisá-lo, ou pergunte sobre o quadro. Tudo roda no navegador, com dados sintéticos.</p>
+              </div>
             ) : (
               <ul className="flex flex-col gap-4">
                 {s.exchanges.map((ex, i) => <ExchangeView key={ex.id} ex={ex} last={i === s.exchanges.length - 1} mobile={mobile} reduced={reduced} busy={s.busy} />)}

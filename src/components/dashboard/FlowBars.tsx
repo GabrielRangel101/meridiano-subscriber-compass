@@ -9,6 +9,7 @@ import { GlassTooltip } from "./ChartTooltip";
 import { DashCard } from "./DashCard";
 import { AXIS_TICK } from "./EvolutionChart";
 import { EventPopover, eventMarkers } from "./EventMarkers";
+import { MonthNotePanel, noteMarker, useMonthNote } from "./MonthNote";
 
 export function FlowBars({ series, events, className }: { series: MonthPoint[]; events: EventMarker[]; className?: string }) {
   const reduce = useReducedMotion();
@@ -16,12 +17,13 @@ export function FlowBars({ series, events, className }: { series: MonthPoint[]; 
   // apenas apresentação: cancelamentos desenhados para baixo
   const rows = useMemo(() => series.map((p) => ({ ...p, cancelledDown: -p.cancelled })), [series]);
   const last = series[series.length - 1];
+  const mn = useMonthNote(series, events);
 
   return (
     <DashCard
       ai="flow-bars"
       title="Novas × cancelamentos"
-      info="24 meses · novas assinaturas acima de zero, cancelamentos abaixo e linha de saldo líquido."
+      info="24 meses · novas assinaturas acima de zero, cancelamentos abaixo e linha de saldo líquido. Clique em um mês para ler a nota do Meridiano."
       summary={<>saldo <strong className={last.netAdds >= 0 ? "text-positive" : "text-danger"}>{fmtSignedInt(last.netAdds)}</strong></>}
       className={className}
     >
@@ -30,14 +32,16 @@ export function FlowBars({ series, events, className }: { series: MonthPoint[]; 
         <span className="inline-flex items-center gap-1"><span className="size-2 rounded-sm bg-danger" aria-hidden />Cancelamentos</span>
         <span className="inline-flex items-center gap-1"><span className="h-0.5 w-3 rounded bg-accent" aria-hidden />Saldo</span>
       </div>
-      <div className="relative min-h-0 flex-1" role="img" aria-label={`Gráfico de barras divergentes de ${series[0].label} a ${last.label}: novas assinaturas acima de zero, cancelamentos abaixo e linha de saldo líquido.`}>
+      <div className="relative min-h-0 flex-1 cursor-pointer" role="img" aria-label={`Gráfico de barras divergentes de ${series[0].label} a ${last.label}: novas assinaturas acima de zero, cancelamentos abaixo e linha de saldo líquido.`}>
         <EventPopover event={hover.e} x={hover.x} />
+        {mn.note && <MonthNotePanel note={mn.note} onClose={mn.close} />}
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={rows} stackOffset="sign" margin={{ top: 24, right: 8, bottom: 0, left: 0 }}>
+          <ComposedChart data={rows} stackOffset="sign" onClick={mn.onChartClick} margin={{ top: 24, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
             <XAxis dataKey="label" tick={AXIS_TICK} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={18} />
             <YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} width={48} tickFormatter={(v: number) => fmtInt(Math.abs(v))} />
             <ReferenceLine y={0} stroke="var(--foreground)" strokeOpacity={0.4} />
+            {noteMarker(mn.selected)}
             {eventMarkers(events, monthLabel, (e, x) => setHover({ e, x: x ?? 0 }))}
             <Tooltip
               cursor={{ fill: "var(--primary)", fillOpacity: 0.08 }}

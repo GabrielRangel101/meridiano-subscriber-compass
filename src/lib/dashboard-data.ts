@@ -116,6 +116,10 @@ function compute() {
     },
   ];
 
+  const insightViews = insights.map((insight) => ({ ...insight, displayValue: formatInsightValue(insight) }));
+  // Pauta do dia: os três achados mais graves do motor de regras, cada um com a pergunta que o aprofunda
+  const agenda = insightViews.slice(0, AGENDA_SIZE).map((i) => ({ id: i.id, title: i.title, severity: i.severity, topic: i.topic, displayValue: i.displayValue, question: TOPIC_QUESTIONS[i.topic] }));
+
   return {
     ds,
     series,
@@ -139,7 +143,8 @@ function compute() {
     correlations,
     lag: lagCorrelation(series, "paidShareNew", "churnRate", 3),
     changes,
-    insights: insights.map((insight) => ({ ...insight, displayValue: formatInsightValue(insight) })),
+    insights: insightViews,
+    agenda,
     severityCounts: SEVERITIES.map((key) => ({ key, count: insights.filter((i) => i.severity === key).length })),
     topics: [...new Set(insights.map((i) => i.topic))].map((key) => ({ key, count: insights.filter((i) => i.topic === key).length })),
   };
@@ -301,6 +306,31 @@ export function parseView(v: unknown): ViewId {
 export const INSIGHT_VIEWS: Record<Insight["topic"], ViewId> = {
   base: "geral", churn: "geral", meta: "geral", preço: "geral", nps: "geral", coortes: "retencao", pagamento: "retencao", editorias: "retencao", canais: "aquisicao", correlação: "risco", risco: "risco",
 };
+
+/** Pergunta da Mesa de análise que aprofunda cada tema de insight (todas com intenção conhecida pelo ask.ts) */
+export const TOPIC_QUESTIONS: Record<Insight["topic"], string> = {
+  base: "Vamos bater a meta de dezembro?", churn: "Como está o churn?", meta: "Vamos bater a meta de dezembro?", coortes: "Compare as safras de campanha",
+  canais: "Qual canal retém pior?", preço: "Como foi o reajuste de preço?", pagamento: "Por que os assinantes cancelam?", correlação: "Resumo dos principais alertas",
+  nps: "Como está o NPS?", risco: "Quem está em risco de cancelar?", editorias: "Como estão as editorias?",
+};
+export const AGENDA_SIZE = 3;
+
+/** Índice de cards para a barra de comandos (id do elemento → view em que ele vive) */
+export const CARD_INDEX: { id: string; view: ViewId; label: string }[] = [
+  { id: "kpi-section", view: "geral", label: "Indicadores principais" },
+  { id: "evolution-card", view: "geral", label: "Evolução de assinantes" },
+  { id: "funnel-card", view: "aquisicao", label: "Funil de compra" },
+  { id: "acq-quality-card", view: "aquisicao", label: "Eficiência por canal · LTV × CAC" },
+  { id: "cohort-card", view: "retencao", label: "Retenção por coorte" },
+  { id: "editoria-card", view: "retencao", label: "Saúde por editoria" },
+  { id: "bridge-card", view: "retencao", label: "Da base inicial à final" },
+  { id: "mrr-bridge-card", view: "retencao", label: "Ponte de MRR" },
+  { id: "reasons-card", view: "retencao", label: "Motivos de cancelamento" },
+  { id: "risk-card", view: "risco", label: "Mapa de assinantes em risco" },
+  { id: "correlation-card", view: "risco", label: "Rede de correlação" },
+  { id: "insights-card", view: "risco", label: "Insights do motor de regras" },
+  { id: "simulator-card", view: "simulador", label: "Simulador e se" },
+];
 
 /** Cor categórica estável por canal (mesma em todos os gráficos) */
 export const CHANNEL_COLORS: Record<string, string> = {
