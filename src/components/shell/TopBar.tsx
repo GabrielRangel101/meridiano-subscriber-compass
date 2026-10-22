@@ -13,9 +13,12 @@ export function TopBar({ brand, monthLabel, view }: { brand: string; monthLabel:
   const { active } = useAi();
   return (
     <header className="relative z-50 flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-3 py-2 sm:px-4 xl:h-[68px] xl:flex-nowrap xl:py-0">
-      <div className="mr-auto flex min-w-0 flex-col xl:mr-0 xl:flex-1">
-        <span className="truncate font-display text-2xl font-semibold leading-none tracking-tight text-foreground">{brand}</span>
-        <span className="mt-1 hidden truncate text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground sm:block">Subscription Intelligence · Edição {monthLabel}</span>
+      <div className="mr-auto flex min-w-0 items-center gap-3 xl:mr-0 xl:flex-1">
+        <img src="/logo.svg" alt="" width={36} height={36} className="size-9 shrink-0 rounded-lg" />
+        <div className="flex min-w-0 flex-col">
+          <span className="truncate font-display text-2xl font-semibold leading-none tracking-tight text-foreground">{brand}</span>
+          <span className="mt-1 hidden truncate text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground sm:block">Subscription Intelligence · Edição {monthLabel}</span>
+        </div>
       </div>
       <NavTabs view={view} className="hidden xl:flex" />
       <ThemeToggle className="xl:hidden" side="bottom" />
