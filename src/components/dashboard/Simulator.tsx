@@ -73,10 +73,17 @@ function Levers({ result, params, set, setAll, className }: { result: WhatIfResu
         current={Math.round(params.acquisitionLift * 100)}
         onChange={(v) => set({ acquisitionLift: v / 100 })}
       />
-      <div className="mt-auto flex flex-wrap gap-2 pt-2">
+      <div className="flex flex-wrap gap-2 pt-3">
         <Chip onClick={() => setAll({ churnCut: 0.01, paymentRecovery: 0.3, acquisitionLift: 0 })}>Cenário prudente</Chip>
         <Chip onClick={closeGoal} disabled={result.hitsGoal || result.extraLiftToGoal === null}>Fechar a meta com aquisição</Chip>
         <Chip onClick={() => setAll(NO_CHANGE)}>Zerar</Chip>
+      </div>
+      <div className="mt-auto hidden space-y-1.5 rounded-lg bg-secondary/50 p-3 text-[11px] leading-relaxed text-muted-foreground xl:block">
+        <p className="font-semibold text-foreground">Como usar</p>
+        <p><strong className="text-foreground">Churn voluntário:</strong> quantos pontos você corta do cancelamento por decisão do cliente (preço, pouco uso, concorrente).</p>
+        <p><strong className="text-foreground">Falhas de pagamento:</strong> parcela dos cartões recusados que você recupera com nova tentativa ou aviso antes do vencimento.</p>
+        <p><strong className="text-foreground">Aquisição:</strong> quanto as novas assinaturas mensais crescem sobre o ritmo atual.</p>
+        <p>O gráfico compara a projeção atual (tracejada) com o cenário. Embaixo, &quot;só com…&quot; mostra quanto cada alavanca precisaria render sozinha para bater a meta.</p>
       </div>
     </DashCard>
   );

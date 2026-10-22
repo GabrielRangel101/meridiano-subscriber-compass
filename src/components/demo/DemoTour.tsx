@@ -150,6 +150,12 @@ export function DemoTour() {
       void navigate({ to: "/", search: { view } });
       await sleep(550);
     };
+    const hideOld = () => {
+      for (const ex of aiStore.get().exchanges) {
+        aiStore.hide(`${ex.id}:read`);
+        for (const c of ex.answer?.cards ?? []) aiStore.hide(`${ex.id}:${c.id}`);
+      }
+    };
     const mesa = () => find(byText("header button", "Mesa de análise"));
     const say = (title: string, sub?: string) => setCaption({ title, sub });
 
@@ -159,7 +165,7 @@ export function DemoTour() {
       commandStore.set(false);
       void navigate({ to: "/", search: { view: "geral" } });
       place(window.innerWidth * 0.5, window.innerHeight * 0.7);
-      await sleep(900);
+      await sleep(1800);
 
       // 1 · abertura rápida
       say("Gazeta Meridiano", "Inteligência de assinaturas B2C · dados sintéticos, motor de métricas próprio");
@@ -180,12 +186,14 @@ export function DemoTour() {
       await click(input, 550);
       await type(input, "Se eu abaixar o preço, melhora o churn?", 24);
       await sleep(150);
+      hideOld();
       input.form?.requestSubmit();
       await waitAi(3200);
 
       say("Não entendeu a métrica? Ela explica a conta", "Fórmula, exemplo com os números do mês e como ler");
       await type(input, "Como é calculada a saúde por editoria?", 24);
       await sleep(150);
+      hideOld();
       input.form?.requestSubmit();
       await waitAi(3000);
 
