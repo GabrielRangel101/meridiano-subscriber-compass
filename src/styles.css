@@ -360,3 +360,6 @@ html.ai-on [data-ai-target].ai-focused::after { content: none; }
 @media (prefers-reduced-motion: reduce) {
   html.ai-on [data-ai-target], .ai-orb, .ai-thread-pulse { animation: none; }
 }
+
+/* modo demo (?demo=1): esconde o cursor real; o roteiro desenha o seu */
+.demo-running, .demo-running * { cursor: none !important; }

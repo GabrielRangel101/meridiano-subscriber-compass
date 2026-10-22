@@ -1,0 +1,295 @@
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { AnimatePresence, motion } from "framer-motion";
+import { aiStore } from "@/components/ai/ai-store";
+import { commandStore } from "@/components/shell/command-store";
+import type { ViewId } from "@/lib/dashboard-data";
+
+/**
+ * Modo demo: abra com ?demo=1 (ou #demo). Roda um roteiro sozinho sobre a interface real, com cursor animado e legendas,
+ * para gravar o vídeo de apresentação. Esc interrompe. Nada aqui calcula dados: só clica, digita e espera.
+ */
+
+class Stopped extends Error {}
+
+interface Caption {
+  title: string;
+  sub?: string;
+}
+
+const CURSOR = (
+  <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden>
+    <path d="M4 2.5 19.5 12 12.6 13.4 16.4 21 13.3 22.4 9.6 14.8 4.6 19.4Z" fill="#fff" stroke="#111" strokeWidth="1.4" strokeLinejoin="round" />
+  </svg>
+);
+
+export function DemoTour() {
+  const navigate = useNavigate();
+  const [on, setOn] = useState(false);
+  const [caption, setCaption] = useState<Caption | null>(null);
+  const [clickKey, setClickKey] = useState(0);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const pos = useRef({ x: 0, y: 0 });
+  const stopped = useRef(false);
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    if (p.has("demo") || window.location.hash === "#demo") setOn(true);
+  }, []);
+
+  useEffect(() => {
+    if (!on) return;
+    stopped.current = false;
+    document.documentElement.classList.add("demo-running");
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !commandStore.get()) stopped.current = true;
+    };
+    window.addEventListener("keydown", onKey);
+
+    const sleep = (ms: number) =>
+      new Promise<void>((resolve, reject) => {
+        const t0 = performance.now();
+        const tick = () => {
+          if (stopped.current) return reject(new Stopped());
+          if (performance.now() - t0 >= ms) return resolve();
+          requestAnimationFrame(tick);
+        };
+        tick();
+      });
+
+    const find = async (pick: () => Element | null | undefined, timeout = 5000): Promise<HTMLElement> => {
+      const t0 = performance.now();
+      for (;;) {
+        const el = pick();
+        if (el instanceof HTMLElement) return el;
+        if (performance.now() - t0 > timeout) throw new Error("demo: elemento não encontrado");
+        await sleep(80);
+      }
+    };
+    const $ = (sel: string) => () => document.querySelector(sel);
+    const byText = (sel: string, text: string) => () => [...document.querySelectorAll(sel)].find((b) => b.textContent?.includes(text));
+
+    const place = (x: number, y: number) => {
+      pos.current = { x, y };
+      if (cursorRef.current) cursorRef.current.style.transform = `translate(${x}px, ${y}px)`;
+    };
+    const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const moveTo = async (x: number, y: number, ms = 750) => {
+      const { x: x0, y: y0 } = pos.current;
+      const t0 = performance.now();
+      for (;;) {
+        const t = Math.min(1, (performance.now() - t0) / ms);
+        place(x0 + (x - x0) * ease(t), y0 + (y - y0) * ease(t));
+        if (t >= 1) return;
+        await sleep(16);
+      }
+    };
+    const center = (el: HTMLElement, fx = 0.5, fy = 0.5) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width * fx, y: r.top + r.height * fy };
+    };
+    const moveToEl = async (el: HTMLElement, ms?: number, fx?: number, fy?: number) => {
+      const c = center(el, fx, fy);
+      await moveTo(c.x, c.y, ms);
+    };
+    const click = async (el: HTMLElement, ms?: number) => {
+      await moveToEl(el, ms);
+      await sleep(180);
+      setClickKey((k) => k + 1);
+      el.click();
+      await sleep(250);
+    };
+    /** passa o "mouse" sobre um gráfico para acender o tooltip */
+    const scrub = async (el: HTMLElement, from: number, to: number, fy = 0.55, ms = 1800) => {
+      const r = el.getBoundingClientRect();
+      const t0 = performance.now();
+      let last: Element | null = null;
+      for (;;) {
+        const t = Math.min(1, (performance.now() - t0) / ms);
+        const x = r.left + r.width * (from + (to - from) * ease(t));
+        const y = r.top + r.height * fy;
+        place(x, y);
+        const target = document.elementFromPoint(x, y);
+        if (target) {
+          target.dispatchEvent(new MouseEvent("mousemove", { clientX: x, clientY: y, bubbles: true }));
+          last = target;
+        }
+        if (t >= 1) break;
+        await sleep(16);
+      }
+      await sleep(900);
+      last?.dispatchEvent(new MouseEvent("mouseout", { clientX: 0, clientY: 0, bubbles: true, relatedTarget: document.body }));
+      last?.dispatchEvent(new MouseEvent("mouseleave", { clientX: 0, clientY: 0, bubbles: false }));
+    };
+    const setNative = (input: HTMLInputElement, value: string) => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+      setter?.call(input, value);
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+    const type = async (input: HTMLInputElement, text: string, perChar = 45) => {
+      input.focus();
+      for (let i = 1; i <= text.length; i++) {
+        setNative(input, text.slice(0, i));
+        await sleep(perChar + (text[i - 1] === " " ? 30 : 0));
+      }
+    };
+    const waitAi = async (extra: number) => {
+      await sleep(300);
+      const t0 = performance.now();
+      while (aiStore.get().busy && performance.now() - t0 < 6000) await sleep(80);
+      await sleep(extra);
+    };
+    const go = async (view: ViewId) => {
+      const link = document.querySelector<HTMLElement>(`header a[href*="view=${view}"]`);
+      if (link) {
+        await moveToEl(link, 650);
+        await sleep(150);
+        setClickKey((k) => k + 1);
+      }
+      void navigate({ to: "/", search: { view } });
+      await sleep(900);
+    };
+    const mesa = () => find(byText("header button", "Mesa de análise"));
+    const say = (title: string, sub?: string) => setCaption({ title, sub });
+
+    const run = async () => {
+      aiStore.close();
+      aiStore.clear();
+      commandStore.set(false);
+      void navigate({ to: "/", search: { view: "geral" } });
+      place(window.innerWidth * 0.5, window.innerHeight * 0.75);
+      await sleep(1500);
+
+      // 1 · visão geral
+      say("Gazeta Meridiano", "Inteligência de assinaturas B2C · dados sintéticos, motor de métricas próprio");
+      await moveToEl(await find($('[data-ai-target="kpi-active"]')), 1100);
+      await sleep(500);
+      for (const k of ["kpi-churn", "kpi-mrr", "kpi-nps"]) {
+        await moveToEl(await find($(`[data-ai-target="${k}"]`)), 600);
+        await sleep(350);
+      }
+      say("Cada gráfico conta o que aconteceu", "Campanhas, reajuste e eventos marcados na linha do tempo");
+      const evo = await find($('[data-ai-target="evolution"]'));
+      await scrub(evo, 0.12, 0.86, 0.55, 2600);
+      await sleep(400);
+
+      // 2 · mesa de análise
+      say("Mesa de análise", "Clique num card e a IA lê o gráfico com você");
+      await click(await mesa(), 900);
+      await sleep(1100);
+      await click(await find($('[data-ai-target="kpi-churn"]')), 900);
+      await waitAi(3600);
+      await click(await find($('[data-ai-target="reasons"]')), 900);
+      await waitAi(3800);
+
+      // 3 · perguntas de negócio
+      say("Perguntas de negócio, em linguagem natural", "Os números vêm do motor; a IA não inventa dados");
+      const input = (await find($("#ai-question-input"))) as HTMLInputElement;
+      await click(input, 800);
+      await type(input, "Se eu abaixar o preço, melhora o churn?");
+      await sleep(350);
+      input.form?.requestSubmit();
+      await waitAi(5200);
+
+      say("Não entendeu a métrica? Ela explica a conta", "Fórmula, exemplo com os números do mês e como ler");
+      await type(input, "Como é calculada a saúde por editoria?");
+      await sleep(350);
+      input.form?.requestSubmit();
+      await waitAi(5200);
+
+      await click(await mesa(), 800);
+      await sleep(700);
+
+      // 4 · aquisição
+      say("Funil de ponta a ponta", "Do visitante à compra, por canal, com o maior vazamento destacado");
+      await go("aquisicao");
+      await moveToEl(await find($("#funnel-card")), 1000, 0.5, 0.45);
+      await sleep(2400);
+      say("Quanto custa e quanto rende cada canal", "CAC, LTV de 12 meses, LTV/CAC e payback");
+      await moveToEl(await find($("#acq-quality-card")), 1000, 0.5, 0.45);
+      await sleep(2600);
+
+      // 5 · simulador
+      say("Simulador: o que falta para bater a meta", "Churn, falha de pagamento e aquisição sobre a mesma projeção");
+      await go("simulador");
+      await sleep(600);
+      await click(await find(byText("button", "Cenário prudente")), 900);
+      await sleep(2600);
+      const close = await find(byText("button", "Fechar a meta com aquisição"));
+      if (!(close as HTMLButtonElement).disabled) {
+        await click(close, 800);
+        await sleep(2800);
+      }
+      await click(await find(byText("button", "Zerar")), 700);
+      await sleep(600);
+
+      // 6 · Ctrl+K
+      say("Ctrl+K: vá direto a qualquer aba ou card");
+      await moveTo(window.innerWidth * 0.5, window.innerHeight * 0.4, 700);
+      commandStore.set(true);
+      await sleep(600);
+      const cmd = await find(() => document.querySelector<HTMLInputElement>('input[placeholder^="Ir para uma aba"]'));
+      await type(cmd as HTMLInputElement, "risco", 110);
+      await sleep(900);
+      cmd.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      await sleep(2600);
+
+      // 7 · fechamento
+      void navigate({ to: "/", search: { view: "geral" } });
+      await sleep(700);
+      say("gazetameridiano.app", "Dashboard web · motor de métricas · IA sobre dados determinísticos");
+      await moveTo(window.innerWidth * 0.5, window.innerHeight * 0.75, 900);
+      await sleep(4200);
+    };
+
+    run()
+      .catch(() => undefined)
+      .finally(() => {
+        aiStore.close();
+        commandStore.set(false);
+        setCaption(null);
+        setOn(false);
+        document.documentElement.classList.remove("demo-running");
+      });
+
+    return () => {
+      stopped.current = true;
+      window.removeEventListener("keydown", onKey);
+      document.documentElement.classList.remove("demo-running");
+    };
+  }, [on, navigate]);
+
+  if (!on) return null;
+  return (
+    <>
+      <div ref={cursorRef} className="pointer-events-none fixed left-0 top-0 z-[300]" style={{ transform: "translate(-100px,-100px)" }} aria-hidden>
+        <div className="-translate-x-[5px] -translate-y-[3px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)]">{CURSOR}</div>
+        <AnimatePresence>
+          <motion.span
+            key={clickKey}
+            className="absolute -left-4 -top-4 size-8 rounded-full border-2 border-[hsl(38_88%_50%)]"
+            initial={{ scale: 0.3, opacity: clickKey ? 0.9 : 0 }}
+            animate={{ scale: 1.6, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          />
+        </AnimatePresence>
+      </div>
+      <AnimatePresence mode="wait">
+        {caption && (
+          <motion.div
+            key={caption.title}
+            className="pointer-events-none fixed bottom-6 left-6 z-[300] max-w-[560px] rounded-xl bg-[hsl(205_38%_10%/0.92)] px-5 py-3.5 text-white shadow-2xl"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.3 }}
+            role="status"
+          >
+            <p className="font-display text-xl font-semibold leading-tight">{caption.title}</p>
+            {caption.sub && <p className="mt-1 text-sm leading-snug text-white/75">{caption.sub}</p>}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}

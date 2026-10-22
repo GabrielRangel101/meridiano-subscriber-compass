@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/shell/AppShell";
 import { AiLayer } from "@/components/ai/AiLayer";
 import { CommandBar } from "@/components/shell/CommandBar";
+import { DemoTour } from "@/components/demo/DemoTour";
 import { AcquisitionView, OverviewView, RetentionView, RiskView, SimulatorPage } from "@/components/views/DashboardViews";
 import { parseView, useDashboardData, useWindowData } from "@/lib/dashboard-data";
 import type { ViewId } from "@/lib/dashboard-data";
@@ -43,6 +44,7 @@ function Index() {
         </AppShell>
         <AiLayer />
         <CommandBar />
+        <DemoTour />
       </TooltipProvider>
     </MotionConfig>
   );
