@@ -1,5 +1,5 @@
-- [ ] 3C-1: app shell (rail, top bar, abas móveis) e views por ?view=.
-- [ ] 3C-1: tema escuro padrão + claro opcional persistido.
-- [ ] 3C-1: cards densos e views Visão geral, Aquisição, Retenção, Risco e sinergia.
-- [ ] 3C-1: navegação dos insights troca de view e pulsa o card.
-- [ ] 3C-1: testes + verificação 1440×900, 1920×1080, 390px.
+- [x] 3C-1: app shell (rail, top bar, abas móveis) e views por ?view=.
+- [x] 3C-1: tema escuro padrão + claro opcional persistido.
+- [x] 3C-1: cards densos e views Visão geral, Aquisição, Retenção, Risco e sinergia.
+- [x] 3C-1: navegação dos insights troca de view e pulsa o card.
+- [x] 3C-1: testes + verificação 1440×900, 1920×1080, 390px.
