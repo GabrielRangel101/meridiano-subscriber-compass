@@ -4,8 +4,8 @@ import { answer } from "@/engine/ask";
 import type { AiAnswer } from "@/engine/ask";
 import { monthLabel } from "@/engine/calendar";
 import { generateDataset } from "@/engine/generate";
-import { atRisk, buildSeries, churnReasons, composition, correlationMatrix, CRITICAL_RISK, funnelByChannel, kpi, lagCorrelation, peopleMap, projectActive, subscriberFlow, toWaffle } from "@/engine/metrics";
-import type { AtRiskRow, CorrelationMatrix, Kpi, MonthPoint, SeriesKey } from "@/engine/metrics";
+import { acquisitionFlow, atRisk, buildSeries, churnReasons, cohortRetention, composition, correlationMatrix, CRITICAL_RISK, editoriaHealth, funnelByChannel, kpi, lagCorrelation, peopleMap, projectActive, subscriberFlow, toWaffle } from "@/engine/metrics";
+import type { AtRiskRow, Cohort, CohortBy, CorrelationMatrix, Kpi, MonthPoint, SeriesKey } from "@/engine/metrics";
 import { generateInsights } from "@/engine/insights";
 import type { Insight, Severity } from "@/engine/insights";
 import { fmtBRL, fmtBRLCompact, fmtInt, fmtPP, fmtPct, fmtSignedInt, fmtSignedPct } from "./format";
@@ -54,6 +54,10 @@ function compute() {
     level: correlationView(correlationMatrix(series, CORRELATION_KEYS, "level")),
   };
   const changes = CHANGE_KEYS.map((key) => monthlyChange(series, key, m)).sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
+  const channelComp = composition(ds, m, "channel");
+  const channelWaffle = toWaffle(channelComp);
+  const cohorts = Object.fromEntries(COHORT_OPTIONS.map((o) => [o.by, cohortView(cohortRetention(ds, o.by))])) as Record<CohortSegment, CohortView>;
+  const editorias = editoriaHealth(ds, m);
   const drivers = DRIVER_ORDER.map((key) => ({ key, color: DRIVER_COLORS[key], count: people.filter((p) => p.driver === key).length }));
 
   const kActive = kpi(series, "active", m);
@@ -121,6 +125,11 @@ function compute() {
     kpis,
     goalLabel: monthLabel(ds.meta.goalMonth).toLowerCase(),
     risk,
+    topRisk: risk.top.slice(0, 5),
+    channelComp,
+    channelWaffle,
+    cohorts,
+    editorias,
     people,
     drivers,
     criticalRisk: CRITICAL_RISK,
@@ -167,8 +176,8 @@ export const PLAN_COLORS: Record<string, string> = {
 // ------------------------------------------------------------------ período (Sankey, motivos, funil)
 
 export const PERIOD_OPTIONS = [
-  { n: 3, label: "Últimos 3 meses" },
-  { n: 6, label: "Últimos 6 meses" },
+  { n: 3, label: "3 meses" },
+  { n: 6, label: "6 meses" },
   { n: 12, label: "12 meses" },
 ] as const;
 export type PeriodN = (typeof PERIOD_OPTIONS)[number]["n"];
@@ -196,6 +205,7 @@ function computePeriod(n: PeriodN) {
   const byNature = [...reasons.byNature].sort((a, b) => natureRank(a.nature) - natureRank(b.nature));
   const reasonRows = [...reasons.rows].sort((a, b) => natureRank(a.nature) - natureRank(b.nature) || b.count - a.count);
 
+  const acquisition = acquisitionFlow(ds, m0, m1);
   const funnel = funnelByChannel(ds, m0, m1);
   const byOverall = [...funnel].sort((a, b) => b.overall - a.overall);
 
@@ -206,6 +216,7 @@ function computePeriod(n: PeriodN) {
     rangeLabel: `${series[m0].label} – ${series[m1].label}`,
     flow,
     flowSummary,
+    acquisition,
     reasons: { total: reasons.total, byNature, rows: reasonRows },
     funnel,
     bestChannel: byOverall[0]?.channel ?? null,
@@ -243,8 +254,49 @@ export const DRIVER_COLORS: Record<AtRiskRow["driver"], string> = {
   "promoção acabando": "var(--cat-3)", "baixo engajamento": "var(--danger)", "renovação anual": "var(--cat-2)", "canal de risco": "var(--cat-4)", geral: "var(--cat-6)",
 };
 export const INSIGHT_TARGETS: Record<Insight["topic"], string> = {
-  base: "evolution-card", churn: "evolution-card", meta: "evolution-card", coortes: "funnel-card", canais: "funnel-card", pagamento: "reasons-card", correlação: "correlation-card", risco: "risk-card", editorias: "risk-card", preço: "kpi-section", nps: "kpi-section",
+  base: "evolution-card", churn: "evolution-card", meta: "evolution-card", coortes: "cohort-card", canais: "funnel-card", pagamento: "reasons-card", correlação: "correlation-card", risco: "risk-card", editorias: "editoria-card", preço: "kpi-section", nps: "kpi-section",
 };
+
+// ------------------------------------------------------------------ views do app
+export const VIEW_IDS = ["geral", "aquisicao", "retencao", "risco"] as const;
+export type ViewId = (typeof VIEW_IDS)[number];
+export function parseView(v: unknown): ViewId {
+  return typeof v === "string" && (VIEW_IDS as readonly string[]).includes(v) ? (v as ViewId) : "geral";
+}
+/** Em qual view vive o card relacionado a cada tema de insight */
+export const INSIGHT_VIEWS: Record<Insight["topic"], ViewId> = {
+  base: "geral", churn: "geral", meta: "geral", preço: "geral", nps: "geral", coortes: "retencao", pagamento: "retencao", editorias: "retencao", canais: "aquisicao", correlação: "risco", risco: "risco",
+};
+
+/** Cor categórica estável por canal (mesma em todos os gráficos) */
+export const CHANNEL_COLORS: Record<string, string> = {
+  Orgânico: "var(--cat-1)", Newsletter: "var(--cat-4)", "Mídia paga (Meta)": "var(--cat-5)", "Mídia paga (Google)": "var(--cat-3)", "Social orgânico": "var(--cat-2)", Parcerias: "var(--cat-6)", Direto: "var(--positive-fill)",
+};
+
+export const COHORT_OPTIONS = [
+  { by: "campaign", label: "Campanha" },
+  { by: "channel", label: "Canal" },
+  { by: "plan", label: "Plano" },
+  { by: "promo", label: "Promoção" },
+] as const satisfies readonly { by: CohortBy; label: string }[];
+export type CohortSegment = (typeof COHORT_OPTIONS)[number]["by"];
+export const COHORT_MAX_AGE = 12;
+export interface CohortView {
+  keys: string[];
+  sizes: Record<string, number>;
+  /** M0..M12; valores como fração (retenção do motor / 100), null = sem observação suficiente */
+  rows: { age: string; values: Record<string, number | null> }[];
+}
+export function cohortView(cohorts: Cohort[]): CohortView {
+  return {
+    keys: cohorts.map((c) => c.key),
+    sizes: Object.fromEntries(cohorts.map((c) => [c.key, c.size])),
+    rows: Array.from({ length: COHORT_MAX_AGE + 1 }, (_, k) => ({
+      age: `M${k}`,
+      values: Object.fromEntries(cohorts.map((c) => { const v = c.retention[k]; return [c.key, v === null || v === undefined ? null : v / 100]; })),
+    })),
+  };
+}
 
 export function correlationView(cm: CorrelationMatrix) {
   const pairs = cm.keys.flatMap((a, i) => cm.keys.slice(i + 1).map((b, offset) => ({ a, b, i, j: i + offset + 1, r: cm.r[i][i + offset + 1] })));
