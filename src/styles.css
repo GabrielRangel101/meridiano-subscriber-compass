@@ -39,6 +39,9 @@
   --color-positive: var(--positive);
   --color-danger: var(--danger);
   --color-warning: var(--warning);
+  --color-cyan: var(--cyan);
+  --color-positive-fill: var(--positive-fill);
+  --color-border-strong: var(--border-strong);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -188,11 +191,20 @@
 }
 
 @utility glass {
-  background: var(--card);
+  background: var(--popover);
   backdrop-filter: blur(16px) saturate(140%);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-glass);
   border-radius: var(--radius);
+}
+
+@utility dash-card {
+  background: var(--card-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-glass);
+  transition: border-color 150ms ease;
+  &:hover { border-color: var(--border-strong); }
 }
 
 @utility font-display {
