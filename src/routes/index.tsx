@@ -3,7 +3,7 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/shell/AppShell";
 import { AiLayer } from "@/components/ai/AiLayer";
-import { AcquisitionView, OverviewView, RetentionView, RiskView } from "@/components/views/DashboardViews";
+import { AcquisitionView, OverviewView, RetentionView, RiskView, SimulatorPage } from "@/components/views/DashboardViews";
 import { parseView, useDashboardData, useWindowData } from "@/lib/dashboard-data";
 import type { ViewId } from "@/lib/dashboard-data";
 
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const VIEW_COMPONENTS = { geral: OverviewView, aquisicao: AcquisitionView, retencao: RetentionView, risco: RiskView } as const;
+const VIEW_COMPONENTS = { geral: OverviewView, aquisicao: AcquisitionView, retencao: RetentionView, risco: RiskView, simulador: SimulatorPage } as const;
 
 function Index() {
   const view = Route.useSearch().view ?? "geral";

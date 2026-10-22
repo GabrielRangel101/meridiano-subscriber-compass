@@ -292,7 +292,7 @@ export const INSIGHT_TARGETS: Record<Insight["topic"], string> = {
 };
 
 // ------------------------------------------------------------------ views do app
-export const VIEW_IDS = ["geral", "aquisicao", "retencao", "risco"] as const;
+export const VIEW_IDS = ["geral", "aquisicao", "retencao", "risco", "simulador"] as const;
 export type ViewId = (typeof VIEW_IDS)[number];
 export function parseView(v: unknown): ViewId {
   return typeof v === "string" && (VIEW_IDS as readonly string[]).includes(v) ? (v as ViewId) : "geral";
@@ -396,6 +396,7 @@ export const AI_TARGETS = {
   correlation: { label: "Rede de correlação", question: "Resumo dos principais alertas" },
   "base-bridge": { label: "Da base inicial à final", question: "Como está o churn?" },
   "mrr-bridge": { label: "Ponte de MRR", question: "Como foi o reajuste de preço?" },
+  simulator: { label: "Simulador e se", question: "Vamos bater a meta de dezembro?" },
   price: { label: "Preço", question: "Como foi o reajuste de preço?" },
 } as const satisfies Record<string, { label: string; question: string }>;
 export type AiTargetId = keyof typeof AI_TARGETS;

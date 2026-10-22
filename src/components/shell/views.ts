@@ -1,4 +1,4 @@
-import { LayoutDashboard, Megaphone, Repeat, ShieldAlert } from "lucide-react";
+import { LayoutDashboard, Megaphone, Repeat, ShieldAlert, SlidersHorizontal } from "lucide-react";
 import type { ViewId } from "@/lib/dashboard-data";
 
 export const VIEWS: { id: ViewId; label: string; short: string; icon: typeof LayoutDashboard }[] = [
@@ -6,4 +6,5 @@ export const VIEWS: { id: ViewId; label: string; short: string; icon: typeof Lay
   { id: "aquisicao", label: "Aquisição", short: "Aquisição", icon: Megaphone },
   { id: "retencao", label: "Retenção", short: "Retenção", icon: Repeat },
   { id: "risco", label: "Risco e sinergia", short: "Risco", icon: ShieldAlert },
+  { id: "simulador", label: "Simulador", short: "E se", icon: SlidersHorizontal },
 ];

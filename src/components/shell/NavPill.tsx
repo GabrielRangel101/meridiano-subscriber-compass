@@ -49,6 +49,7 @@ export function NavPill({ view, className, side = "bottom" }: { view: ViewId; cl
       </Tooltip>
       <ViewLink id="retencao" view={view} disabled={active} side={side} />
       <ViewLink id="risco" view={view} disabled={active} side={side} />
+      <ViewLink id="simulador" view={view} disabled={active} side={side} />
     </nav>
   );
 }

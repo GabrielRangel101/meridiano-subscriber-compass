@@ -19,6 +19,7 @@ import { RuleInsights } from "@/components/dashboard/RuleInsights";
 import { MrrBridge } from "@/components/dashboard/MrrBridge";
 import { PlanMix } from "@/components/dashboard/PlanMix";
 import { UnitEconomics } from "@/components/dashboard/UnitEconomics";
+import { SimulatorView } from "@/components/dashboard/Simulator";
 import { WaffleCard } from "@/components/dashboard/WaffleCard";
 
 interface ViewProps {
@@ -77,4 +78,8 @@ export function RiskView({ data }: ViewProps) {
       <RuleInsights data={data} className="h-[520px] md:col-span-2 xl:col-span-6 xl:h-auto" />
     </div>
   );
+}
+
+export function SimulatorPage({ data }: ViewProps) {
+  return <SimulatorView data={data} />;
 }
