@@ -75,7 +75,7 @@ export function DemoTour() {
       if (cursorRef.current) cursorRef.current.style.transform = `translate(${x}px, ${y}px)`;
     };
     const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-    const moveTo = async (x: number, y: number, ms = 750) => {
+    const moveTo = async (x: number, y: number, ms = 500) => {
       const { x: x0, y: y0 } = pos.current;
       const t0 = performance.now();
       for (;;) {
@@ -95,10 +95,10 @@ export function DemoTour() {
     };
     const click = async (el: HTMLElement, ms?: number) => {
       await moveToEl(el, ms);
-      await sleep(180);
+      await sleep(90);
       setClickKey((k) => k + 1);
       el.click();
-      await sleep(250);
+      await sleep(150);
     };
     /** passa o "mouse" sobre um gráfico para acender o tooltip */
     const scrub = async (el: HTMLElement, from: number, to: number, fy = 0.55, ms = 1800) => {
@@ -118,7 +118,7 @@ export function DemoTour() {
         if (t >= 1) break;
         await sleep(16);
       }
-      await sleep(900);
+      await sleep(500);
       last?.dispatchEvent(new MouseEvent("mouseout", { clientX: 0, clientY: 0, bubbles: true, relatedTarget: document.body }));
       last?.dispatchEvent(new MouseEvent("mouseleave", { clientX: 0, clientY: 0, bubbles: false }));
     };
@@ -135,7 +135,7 @@ export function DemoTour() {
       }
     };
     const waitAi = async (extra: number) => {
-      await sleep(300);
+      await sleep(150);
       const t0 = performance.now();
       while (aiStore.get().busy && performance.now() - t0 < 6000) await sleep(80);
       await sleep(extra);
@@ -143,12 +143,12 @@ export function DemoTour() {
     const go = async (view: ViewId) => {
       const link = document.querySelector<HTMLElement>(`header a[href*="view=${view}"]`);
       if (link) {
-        await moveToEl(link, 650);
-        await sleep(150);
+        await moveToEl(link, 450);
+        await sleep(80);
         setClickKey((k) => k + 1);
       }
       void navigate({ to: "/", search: { view } });
-      await sleep(900);
+      await sleep(550);
     };
     const mesa = () => find(byText("header button", "Mesa de análise"));
     const say = (title: string, sub?: string) => setCaption({ title, sub });
@@ -158,89 +158,97 @@ export function DemoTour() {
       aiStore.clear();
       commandStore.set(false);
       void navigate({ to: "/", search: { view: "geral" } });
-      place(window.innerWidth * 0.5, window.innerHeight * 0.75);
-      await sleep(1500);
+      place(window.innerWidth * 0.5, window.innerHeight * 0.7);
+      await sleep(900);
 
-      // 1 · visão geral
+      // 1 · abertura rápida
       say("Gazeta Meridiano", "Inteligência de assinaturas B2C · dados sintéticos, motor de métricas próprio");
-      await moveToEl(await find($('[data-ai-target="kpi-active"]')), 1100);
-      await sleep(500);
-      for (const k of ["kpi-churn", "kpi-mrr", "kpi-nps"]) {
-        await moveToEl(await find($(`[data-ai-target="${k}"]`)), 600);
-        await sleep(350);
+      for (const k of ["kpi-active", "kpi-churn", "kpi-mrr"]) {
+        await moveToEl(await find($(`[data-ai-target="${k}"]`)), 380);
+        await sleep(120);
       }
-      say("Cada gráfico conta o que aconteceu", "Campanhas, reajuste e eventos marcados na linha do tempo");
-      const evo = await find($('[data-ai-target="evolution"]'));
-      await scrub(evo, 0.12, 0.86, 0.55, 2600);
-      await sleep(400);
 
-      // 2 · mesa de análise
+      // 2 · Modo IA logo de cara
       say("Mesa de análise", "Clique num card e a IA lê o gráfico com você");
-      await click(await mesa(), 900);
-      await sleep(1100);
-      await click(await find($('[data-ai-target="kpi-churn"]')), 900);
-      await waitAi(3600);
-      await click(await find($('[data-ai-target="reasons"]')), 900);
-      await waitAi(3800);
+      await click(await mesa(), 550);
+      await sleep(500);
+      await click(await find($('[data-ai-target="kpi-churn"]')), 550);
+      await waitAi(2200);
 
-      // 3 · perguntas de negócio
       say("Perguntas de negócio, em linguagem natural", "Os números vêm do motor; a IA não inventa dados");
       const input = (await find($("#ai-question-input"))) as HTMLInputElement;
-      await click(input, 800);
-      await type(input, "Se eu abaixar o preço, melhora o churn?");
-      await sleep(350);
+      await click(input, 550);
+      await type(input, "Se eu abaixar o preço, melhora o churn?", 24);
+      await sleep(150);
       input.form?.requestSubmit();
-      await waitAi(5200);
+      await waitAi(3200);
 
       say("Não entendeu a métrica? Ela explica a conta", "Fórmula, exemplo com os números do mês e como ler");
-      await type(input, "Como é calculada a saúde por editoria?");
-      await sleep(350);
+      await type(input, "Como é calculada a saúde por editoria?", 24);
+      await sleep(150);
       input.form?.requestSubmit();
-      await waitAi(5200);
+      await waitAi(3000);
 
-      await click(await mesa(), 800);
-      await sleep(700);
+      await click(await mesa(), 500);
+      await sleep(350);
+
+      // 3 · visão geral
+      say("Cada gráfico conta o que aconteceu", "Campanhas, reajuste e eventos marcados na linha do tempo");
+      await scrub(await find($('[data-ai-target="evolution"]')), 0.15, 0.85, 0.55, 1500);
 
       // 4 · aquisição
-      say("Funil de ponta a ponta", "Do visitante à compra, por canal, com o maior vazamento destacado");
+      say("Funil de ponta a ponta e eficiência por canal", "Do visitante à compra · CAC, LTV, LTV/CAC e payback");
       await go("aquisicao");
-      await moveToEl(await find($("#funnel-card")), 1000, 0.5, 0.45);
-      await sleep(2400);
-      say("Quanto custa e quanto rende cada canal", "CAC, LTV de 12 meses, LTV/CAC e payback");
-      await moveToEl(await find($("#acq-quality-card")), 1000, 0.5, 0.45);
-      await sleep(2600);
+      await moveToEl(await find($("#funnel-card")), 550, 0.3, 0.5);
+      await sleep(900);
+      await moveToEl(await find($("#acq-quality-card")), 550, 0.6, 0.45);
+      await sleep(1100);
 
-      // 5 · simulador
+      // 5 · retenção
+      say("Retenção por safra e saúde por editoria", "Curvas de permanência (Kaplan-Meier) e ponte de MRR");
+      await go("retencao");
+      await moveToEl(await find($('[data-ai-target="cohort"]')), 550, 0.5, 0.5);
+      await sleep(1100);
+      const ed = document.querySelector<HTMLElement>('[data-ai-target="editorias"]');
+      if (ed) {
+        await moveToEl(ed, 500);
+        await sleep(900);
+      }
+
+      // 6 · risco
+      say("Quem está prestes a cancelar", "Risco por assinante, gatilho e correlação entre métricas");
+      await go("risco");
+      await moveToEl(await find($('[data-ai-target="risk-map"]')), 550, 0.45, 0.45);
+      await sleep(1400);
+
+      // 7 · simulador
       say("Simulador: o que falta para bater a meta", "Churn, falha de pagamento e aquisição sobre a mesma projeção");
       await go("simulador");
-      await sleep(600);
-      await click(await find(byText("button", "Cenário prudente")), 900);
-      await sleep(2600);
+      await click(await find(byText("button", "Cenário prudente")), 550);
+      await sleep(1500);
       const close = await find(byText("button", "Fechar a meta com aquisição"));
       if (!(close as HTMLButtonElement).disabled) {
-        await click(close, 800);
-        await sleep(2800);
+        await click(close, 450);
+        await sleep(1700);
       }
-      await click(await find(byText("button", "Zerar")), 700);
-      await sleep(600);
+      await click(await find(byText("button", "Zerar")), 400);
 
-      // 6 · Ctrl+K
+      // 8 · Ctrl+K
       say("Ctrl+K: vá direto a qualquer aba ou card");
-      await moveTo(window.innerWidth * 0.5, window.innerHeight * 0.4, 700);
+      await moveTo(window.innerWidth * 0.5, window.innerHeight * 0.4, 450);
       commandStore.set(true);
-      await sleep(600);
+      await sleep(400);
       const cmd = await find(() => document.querySelector<HTMLInputElement>('input[placeholder^="Ir para uma aba"]'));
-      await type(cmd as HTMLInputElement, "risco", 110);
-      await sleep(900);
+      await type(cmd as HTMLInputElement, "visão", 70);
+      await sleep(500);
       cmd.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
-      await sleep(2600);
+      await sleep(900);
 
-      // 7 · fechamento
+      // 9 · fechamento
       void navigate({ to: "/", search: { view: "geral" } });
-      await sleep(700);
       say("gazetameridiano.app", "Dashboard web · motor de métricas · IA sobre dados determinísticos");
-      await moveTo(window.innerWidth * 0.5, window.innerHeight * 0.75, 900);
-      await sleep(4200);
+      await moveTo(window.innerWidth * 0.5, window.innerHeight * 0.7, 600);
+      await sleep(3000);
     };
 
     run()
