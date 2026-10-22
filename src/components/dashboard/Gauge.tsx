@@ -31,7 +31,7 @@ export function Gauge({ value }: { value: number }) {
   return (
     <svg
       viewBox={`0 0 ${W} 86`}
-      className="h-20 w-full"
+      className="h-full w-full"
       role="img"
       aria-label={`Medidor de NPS: ${Math.round(value)} em escala de −100 a +100, zona ${band.name}`}
     >

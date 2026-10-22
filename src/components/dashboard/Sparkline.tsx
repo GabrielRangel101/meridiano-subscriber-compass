@@ -8,7 +8,7 @@ export function Sparkline({ data, color = "var(--primary)", label }: { data: num
   const points = data.map((v, i) => ({ i, v }));
   const last = points[points.length - 1];
   return (
-    <div className="h-12 w-full" role="img" aria-label={`Tendência de 12 meses: ${label}`}>
+    <div className="h-full w-full" role="img" aria-label={`Tendência de 12 meses: ${label}`}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={points} margin={{ top: 4, right: 6, bottom: 2, left: 2 }}>
           <defs>

@@ -30,7 +30,7 @@ function MarkerLabel({ viewBox, event, onHover }: MarkerLabelProps) {
       onBlur={() => onHover(null)}
       style={{ cursor: "pointer", outline: "none" }}
     >
-      <circle r={9} fill="var(--background)" stroke={color} strokeWidth={1.75} />
+      <circle r={9} fill="var(--card)" stroke={color} strokeWidth={1.75} />
       <text textAnchor="middle" dy={3.5} fontSize={event.kind === "preço" ? 7 : 9} fontWeight={600} fill={color}>
         {KIND_GLYPH[event.kind]}
       </text>
@@ -69,7 +69,7 @@ export function EventPopover({ event, x }: { event: EventMarker | null; x: numbe
       style={{ left: Math.max(130, x) }}
       role="status"
     >
-      <p className="font-display text-sm font-medium text-foreground">{event.label}</p>
+      <p className="text-xs font-semibold text-foreground">{event.label}</p>
       <p className="mt-0.5 text-muted-foreground">{event.description}</p>
     </div>
   );
@@ -77,7 +77,7 @@ export function EventPopover({ event, x }: { event: EventMarker | null; x: numbe
 
 export function EventLegend() {
   return (
-    <ul className="flex flex-wrap gap-3 text-[11px] text-muted-foreground" aria-label="Legenda dos marcadores de evento">
+    <ul className="flex flex-wrap gap-2 text-[11px] text-muted-foreground" aria-label="Legenda dos marcadores de evento">
       {(Object.keys(KIND_COLOR) as EventMarker["kind"][]).map((k) => (
         <li key={k} className="inline-flex items-center gap-1">
           <span
