@@ -19,3 +19,4 @@
 - Motion preferences that affect SSR markup use a hydration-safe reduced-motion fallback to prevent first-render mismatches and hidden content.
 - Prebundle React, its renderer/JSX runtimes and all directly imported dashboard/AI UI dependencies (including Radix Dialog) together in Vite to avoid late cache-generation changes mixing dispatchers. The hook-free shell boundary recovers stale React dispatcher errors with one reload per minute and never loops.
 - AI UI lives in src/components/ai; scheduled, cached answers use the shared dashboard singleton, keeping all business numbers inside answer() and the existing dashboard untouched.
+- Window-based cards (reasons, funnel, volume × quality, base bridge) read one fixed trailing window from getWindowData() in dashboard-data; there is no global period state, so every card shows the same reference month.
