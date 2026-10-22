@@ -3,7 +3,7 @@ import { sankey, sankeyJustify, sankeyLinkHorizontal } from "d3-sankey";
 import type { SankeyLink as D3Link, SankeyNode as D3Node } from "d3-sankey";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Sankey } from "@/engine/metrics";
-import { PLAN_COLORS } from "@/lib/dashboard-data";
+import { CHANNEL_COLORS, PLAN_COLORS } from "@/lib/dashboard-data";
 import { fmtInt, fmtPct } from "@/lib/format";
 import { GlassTooltip } from "./ChartTooltip";
 
@@ -24,27 +24,31 @@ const GROUP_COLOR: Record<string, string> = {
   origem: "var(--primary)",
   positivo: "var(--positive-fill)",
   negativo: "var(--danger)",
+  "ponto de contato": "var(--cyan)",
 };
-const colorOf = (n: N) => (n.group === "plano" ? (PLAN_COLORS[n.label] ?? "var(--cat-6)") : (GROUP_COLOR[n.group] ?? "var(--cat-6)"));
+const colorOf = (n: N) =>
+  n.group === "plano" ? (PLAN_COLORS[n.label] ?? "var(--cat-6)") : n.group === "canal" ? (CHANNEL_COLORS[n.label] ?? "var(--cat-6)") : (GROUP_COLOR[n.group] ?? "var(--cat-6)");
 
-function useWidth<T extends HTMLElement>() {
+export function useSize<T extends HTMLElement>() {
   const ref = useRef<T>(null);
-  const [w, setW] = useState(0);
+  const [size, setSize] = useState({ w: 0, h: 0 });
   useEffect(() => {
     if (!ref.current) return;
-    const ro = new ResizeObserver(([e]) => setW(Math.floor(e.contentRect.width)));
+    const ro = new ResizeObserver(([e]) => setSize({ w: Math.floor(e.contentRect.width), h: Math.floor(e.contentRect.height) }));
     ro.observe(ref.current);
     return () => ro.disconnect();
   }, []);
-  return [ref, w] as const;
+  return [ref, size] as const;
 }
 
 const truncate = (s: string, max: number) => (s.length > max ? `${s.slice(0, Math.max(3, max - 1))}…` : s);
 
-export function SubscriberSankey({ flow }: { flow: Sankey }) {
-  const [ref, width] = useWidth<HTMLDivElement>();
+/** Sankey genérico: aceita qualquer objeto `Sankey` do motor e ocupa toda a área do contêiner. */
+export function SubscriberSankey({ flow, label = "Diagrama de Sankey" }: { flow: Sankey; label?: string }) {
+  const [ref, size] = useSize<HTMLDivElement>();
+  const width = size.w;
   const reduce = useReducedMotion();
-  const height = width < 520 ? 380 : 340;
+  const height = Math.max(200, size.h);
   const [hoverLink, setHoverLink] = useState<number | null>(null);
   const [hoverNode, setHoverNode] = useState<string | null>(null);
   const [tip, setTip] = useState<{ x: number; y: number; link: LLink } | null>(null);
@@ -58,11 +62,11 @@ export function SubscriberSankey({ flow }: { flow: Sankey }) {
       .nodeId((d) => d.id)
       .nodeAlign(sankeyJustify)
       .nodeWidth(14)
-      .nodePadding(14)
+      .nodePadding(height < 320 ? 8 : 12)
       .nodeSort(null)
       .extent([
-        [1, 8],
-        [width - 1, height - 8],
+        [1, 4],
+        [width - 1, height - 4],
       ]);
     return gen({ nodes, links });
   }, [flow, width, height]);
@@ -74,12 +78,12 @@ export function SubscriberSankey({ flow }: { flow: Sankey }) {
       const l = layout.links[hoverLink];
       const s = (l.source as LNode).id;
       const t = (l.target as LNode).id;
-      // inclui o trecho anterior/posterior que passa pelo plano
+      // inclui o trecho anterior/posterior que passa por nós intermediários
+      const isMiddle = (id: string) => layout.links.some((x) => (x.source as LNode).id === id) && layout.links.some((x) => (x.target as LNode).id === id);
       return new Set(
         layout.links
           .map((x, i) => ({ x, i }))
-          .filter(({ x, i }) => i === hoverLink || (x.target as LNode).id === s || (x.source as LNode).id === t)
-          .filter(({ x, i }) => i === hoverLink || ((x.target as LNode).id === s && (x.target as LNode).id.startsWith("plan:")) || ((x.source as LNode).id === t && t.startsWith("plan:")))
+          .filter(({ x, i }) => i === hoverLink || ((x.target as LNode).id === s && isMiddle(s)) || ((x.source as LNode).id === t && isMiddle(t)))
           .map(({ i }) => i),
       );
     }
@@ -95,17 +99,17 @@ export function SubscriberSankey({ flow }: { flow: Sankey }) {
   }, [layout, hoverLink, hoverNode]);
 
   const compact = width < 520;
-  const maxChars = compact ? 11 : 26;
+  const maxChars = compact ? 11 : width < 760 ? 18 : 26;
   const path = sankeyLinkHorizontal();
 
   return (
-    <div ref={ref} className="relative w-full" style={{ height }}>
+    <div ref={ref} className="relative h-full min-h-[200px] w-full">
       {layout && (
         <svg
           width={width}
           height={height}
           role="img"
-          aria-label={`Diagrama de Sankey: ${fmtInt(flow.total)} assinantes fluindo da origem para o plano e para o desfecho no período.`}
+          aria-label={`${label}: ${fmtInt(flow.total)} assinantes no período.`}
           onMouseLeave={() => {
             setHoverLink(null);
             setHoverNode(null);
@@ -177,9 +181,9 @@ export function SubscriberSankey({ flow }: { flow: Sankey }) {
                     y={(y0 + y1) / 2}
                     dy="0.35em"
                     textAnchor={right ? "start" : "end"}
-                    fontSize={compact ? 10 : 12}
+                    fontSize={compact ? 10 : 11}
                     fill="var(--foreground)"
-                    style={{ paintOrder: "stroke", stroke: "var(--background)", strokeWidth: 3, strokeLinejoin: "round" }}
+                    style={{ paintOrder: "stroke", stroke: "var(--card)", strokeWidth: 3, strokeLinejoin: "round" }}
                   >
                     <tspan>{truncate(n.label, maxChars)}</tspan>
                     <tspan dx={4} fill="var(--muted-foreground)" fontWeight={600} className="tabular-nums">
