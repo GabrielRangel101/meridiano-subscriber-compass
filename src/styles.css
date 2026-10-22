@@ -335,3 +335,21 @@
   .ai-conversation { padding: 7px 14px max(12px, env(safe-area-inset-bottom)); border-radius: 16px 16px 0 0; }.ai-chat-scroll { max-height: min(24dvh, 200px); margin-bottom: 8px; }.ai-input-form { padding: 4px 6px 4px 10px; gap: 4px; }.ai-input-form input { font-size: 12px; }.ai-response h2 { font-size: 20px; }.ai-typed { font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) { .ai-dots i,.ai-path-pulse { animation: none; } }
+
+/* ---------------- Modo IA como camada sobre o dashboard ---------------- */
+.ai-scrim { position: fixed; inset: 0; z-index: 40; background: hsl(245 44% 7% / 0.55); backdrop-filter: blur(2px); }
+html.ai-on [data-ai-target] { position: relative; z-index: 41; cursor: pointer; outline: 1.5px solid hsl(188 86% 60% / 0.7); outline-offset: 2px; animation: ai-glow 2.4s ease-in-out infinite; }
+html.ai-on [data-ai-target]::after { content: "✦ analisar"; position: absolute; top: 6px; right: 8px; z-index: 2; padding: 1px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; color: hsl(225 51% 8%); background: hsl(48 96% 60%); pointer-events: none; }
+html.ai-on [data-ai-target].ai-focused { z-index: 52; outline: 2px solid hsl(0 0% 100% / 0.9); animation: none; box-shadow: 0 0 0 6px hsl(188 86% 53% / 0.25), 0 0 48px hsl(258 90% 66% / 0.55); }
+html.ai-on [data-ai-target].ai-focused::after { content: none; }
+@keyframes ai-glow { 0%, 100% { box-shadow: 0 0 0 0 hsl(188 86% 53% / 0); } 50% { box-shadow: 0 0 22px 2px hsl(188 86% 53% / 0.45); } }
+.ai-orb { background: conic-gradient(from 200deg, #6366F1, #8B5CF6, #22D3EE, #6366F1); box-shadow: 0 0 18px hsl(258 90% 66% / 0.55), inset 0 0 12px hsl(0 0% 100% / 0.35); animation: ai-orb 3s ease-in-out infinite; }
+@keyframes ai-orb { 0%, 100% { box-shadow: 0 0 14px hsl(258 90% 66% / 0.45), inset 0 0 12px hsl(0 0% 100% / 0.35); } 50% { box-shadow: 0 0 28px hsl(188 86% 53% / 0.7), inset 0 0 12px hsl(0 0% 100% / 0.45); } }
+.ai-gen-card { background: linear-gradient(145deg, #1B2A7A, #3A1F8F); border: 1px solid hsl(188 86% 53% / 0.25); box-shadow: 0 18px 44px -12px hsl(245 60% 5% / 0.7); color: var(--foreground); }
+.ai-panel { background: linear-gradient(180deg, hsl(232 55% 14% / 0.94), hsl(250 50% 12% / 0.94)); border: 1px solid hsl(188 86% 53% / 0.3); box-shadow: 0 0 0 1px hsl(258 90% 66% / 0.15), 0 20px 60px -20px hsl(245 60% 3% / 0.9); backdrop-filter: blur(16px); }
+.ai-thread-pulse { animation: ai-pulse 2.6s linear infinite; }
+.ai-gen-card .ai-chart { height: 180px; }
+.ai-gen-card .ai-donut { height: 150px; }
+@media (prefers-reduced-motion: reduce) {
+  html.ai-on [data-ai-target], .ai-orb, .ai-thread-pulse { animation: none; }
+}
