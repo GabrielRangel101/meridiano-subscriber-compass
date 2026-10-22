@@ -101,7 +101,7 @@ export function AiLayer() {
 
           {focusRect && (
             <div className="absolute -translate-x-1/2 rounded-full border border-white/20 bg-[hsl(245_44%_9%)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground shadow-lg" style={{ left: focusRect.x + focusRect.w / 2, top: Math.max(4, focusRect.y - 14) }}>
-              Em foco · {items.length} {items.length === 1 ? "análise gerada" : "análises geradas"}
+              Em análise · {items.length} {items.length === 1 ? "leitura" : "leituras"}
             </div>
           )}
           {!s.focusId && latest && (

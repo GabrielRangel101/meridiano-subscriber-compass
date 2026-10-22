@@ -46,7 +46,7 @@ function ExchangeView({ ex, last, mobile, reduced, busy }: { ex: AiExchange; las
           )}
           {a.cards.slice(0, 2).map((c) => (
             <div key={c.id} className="rounded-lg border border-[hsl(188_86%_53%/0.25)] bg-white/5 px-2.5 py-2">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-[hsl(48_96%_60%)]">Insight de IA · {a.basedOn[0] ?? "dashboard"}</p>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[hsl(48_96%_60%)]">Nota do Meridiano · {a.basedOn[0] ?? "dashboard"}</p>
               <p className="mt-0.5 text-xs text-foreground">{c.title}</p>
             </div>
           ))}
@@ -56,7 +56,7 @@ function ExchangeView({ ex, last, mobile, reduced, busy }: { ex: AiExchange; las
                 const item = { key: `${ex.id}:${card?.id ?? "read"}`, exchange: ex, card };
                 return (
                   <article key={item.key} className="ai-gen-card rounded-xl p-3">
-                    <GenCardHeader item={item} title={card?.title ?? "Leitura da IA"} />
+                    <GenCardHeader item={item} title={card?.title ?? "Leitura do Meridiano"} />
                     <div className="mt-2"><GenCardBody item={item} busy={busy} compact /></div>
                   </article>
                 );
@@ -69,7 +69,7 @@ function ExchangeView({ ex, last, mobile, reduced, busy }: { ex: AiExchange; las
   );
 }
 
-/** Painel "Pergunte à IA": conversa, respostas digitadas, fontes e campo de pergunta. */
+/** Painel "Pergunte ao Meridiano": conversa, respostas digitadas, fontes e campo de pergunta. */
 export function AiPanel({ mobile }: { mobile: boolean }) {
   const s = useAi();
   const reduced = useMotionPreference();
@@ -81,7 +81,7 @@ export function AiPanel({ mobile }: { mobile: boolean }) {
 
   return (
     <aside
-      aria-label="Pergunte à IA"
+      aria-label="Pergunte ao Meridiano"
       className={cn(
         "ai-dark ai-panel fixed z-[55] flex flex-col overflow-hidden text-foreground",
         mobile ? "inset-x-0 bottom-0 max-h-[80dvh] rounded-t-2xl" : "right-4 top-[84px] w-[400px] rounded-2xl",
@@ -90,14 +90,14 @@ export function AiPanel({ mobile }: { mobile: boolean }) {
       )}
     >
       <header className="flex shrink-0 items-center gap-2 border-b border-white/10 px-3 py-2.5">
-        <span className="rounded-full bg-[hsl(48_96%_60%)] px-2.5 py-1 text-[11px] font-bold text-[hsl(225_51%_8%)]">✦ Pergunte à IA</span>
+        <span className="rounded-full bg-[hsl(48_96%_60%)] px-2.5 py-1 text-[11px] font-bold text-[hsl(225_51%_8%)]">✦ Pergunte ao Meridiano</span>
         <button type="button" onClick={() => aiStore.clear()} className="ml-auto inline-flex items-center gap-1 rounded px-1.5 py-1 text-[11px] text-muted-foreground hover:bg-white/10 hover:text-foreground">
-          <Trash2 className="size-3.5" aria-hidden />Limpar conversa
+          <Trash2 className="size-3.5" aria-hidden />Nova conversa
         </button>
         <button type="button" aria-label={collapsed ? "Expandir painel" : "Recolher painel"} onClick={() => aiStore.setCollapsed(!collapsed)} className="grid size-7 place-items-center rounded text-muted-foreground hover:bg-white/10 hover:text-foreground">
           {collapsed ? <ChevronDown className="size-4" /> : <ChevronUp className="size-4" />}
         </button>
-        {mobile && <button type="button" aria-label="Sair do Modo IA" onClick={() => aiStore.close()} className="grid size-7 place-items-center rounded text-muted-foreground hover:bg-white/10"><X className="size-4" /></button>}
+        {mobile && <button type="button" aria-label="Sair da mesa de análise" onClick={() => aiStore.close()} className="grid size-7 place-items-center rounded text-muted-foreground hover:bg-white/10"><X className="size-4" /></button>}
       </header>
       {!collapsed && (
         <>
@@ -118,8 +118,8 @@ export function AiPanel({ mobile }: { mobile: boolean }) {
               </div>
             )}
             <form className="flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 py-1 pl-3 pr-1" onSubmit={(e) => { e.preventDefault(); if (q.trim() && !s.busy) { aiStore.ask(q); setQ(""); } }}>
-              <label htmlFor="ai-question-input" className="sr-only">Pergunte sobre o quadro</label>
-              <input id="ai-question-input" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Pergunte sobre o quadro…" className="min-w-0 flex-1 bg-transparent py-1.5 text-xs text-foreground outline-none placeholder:text-muted-foreground" />
+              <label htmlFor="ai-question-input" className="sr-only">Pergunte sobre as assinaturas</label>
+              <input id="ai-question-input" autoComplete="off" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Pergunte sobre as assinaturas…" className="min-w-0 flex-1 bg-transparent py-1.5 text-xs text-foreground outline-none placeholder:text-muted-foreground" />
               <button type="submit" disabled={!q.trim() || s.busy} aria-label="Enviar pergunta" className="grid size-8 place-items-center rounded-lg text-primary-foreground disabled:opacity-40" style={{ background: "var(--gradient-primary)" }}><ArrowUp className="size-4" /></button>
             </form>
           </footer>

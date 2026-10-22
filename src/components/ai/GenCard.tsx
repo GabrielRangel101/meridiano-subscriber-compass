@@ -6,13 +6,13 @@ import { aiStore, type GenItem } from "./ai-store";
 export function AiBadge({ area }: { area?: string }) {
   return (
     <span className="flex min-w-0 items-center gap-1.5">
-      <span className="shrink-0 rounded-full bg-[hsl(48_96%_60%)] px-1.5 py-0.5 text-[10px] font-bold text-[hsl(225_51%_8%)]">✦ IA</span>
+      <span className="shrink-0 rounded-full bg-[hsl(48_96%_60%)] px-1.5 py-0.5 text-[10px] font-bold text-[hsl(225_51%_8%)]">✦ Meridiano</span>
       {area && <span className="truncate text-[10px] uppercase tracking-wider text-muted-foreground">{area}</span>}
     </span>
   );
 }
 
-/** Conteúdo de um card gerado: "Leitura da IA" (texto + follow-ups) ou um card de dados do answer(). */
+/** Conteúdo de um card gerado: "Leitura do Meridiano" (texto + follow-ups) ou um card de dados do answer(). */
 export function GenCardBody({ item, busy, compact = false }: { item: GenItem; busy: boolean; compact?: boolean }) {
   const a = item.exchange.answer!;
   if (!item.card)
@@ -51,4 +51,4 @@ export function GenCardHeader({ item, title }: { item: GenItem; title: string })
   );
 }
 
-export const genTitle = (item: GenItem) => (item.card ? item.card.title : "Leitura da IA");
+export const genTitle = (item: GenItem) => (item.card ? item.card.title : "Leitura do Meridiano");

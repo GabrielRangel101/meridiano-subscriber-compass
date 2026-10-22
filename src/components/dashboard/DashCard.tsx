@@ -24,8 +24,8 @@ export function AskButton({ title, ai }: { title: string; ai?: AiTargetId }) {
     <button
       type="button"
       onClick={() => aiStore.open(ai)}
-      aria-label={`Analisar ${title} no Modo IA`}
-      title="Analisar no Modo IA"
+      aria-label={`Analisar ${title} na mesa de análise`}
+      title="Analisar na mesa de análise"
       className="inline-flex size-5 shrink-0 items-center justify-center rounded-md text-[11px] text-muted-foreground transition-colors hover:bg-secondary hover:text-primary"
     >
       ✦

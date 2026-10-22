@@ -27,7 +27,7 @@ function ViewLink({ id, view, disabled, side }: { id: ViewId; view: ViewId; disa
           {on && <span className="bg-gradient-primary absolute bottom-1 h-0.5 w-4 rounded-full" aria-hidden />}
         </Link>
       </TooltipTrigger>
-      <TooltipContent side={side}>{disabled ? `${v.label} (saia do Modo IA para navegar)` : v.label}</TooltipContent>
+      <TooltipContent side={side}>{disabled ? `${v.label} (saia da mesa de análise para navegar)` : v.label}</TooltipContent>
     </Tooltip>
   );
 }
@@ -41,11 +41,11 @@ export function NavPill({ view, className, side = "bottom" }: { view: ViewId; cl
       <ViewLink id="aquisicao" view={view} disabled={active} side={side} />
       <Tooltip>
         <TooltipTrigger asChild>
-          <button type="button" aria-label="Modo IA" aria-pressed={active} onClick={() => aiStore.toggle()} className="ai-orb mx-1 grid size-12 shrink-0 place-items-center rounded-full text-primary-foreground">
+          <button type="button" aria-label="Mesa de análise" aria-pressed={active} onClick={() => aiStore.toggle()} className="ai-orb mx-1 grid size-12 shrink-0 place-items-center rounded-full text-primary-foreground">
             <Sparkles className="size-5" aria-hidden />
           </button>
         </TooltipTrigger>
-        <TooltipContent side={side}>Modo IA</TooltipContent>
+        <TooltipContent side={side}>Mesa de análise</TooltipContent>
       </Tooltip>
       <ViewLink id="retencao" view={view} disabled={active} side={side} />
       <ViewLink id="risco" view={view} disabled={active} side={side} />
