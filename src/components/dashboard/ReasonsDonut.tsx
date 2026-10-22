@@ -1,12 +1,12 @@
 import { useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import type { PeriodData } from "@/lib/dashboard-data";
+import type { WindowData } from "@/lib/dashboard-data";
 import { NATURE_COLORS } from "@/lib/dashboard-data";
 import { fmtInt, fmtPct } from "@/lib/format";
 import { DashCard } from "./DashCard";
 
-type Reasons = PeriodData["reasons"];
+type Reasons = WindowData["reasons"];
 
 const natureColor = (n: string) => NATURE_COLORS[n] ?? "var(--cat-6)";
 /** tom do motivo: mistura a cor da natureza com o fundo conforme a posição dentro da natureza */
@@ -14,7 +14,7 @@ const tone = (base: string, k: number) => (k === 0 ? base : `color-mix(in srgb, 
 
 export function ReasonsCard({ reasons, rangeLabel, className }: { reasons: Reasons; rangeLabel: string; className?: string }) {
   return (
-    <DashCard id="reasons-card" ai="reasons" title="Motivos de cancelamento" info={`Natureza (anel interno) e motivo (anel externo) · ${rangeLabel}`} summary={`${fmtInt(reasons.total)} cancel.`} className={className}>
+    <DashCard id="reasons-card" ai="reasons" title="Motivos de cancelamento" info={`Natureza (anel interno) e motivo (anel externo) · ${rangeLabel}`} summary={`${fmtInt(reasons.total)} cancel. · últimos 6 meses`} className={className}>
       <ReasonsDonut reasons={reasons} />
     </DashCard>
   );

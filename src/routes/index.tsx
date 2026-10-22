@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/shell/AppShell";
 import { AiLayer } from "@/components/ai/AiLayer";
 import { AcquisitionView, OverviewView, RetentionView, RiskView } from "@/components/views/DashboardViews";
-import { parseView, useDashboardData, usePeriodData } from "@/lib/dashboard-data";
-import type { PeriodN, ViewId } from "@/lib/dashboard-data";
+import { parseView, useDashboardData, useWindowData } from "@/lib/dashboard-data";
+import type { ViewId } from "@/lib/dashboard-data";
 
 export const Route = createFileRoute("/")({
   validateSearch: (search: Record<string, unknown>): { view?: ViewId } => ({ view: parseView(search["view"]) }),
@@ -28,14 +27,13 @@ const VIEW_COMPONENTS = { geral: OverviewView, aquisicao: AcquisitionView, reten
 function Index() {
   const view = Route.useSearch().view ?? "geral";
   const data = useDashboardData();
-  const [n, setN] = useState<PeriodN>(3);
-  const period = usePeriodData(n);
+  const period = useWindowData();
   const View = VIEW_COMPONENTS[view];
 
   return (
     <MotionConfig reducedMotion="user">
       <TooltipProvider delayDuration={150}>
-        <AppShell view={view} brand={data.ds.meta.brand} monthLabel={data.current.label} period={n} onPeriod={setN}>
+        <AppShell view={view} brand={data.ds.meta.brand} monthLabel={data.current.label}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.div key={view} data-view={view} className="xl:h-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
               <View data={data} period={period} />

@@ -4,7 +4,7 @@ import { answer } from "@/engine/ask";
 import type { AiAnswer } from "@/engine/ask";
 import { monthLabel } from "@/engine/calendar";
 import { generateDataset } from "@/engine/generate";
-import { acquisitionFlow, atRisk, buildSeries, churnReasons, cohortRetention, composition, correlationMatrix, CRITICAL_RISK, editoriaHealth, funnelByChannel, kpi, lagCorrelation, peopleMap, projectActive, subscriberFlow, toWaffle } from "@/engine/metrics";
+import { atRisk, buildSeries, churnReasons, cohortRetention, composition, correlationMatrix, CRITICAL_RISK, editoriaHealth, funnelByChannel, kpi, lagCorrelation, peopleMap, projectActive, toWaffle } from "@/engine/metrics";
 import type { AtRiskRow, Cohort, CohortBy, CorrelationMatrix, Kpi, MonthPoint, SeriesKey } from "@/engine/metrics";
 import { generateInsights } from "@/engine/insights";
 import type { Insight, Severity } from "@/engine/insights";
@@ -173,29 +173,23 @@ export const PLAN_COLORS: Record<string, string> = {
   Estudante: "var(--cat-4)",
 };
 
-// ------------------------------------------------------------------ período (Sankey, motivos, funil)
+// ------------------------------------------------------------------ janela fixa (motivos, funil, volume × qualidade, ponte)
 
-export const PERIOD_OPTIONS = [
-  { n: 3, label: "3 meses" },
-  { n: 6, label: "6 meses" },
-  { n: 12, label: "12 meses" },
-] as const;
-export type PeriodN = (typeof PERIOD_OPTIONS)[number]["n"];
+/** Janela fixa de 6 meses terminando no mês de referência. */
+export const WINDOW_MONTHS = 6;
+export const WINDOW_LABEL = "últimos 6 meses";
 
 const NATURE_ORDER = ["Voluntário", "Involuntário", "Fim de contrato"];
 
-function computePeriod(n: PeriodN) {
+export function retentionTone(r: number | null): "bom" | "medio" | "ruim" | null {
+  if (r === null) return null;
+  return r >= 0.8 ? "bom" : r >= 0.6 ? "medio" : "ruim";
+}
+
+function computeWindow() {
   const { ds, m, series } = getDashboardData();
-  const m0 = m - n + 1;
+  const m0 = m - WINDOW_MONTHS + 1;
   const m1 = m;
-  const flow = subscriberFlow(ds, m0, m1);
-  const outcomeGroup = new Map(flow.nodes.map((nd) => [nd.id, nd]));
-  const sumTo = (pred: (id: string) => boolean) => flow.links.filter((l) => pred(l.target)).reduce((a, l) => a + l.value, 0);
-  const flowSummary = {
-    cancelled: sumTo((id) => outcomeGroup.get(id)?.group === "negativo"),
-    upgrades: sumTo((id) => id === "out:upgrade"),
-    stayed: sumTo((id) => id === "out:stay"),
-  };
 
   const reasons = churnReasons(ds, m0, m1);
   const natureRank = (n: string) => {
@@ -205,34 +199,64 @@ function computePeriod(n: PeriodN) {
   const byNature = [...reasons.byNature].sort((a, b) => natureRank(a.nature) - natureRank(b.nature));
   const reasonRows = [...reasons.rows].sort((a, b) => natureRank(a.nature) - natureRank(b.nature) || b.count - a.count);
 
-  const acquisition = acquisitionFlow(ds, m0, m1);
   const funnel = funnelByChannel(ds, m0, m1);
   const byOverall = [...funnel].sort((a, b) => b.overall - a.overall);
 
+  // Volume × qualidade: compras no período e retenção em 6 meses por canal
+  const ret = new Map(cohortRetention(ds, "channel", { minSize: 150 }).map((c) => [c.key, c.retention[6]]));
+  const quality = [...funnel]
+    .sort((a, b) => b.purchases - a.purchases)
+    .map((f) => {
+      const r = ret.get(f.channel);
+      const retention6 = r === null || r === undefined ? null : r / 100;
+      return { channel: f.channel, purchases: f.purchases, retention6, tone: retentionTone(retention6) };
+    });
+
+  // Ponte da base: início + novas − cancelamentos (por natureza) = fim; diferença residual vai para "Outros"
+  const start = series[m0 - 1].active;
+  const end = series[m1].active;
+  const added = series.slice(m0, m1 + 1).reduce((a, p) => a + p.newSubs, 0);
+  const nat = (n: string) => reasons.byNature.find((x) => x.nature === n)?.count ?? 0;
+  const losses = [
+    { key: "vol", label: "− Cancelamento voluntário", value: nat("Voluntário") },
+    { key: "inv", label: "− Falha de pagamento", value: nat("Involuntário") },
+    { key: "fim", label: "− Fim de contrato", value: nat("Fim de contrato") },
+  ];
+  const others = start + added - losses.reduce((a, l) => a + l.value, 0) - end;
+  if (others !== 0) losses.push({ key: "outros", label: "− Outros", value: others });
+  const bridgeSteps: BridgeStep[] = [];
+  let level = start;
+  bridgeSteps.push({ key: "start", label: `Base em ${series[m0 - 1].label}`, kind: "total", from: 0, to: start, value: start });
+  bridgeSteps.push({ key: "new", label: "+ Novas assinaturas", kind: "up", from: level, to: level + added, value: added });
+  level += added;
+  for (const l of losses) {
+    bridgeSteps.push({ key: l.key, label: l.label, kind: "down", from: level, to: level - l.value, value: -l.value });
+    level -= l.value;
+  }
+  bridgeSteps.push({ key: "end", label: `Base em ${series[m1].label}`, kind: "total", from: 0, to: end, value: end });
+
   return {
-    n,
     m0,
     m1,
     rangeLabel: `${series[m0].label} – ${series[m1].label}`,
-    flow,
-    flowSummary,
-    acquisition,
     reasons: { total: reasons.total, byNature, rows: reasonRows },
     funnel,
     bestChannel: byOverall[0]?.channel ?? null,
     worstChannel: byOverall[byOverall.length - 1]?.channel ?? null,
+    quality,
+    bridge: { start, end, added, others, net: end - start, steps: bridgeSteps },
   };
 }
 
-export type PeriodData = ReturnType<typeof computePeriod>;
-const periodCache = new Map<PeriodN, PeriodData>();
-export function getPeriodData(n: PeriodN): PeriodData {
-  let p = periodCache.get(n);
-  if (!p) periodCache.set(n, (p = computePeriod(n)));
-  return p;
+export interface BridgeStep { key: string; label: string; kind: "total" | "up" | "down"; from: number; to: number; value: number }
+export type WindowData = ReturnType<typeof computeWindow>;
+let windowCache: WindowData | null = null;
+export function getWindowData(): WindowData {
+  if (!windowCache) windowCache = computeWindow();
+  return windowCache;
 }
-export function usePeriodData(n: PeriodN): PeriodData {
-  return useMemo(() => getPeriodData(n), [n]);
+export function useWindowData(): WindowData {
+  return useMemo(getWindowData, []);
 }
 
 /** Cores por natureza do cancelamento; motivos usam tons da cor da natureza */
@@ -349,7 +373,7 @@ export const AI_TARGETS = {
   "waffle-plans": { label: "Planos", question: "Qual a composição por plano?" },
   reasons: { label: "Motivos de cancelamento", question: "Por que os assinantes cancelam?" },
   funnel: { label: "Funil por canal", question: "Qual canal retém pior?" },
-  "acq-sankey": { label: "Fluxo de aquisição", question: "Qual canal retém pior?" },
+  "acq-quality": { label: "Volume × qualidade por canal", question: "Qual canal retém pior?" },
   "waffle-channels": { label: "Canais", question: "Qual canal retém pior?" },
   cohort: { label: "Retenção por coorte", question: "Compare as safras de campanha" },
   editorias: { label: "Saúde por editoria", question: "Como estão as editorias?" },
@@ -360,7 +384,7 @@ export const AI_TARGETS = {
   "insights-full": { label: "Insights do motor de regras", question: "Resumo dos principais alertas" },
   changes: { label: "Variação mês a mês", question: "Resumo dos principais alertas" },
   correlation: { label: "Rede de correlação", question: "Resumo dos principais alertas" },
-  "flow-sankey": { label: "Fluxo de assinantes", question: "Resumo dos principais alertas" },
+  "base-bridge": { label: "Da base inicial à final", question: "Como está o churn?" },
   price: { label: "Preço", question: "Como foi o reajuste de preço?" },
 } as const satisfies Record<string, { label: string; question: string }>;
 export type AiTargetId = keyof typeof AI_TARGETS;

@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { cardCaption } from "@/engine/captions";
 import { AiCardContent } from "./AiCardContent";
 import { aiStore, type GenItem } from "./ai-store";
 
@@ -27,7 +28,13 @@ export function GenCardBody({ item, busy, compact = false }: { item: GenItem; bu
         </div>
       </div>
     );
-  return <div className={compact ? "" : "min-h-0"}><AiCardContent card={item.card} /></div>;
+  const caption = cardCaption(item.card);
+  return (
+    <div className={compact ? "" : "min-h-0"}>
+      <AiCardContent card={item.card} />
+      {caption && <p className="mt-1.5 text-xs leading-snug text-muted-foreground">{caption}</p>}
+    </div>
+  );
 }
 
 export function GenCardHeader({ item, title }: { item: GenItem; title: string }) {

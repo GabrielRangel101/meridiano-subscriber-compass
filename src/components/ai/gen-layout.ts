@@ -1,25 +1,32 @@
 // Geometria pura (apresentação): posiciona cards gerados em slots livres ao redor do foco.
 export interface Rect { x: number; y: number; w: number; h: number }
 export const GEN_W = 300;
-export const GEN_H = 236;
+export const GEN_H = 260;
 const GAP = 14;
 
 const overlaps = (a: Rect, b: Rect, pad = 12) => a.x < b.x + b.w + pad && a.x + a.w + pad > b.x && a.y < b.y + b.h + pad && a.y + a.h + pad > b.y;
 
-/** Slots determinísticos dentro de `region`, sem tocar `avoid`, ordenados pela distância ao foco. */
+/**
+ * Slots determinísticos dentro de `region`, sem tocar `avoid` nem uns aos outros, mais próximos do foco primeiro.
+ * Varre posições candidatas em passo fino, então encontra espaço livre mesmo quando o foco é grande.
+ */
 export function layoutSlots(region: Rect, avoid: Rect[], focus: Rect, count: number): Rect[] {
-  const cols = Math.max(1, Math.floor((region.w + GAP) / (GEN_W + GAP)));
-  const rows = Math.max(1, Math.floor((region.h + GAP) / (GEN_H + GAP)));
-  const ox = region.x + (region.w - (cols * (GEN_W + GAP) - GAP)) / 2;
-  const slots: Rect[] = [];
-  for (let r = 0; r < rows; r++)
-    for (let c = 0; c < cols; c++) {
-      const s = { x: ox + c * (GEN_W + GAP), y: region.y + r * (GEN_H + GAP), w: GEN_W, h: GEN_H };
-      if (!avoid.some((a) => overlaps(s, a))) slots.push(s);
-    }
+  const STEP = 16;
   const fx = focus.x + focus.w / 2, fy = focus.y + focus.h / 2;
+  const candidates: Rect[] = [];
+  for (let y = region.y; y + GEN_H <= region.y + region.h; y += STEP)
+    for (let x = region.x; x + GEN_W <= region.x + region.w; x += STEP) {
+      const s = { x, y, w: GEN_W, h: GEN_H };
+      if (!avoid.some((a) => overlaps(s, a))) candidates.push(s);
+    }
   const d = (s: Rect) => Math.hypot(s.x + s.w / 2 - fx, s.y + s.h / 2 - fy);
-  return slots.sort((a, b) => d(a) - d(b) || a.y - b.y || a.x - b.x).slice(0, count);
+  candidates.sort((a, b) => d(a) - d(b) || a.y - b.y || a.x - b.x);
+  const picked: Rect[] = [];
+  for (const s of candidates) {
+    if (picked.length >= count) break;
+    if (!picked.some((p) => overlaps(s, p, GAP - 12))) picked.push(s);
+  }
+  return picked;
 }
 
 /** Bezier da borda do foco até a borda do card. */
