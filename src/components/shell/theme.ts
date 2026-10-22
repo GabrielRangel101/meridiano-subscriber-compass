@@ -29,4 +29,4 @@ export function useTheme(): Theme {
 }
 
 /** Script inline do <head>: aplica o tema salvo antes da pintura; padrão claro. */
-export const THEME_BOOT_SCRIPT = `try{var t=localStorage.getItem("${THEME_KEY}");document.documentElement.dataset["theme"]=t==="light"?"light":"dark"}catch(e){document.documentElement.dataset["theme"]="dark"}`;
+export const THEME_BOOT_SCRIPT = `try{var t=localStorage.getItem("${THEME_KEY}");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}`;
