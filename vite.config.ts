@@ -18,7 +18,7 @@ export default defineConfig({
     optimizeDeps: {
       include: [
         "react", "react-dom", "react-dom/client", "react/jsx-runtime", "react/jsx-dev-runtime",
-        "framer-motion", "recharts", "d3-sankey", "lucide-react",
+        "framer-motion", "recharts", "lucide-react",
         "@radix-ui/react-slot", "@radix-ui/react-tooltip", "@radix-ui/react-dialog",
         "class-variance-authority", "clsx", "tailwind-merge",
       ],

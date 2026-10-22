@@ -6,7 +6,7 @@ import { fmtBRL, fmtInt, fmtPct } from "@/lib/format";
 import { avatarHash, fmtRisk, initials } from "./avatar";
 import { DashCard } from "./DashCard";
 import { SubscriberDetail } from "./SubscriberDetail";
-import { useSize } from "./SubscriberSankey";
+import { useSize } from "@/hooks/use-size";
 
 const PAD = { left: 40, right: 14, top: 26, bottom: 34 };
 

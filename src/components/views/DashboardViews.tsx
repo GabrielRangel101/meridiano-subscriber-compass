@@ -1,13 +1,12 @@
 import { useState } from "react";
 import type { AtRiskRow } from "@/engine/metrics";
-import type { DashboardData, PeriodData } from "@/lib/dashboard-data";
+import type { DashboardData, WindowData } from "@/lib/dashboard-data";
 import { CHANNEL_COLORS, PLAN_COLORS } from "@/lib/dashboard-data";
-import { fmtInt } from "@/lib/format";
 import { AtRiskNow } from "@/components/dashboard/AtRiskNow";
 import { FunnelCard } from "@/components/dashboard/ChannelFunnel";
 import { CohortRetention } from "@/components/dashboard/CohortRetention";
 import { CorrelationNetwork } from "@/components/dashboard/CorrelationNetwork";
-import { DashCard } from "@/components/dashboard/DashCard";
+import { BaseBridge } from "@/components/dashboard/BaseBridge";
 import { EditoriaHealth } from "@/components/dashboard/EditoriaHealth";
 import { EvolutionChart } from "@/components/dashboard/EvolutionChart";
 import { FlowBars } from "@/components/dashboard/FlowBars";
@@ -17,12 +16,12 @@ import { MonthlyChanges } from "@/components/dashboard/MonthlyChanges";
 import { ReasonsCard } from "@/components/dashboard/ReasonsDonut";
 import { RiskMap, RiskPanel } from "@/components/dashboard/RiskMap";
 import { RuleInsights } from "@/components/dashboard/RuleInsights";
-import { SubscriberSankey } from "@/components/dashboard/SubscriberSankey";
+import { VolumeQuality } from "@/components/dashboard/VolumeQuality";
 import { WaffleCard } from "@/components/dashboard/WaffleCard";
 
 interface ViewProps {
   data: DashboardData;
-  period: PeriodData;
+  period: WindowData;
 }
 
 const GRID = "grid grid-cols-1 gap-3 md:grid-cols-2 xl:h-full xl:grid-cols-12";
@@ -46,9 +45,7 @@ export function OverviewView({ data, period }: ViewProps) {
 export function AcquisitionView({ data, period }: ViewProps) {
   return (
     <div className={`${GRID} xl:grid-rows-[minmax(0,1fr)_auto]`}>
-      <DashCard ai="acq-sankey" title="Fluxo de aquisição" info={`Novas assinaturas: canal → ponto de contato → plano · ${period.rangeLabel}`} summary={`${fmtInt(period.acquisition.total)} novas · ${period.rangeLabel}`} className="h-[440px] md:col-span-2 xl:col-span-8 xl:h-auto">
-        <SubscriberSankey flow={period.acquisition} label="Sankey de aquisição: canal, ponto de contato e plano" />
-      </DashCard>
+      <VolumeQuality rows={period.quality} className="h-[400px] md:col-span-2 xl:col-span-8 xl:h-auto" />
       <WaffleCard ai="waffle-channels" title="Canais" info={`Base ativa em ${data.current.label} por canal de aquisição · cada quadrado = 1%`} comp={data.channelComp} waffle={data.channelWaffle} colors={CHANNEL_COLORS} className="h-[380px] md:col-span-2 xl:col-span-4 xl:h-auto" />
       <FunnelCard rows={period.funnel} best={period.bestChannel} worst={period.worstChannel} rangeLabel={period.rangeLabel} className="md:col-span-2 xl:col-span-12" />
     </div>
@@ -56,21 +53,12 @@ export function AcquisitionView({ data, period }: ViewProps) {
 }
 
 export function RetentionView({ data, period }: ViewProps) {
-  const s = period.flowSummary;
   return (
     <div className={`${GRID} xl:grid-rows-2`}>
       <CohortRetention data={data} className="h-[360px] md:col-span-2 xl:col-span-6 xl:h-auto" />
       <EditoriaHealth data={data} className="h-[320px] xl:col-span-3 xl:h-auto" />
       <MonthlyChanges changes={data.changes} className="h-[340px] xl:col-span-3 xl:h-auto" />
-      <DashCard
-        ai="flow-sankey"
-        title="Fluxo de assinantes"
-        info={`Base + novas → plano → desfecho · ${period.rangeLabel}`}
-        summary={<><span className="text-danger">{fmtInt(s.cancelled)} cancel.</span> · <span className="text-positive">{fmtInt(s.upgrades)} upgr.</span> · <span className="text-foreground">{fmtInt(s.stayed)} ficam</span></>}
-        className="h-[420px] md:col-span-2 xl:col-span-8 xl:h-auto"
-      >
-        <SubscriberSankey flow={period.flow} label="Sankey de assinantes: origem, plano e desfecho" />
-      </DashCard>
+      <BaseBridge bridge={period.bridge} className="h-[340px] md:col-span-2 xl:col-span-8 xl:h-auto" />
       <ReasonsCard reasons={period.reasons} rangeLabel={period.rangeLabel} className="h-[300px] md:col-span-2 xl:col-span-4 xl:h-auto" />
     </div>
   );
