@@ -34,7 +34,8 @@ export function DemoTour() {
 
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
-    if (p.has("demo") || window.location.hash === "#demo") setOn(true);
+    // o roteiro usa o layout de desktop (≥ 1280 px)
+    if ((p.has("demo") || window.location.hash === "#demo") && window.innerWidth >= 1280) setOn(true);
   }, []);
 
   useEffect(() => {
@@ -274,11 +275,12 @@ export function DemoTour() {
           />
         </AnimatePresence>
       </div>
+      <div className="pointer-events-none fixed inset-x-0 bottom-6 z-[300] flex justify-center px-6">
       <AnimatePresence mode="wait">
         {caption && (
           <motion.div
             key={caption.title}
-            className="pointer-events-none fixed bottom-6 left-6 z-[300] max-w-[560px] rounded-xl bg-[hsl(205_38%_10%/0.92)] px-5 py-3.5 text-white shadow-2xl"
+            className="max-w-[640px] rounded-xl bg-[hsl(205_38%_10%/0.92)] px-5 py-3.5 text-center text-white shadow-2xl"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
@@ -290,6 +292,7 @@ export function DemoTour() {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
     </>
   );
 }
