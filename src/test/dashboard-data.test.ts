@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { MonthPoint } from "@/engine/metrics";
-import { correlationView, getDashboardData, INSIGHT_TARGETS, monthlyChange } from "@/lib/dashboard-data";
+import { cohortView, correlationView, getDashboardData, INSIGHT_TARGETS, INSIGHT_VIEWS, monthlyChange, parseView } from "@/lib/dashboard-data";
 
 describe("Sinergia e risco", () => {
   it("includes edges at |r| = 0.35 and excludes weaker pairs", () => {
@@ -15,6 +15,21 @@ describe("Sinergia e risco", () => {
   it('uses fractional changes for the other metrics', () => { expect(monthlyChange(series, 'active', 1).value).toBeCloseTo(0.1); });
   it('memoizes the 60-person sample and risk results', () => { const data = getDashboardData(); expect(data.people).toHaveLength(60); expect(getDashboardData().risk).toBe(data.risk); expect(getDashboardData().people).toBe(data.people); });
   it('maps each required insight topic to the related section', () => {
-    expect(INSIGHT_TARGETS).toMatchObject({ churn: 'evolution-card', meta: 'evolution-card', coortes: 'funnel-card', canais: 'funnel-card', pagamento: 'reasons-card', correlação: 'correlation-card', risco: 'risk-card', preço: 'kpi-section', nps: 'kpi-section' });
+    expect(INSIGHT_TARGETS).toMatchObject({ churn: 'evolution-card', meta: 'evolution-card', coortes: 'cohort-card', canais: 'funnel-card', pagamento: 'reasons-card', correlação: 'correlation-card', risco: 'risk-card', preço: 'kpi-section', nps: 'kpi-section' });
+  });
+  it('switches to the right view for each insight topic', () => {
+    expect(INSIGHT_VIEWS).toMatchObject({ churn: 'geral', meta: 'geral', coortes: 'retencao', canais: 'aquisicao', pagamento: 'retencao', correlação: 'risco', risco: 'risco', preço: 'geral', nps: 'geral' });
+  });
+  it('defaults unknown or missing ?view to geral', () => {
+    expect(parseView(undefined)).toBe('geral');
+    expect(parseView('xpto')).toBe('geral');
+    expect(parseView('retencao')).toBe('retencao');
+  });
+  it('builds cohort rows M0..M12 divided by 100 with gaps kept as null', () => {
+    const v = cohortView([{ key: 'A', size: 100, firstStart: 0, retention: [100, 80.5, null, ...Array(16).fill(null)] }]);
+    expect(v.rows).toHaveLength(13);
+    expect(v.rows[0].age).toBe('M0');
+    expect(v.rows[1].values.A).toBeCloseTo(0.805);
+    expect(v.rows[2].values.A).toBeNull();
   });
 });
