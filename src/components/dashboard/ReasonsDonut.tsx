@@ -14,7 +14,7 @@ const tone = (base: string, k: number) => (k === 0 ? base : `color-mix(in srgb, 
 
 export function ReasonsCard({ reasons, rangeLabel, className }: { reasons: Reasons; rangeLabel: string; className?: string }) {
   return (
-    <DashCard id="reasons-card" title="Motivos de cancelamento" info={`Natureza (anel interno) e motivo (anel externo) · ${rangeLabel}`} summary={`${fmtInt(reasons.total)} cancel.`} className={className}>
+    <DashCard id="reasons-card" ai="reasons" title="Motivos de cancelamento" info={`Natureza (anel interno) e motivo (anel externo) · ${rangeLabel}`} summary={`${fmtInt(reasons.total)} cancel.`} className={className}>
       <ReasonsDonut reasons={reasons} />
     </DashCard>
   );

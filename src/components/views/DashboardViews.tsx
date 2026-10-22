@@ -34,7 +34,7 @@ export function OverviewView({ data, period }: ViewProps) {
         {data.kpis.map((k) => <KpiCard key={k.id} kpi={k} />)}
       </section>
       <EvolutionChart data={data} className="h-[380px] md:col-span-2 xl:col-span-6 xl:h-auto" />
-      <WaffleCard title="Planos" info={`Base ativa em ${data.current.label} por plano · cada quadrado = 1%`} comp={data.comp} waffle={data.waffle} colors={PLAN_COLORS} className="h-[340px] xl:col-span-3 xl:h-auto" />
+      <WaffleCard ai="waffle-plans" title="Planos" info={`Base ativa em ${data.current.label} por plano · cada quadrado = 1%`} comp={data.comp} waffle={data.waffle} colors={PLAN_COLORS} className="h-[340px] xl:col-span-3 xl:h-auto" />
       <InsightsCompact data={data} className="h-[240px] xl:col-span-3 xl:h-auto" />
       <FlowBars series={data.series} events={data.ds.meta.events} className="h-[300px] md:col-span-2 xl:col-span-5 xl:h-auto" />
       <ReasonsCard reasons={period.reasons} rangeLabel={period.rangeLabel} className="h-[280px] xl:col-span-3 xl:h-auto" />
@@ -46,10 +46,10 @@ export function OverviewView({ data, period }: ViewProps) {
 export function AcquisitionView({ data, period }: ViewProps) {
   return (
     <div className={`${GRID} xl:grid-rows-[minmax(0,1fr)_auto]`}>
-      <DashCard title="Fluxo de aquisição" info={`Novas assinaturas: canal → ponto de contato → plano · ${period.rangeLabel}`} summary={`${fmtInt(period.acquisition.total)} novas · ${period.rangeLabel}`} className="h-[440px] md:col-span-2 xl:col-span-8 xl:h-auto">
+      <DashCard ai="acq-sankey" title="Fluxo de aquisição" info={`Novas assinaturas: canal → ponto de contato → plano · ${period.rangeLabel}`} summary={`${fmtInt(period.acquisition.total)} novas · ${period.rangeLabel}`} className="h-[440px] md:col-span-2 xl:col-span-8 xl:h-auto">
         <SubscriberSankey flow={period.acquisition} label="Sankey de aquisição: canal, ponto de contato e plano" />
       </DashCard>
-      <WaffleCard title="Canais" info={`Base ativa em ${data.current.label} por canal de aquisição · cada quadrado = 1%`} comp={data.channelComp} waffle={data.channelWaffle} colors={CHANNEL_COLORS} className="h-[380px] md:col-span-2 xl:col-span-4 xl:h-auto" />
+      <WaffleCard ai="waffle-channels" title="Canais" info={`Base ativa em ${data.current.label} por canal de aquisição · cada quadrado = 1%`} comp={data.channelComp} waffle={data.channelWaffle} colors={CHANNEL_COLORS} className="h-[380px] md:col-span-2 xl:col-span-4 xl:h-auto" />
       <FunnelCard rows={period.funnel} best={period.bestChannel} worst={period.worstChannel} rangeLabel={period.rangeLabel} className="md:col-span-2 xl:col-span-12" />
     </div>
   );
@@ -63,6 +63,7 @@ export function RetentionView({ data, period }: ViewProps) {
       <EditoriaHealth data={data} className="h-[320px] xl:col-span-3 xl:h-auto" />
       <MonthlyChanges changes={data.changes} className="h-[340px] xl:col-span-3 xl:h-auto" />
       <DashCard
+        ai="flow-sankey"
         title="Fluxo de assinantes"
         info={`Base + novas → plano → desfecho · ${period.rangeLabel}`}
         summary={<><span className="text-danger">{fmtInt(s.cancelled)} cancel.</span> · <span className="text-positive">{fmtInt(s.upgrades)} upgr.</span> · <span className="text-foreground">{fmtInt(s.stayed)} ficam</span></>}

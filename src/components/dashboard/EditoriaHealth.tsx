@@ -7,7 +7,7 @@ const scoreColor = (s: number) => (s >= 70 ? "var(--positive-fill)" : s >= 50 ? 
 
 export function EditoriaHealth({ data, className }: { data: DashboardData; className?: string }) {
   return (
-    <DashCard id="editoria-card" title="Saúde por editoria" info="Nota 0–100: 55% engajamento médio + 45% estabilidade (churn dos últimos 3 meses). Ordenado pela nota." className={className}>
+    <DashCard id="editoria-card" ai="editorias" title="Saúde por editoria" info="Nota 0–100: 55% engajamento médio + 45% estabilidade (churn dos últimos 3 meses). Ordenado pela nota." className={className}>
       <ul className="flex min-h-0 flex-1 flex-col justify-between gap-1 overflow-y-auto">
         {data.editorias.map((e, i) => (
           <li key={e.editoria} className="min-w-0" title={`${e.editoria}: ${fmtInt(e.active)} ativos (${fmtPct(e.share, 1)}), churn 3m ${fmtPct(e.churn3m, 1)}`}>

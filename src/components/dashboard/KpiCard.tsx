@@ -1,4 +1,5 @@
-import type { KpiView } from "@/lib/dashboard-data";
+import type { AiTargetId, KpiView } from "@/lib/dashboard-data";
+import { useAiTarget } from "@/components/ai/ai-store";
 import { AnimatedNumber } from "./AnimatedNumber";
 import { AskButton, InfoTip } from "./DashCard";
 import { DeltaBadge } from "./DeltaBadge";
@@ -7,8 +8,10 @@ import { Sparkline } from "./Sparkline";
 
 export function KpiCard({ kpi }: { kpi: KpiView }) {
   const headingId = `kpi-${kpi.id}`;
+  const ai = `kpi-${kpi.id}` as AiTargetId;
+  const target = useAiTarget(ai);
   return (
-    <article className="dash-card grid h-[112px] min-w-0 grid-cols-[minmax(0,1fr)_4.5rem] gap-x-2 p-3" aria-labelledby={headingId}>
+    <article {...target.props} className="dash-card grid h-[112px] min-w-0 grid-cols-[minmax(0,1fr)_4.5rem] gap-x-2 p-3" aria-labelledby={headingId}>
       <div className="flex min-w-0 flex-col">
         <div className="flex min-w-0 items-center gap-1">
           <h3 id={headingId} className="truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
@@ -25,7 +28,7 @@ export function KpiCard({ kpi }: { kpi: KpiView }) {
         </div>
       </div>
       <div className="flex min-w-0 flex-col items-end justify-between">
-        <AskButton title={kpi.label} />
+        <AskButton title={kpi.label} ai={ai} />
         <div className="h-12 w-full">
           {kpi.kind === "gauge" ? <Gauge value={kpi.value} /> : <Sparkline data={kpi.spark} label={kpi.label} />}
         </div>

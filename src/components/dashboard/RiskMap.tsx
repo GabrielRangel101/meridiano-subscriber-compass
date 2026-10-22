@@ -43,7 +43,7 @@ export function RiskMap({ data, selected, onSelect, className }: { data: Dashboa
   const criticalY = y(data.criticalRisk);
 
   return (
-    <DashCard id="risk-card" title="Mapa de assinantes em risco" info="Amostra de assinantes por engajamento (eixo X) e risco de cancelar em 90 dias (eixo Y). Tamanho = MRR; borda = gatilho principal. Clique num avatar para ver o detalhe." summary={`${data.people.length} assinantes · 90 dias`} className={className}>
+    <DashCard id="risk-card" ai="risk-map" title="Mapa de assinantes em risco" info="Amostra de assinantes por engajamento (eixo X) e risco de cancelar em 90 dias (eixo Y). Tamanho = MRR; borda = gatilho principal. Clique num avatar para ver o detalhe." summary={`${data.people.length} assinantes · 90 dias`} className={className}>
       <div ref={ref} className="relative min-h-[360px] flex-1 xl:min-h-0" onMouseLeave={() => setHover(null)}>
         <svg width={width} height={height} className="absolute inset-0" role="group" aria-label="Assinantes por engajamento e risco de cancelar em 90 dias">
           <rect x={PAD.left} y={PAD.top} width={width - PAD.left - PAD.right} height={criticalY - PAD.top} fill="var(--danger)" opacity={0.08} />
@@ -84,7 +84,7 @@ export function RiskPanel({ data, selected, onClose, className }: { data: Dashbo
     { label: "Editoria exposta", value: data.risk.topEditoria?.key ?? "Nenhuma", note: data.risk.topEditoria ? `${fmtInt(data.risk.topEditoria.count)} críticos` : "—", tone: "text-foreground" },
   ];
   return (
-    <DashCard title="Detalhe e estatísticas" info="Estatísticas de toda a base ativa; gatilhos contados na amostra do mapa." className={className} bodyClassName="gap-3 overflow-y-auto">
+    <DashCard ai="risk-panel" title="Detalhe e estatísticas" info="Estatísticas de toda a base ativa; gatilhos contados na amostra do mapa." className={className} bodyClassName="gap-3 overflow-y-auto">
       <dl className="grid shrink-0 grid-cols-2 gap-2">
         {stats.map((s) => (
           <div key={s.label} className="min-w-0 rounded-lg border bg-background/30 px-2.5 py-1.5">

@@ -20,6 +20,7 @@ export function CohortRetention({ data, className }: { data: DashboardData; clas
   return (
     <DashCard
       id="cohort-card"
+      ai="cohort"
       title="Retenção por coorte"
       info="% ainda ativo M meses após a entrada (Kaplan-Meier). Lacunas = poucos assinantes observáveis naquela idade."
       actions={<Segmented label="Agrupar coortes por" value={by} options={OPTIONS} onChange={(v) => { setBy(v); setFocus(null); }} />}

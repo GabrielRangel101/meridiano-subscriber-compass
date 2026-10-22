@@ -34,6 +34,7 @@ export function EvolutionChart({ data, className }: { data: DashboardData; class
   return (
     <DashCard
       id="evolution-card"
+      ai="evolution"
       title="Evolução de assinantes"
       info={`Base ativa mensal e projeção linear até ${goalLabel}. Marcadores indicam campanhas, reajustes e eventos.`}
       actions={<div className="hidden md:block"><EventLegend /></div>}
