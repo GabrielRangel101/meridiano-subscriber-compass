@@ -76,7 +76,8 @@ export function CommandBar() {
     const free: Item[] = q.trim()
       ? [{ key: "free", group: "Perguntar", label: `Perguntar ao Meridiano: “${q.trim()}”`, run: () => { commandStore.set(false); aiStore.open(); aiStore.ask(q.trim()); } }]
       : [];
-    return [...free, ...matched].slice(0, 30);
+    // sem busca: lista padrão; com busca: o que casou primeiro e a pergunta livre por último (ou sozinha, se nada casou)
+    return [...matched, ...free].slice(0, 30);
   }, [items, q]);
 
   useEffect(() => setIdx(0), [q]);

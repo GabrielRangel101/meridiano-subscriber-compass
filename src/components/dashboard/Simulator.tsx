@@ -45,7 +45,7 @@ function Levers({ result, params, set, setAll, className }: { result: WhatIfResu
     >
       <Lever
         label="Reduzir o churn voluntário"
-        value={`−${pp(params.churnCut)}`}
+        value={params.churnCut > 0 ? `−${pp(params.churnCut)}` : pp(0)}
         hint={`churn voluntário hoje: ${fmtPct(b.voluntaryChurn, 1)} ao mês`}
         min={0}
         max={Math.round(Math.min(0.03, b.voluntaryChurn) * 1000)}
@@ -65,7 +65,7 @@ function Levers({ result, params, set, setAll, className }: { result: WhatIfResu
       />
       <Lever
         label="Aumentar a aquisição"
-        value={`+${pct0(params.acquisitionLift)}`}
+        value={params.acquisitionLift > 0 ? `+${pct0(params.acquisitionLift)}` : "0%"}
         hint={`hoje: ${fmtInt(b.newPerMonth)} novas assinaturas por mês`}
         min={0}
         max={100}
@@ -117,7 +117,7 @@ function Tiles({ result: r }: { result: WhatIfResult }) {
   return (
     <section aria-label="Resultado do cenário" className="grid grid-cols-2 gap-3 xl:grid-cols-4">
       <Tile label={`Assinantes ${r.goalLabel}`} value={fmtInt(r.scenarioActive)} sub={<>projeção atual {fmtInt(r.baseActive)} · <strong className={r.deltaActive > 0 ? "text-positive" : ""}>{fmtSignedInt(r.deltaActive)}</strong></>} />
-      <Tile label={`MRR ${r.goalLabel}`} value={fmtBRLCompact(r.scenarioMrr)} sub={<>projeção atual {fmtBRLCompact(r.baseMrr)} · <strong className={r.deltaMrr > 0 ? "text-positive" : ""}>{r.deltaMrr >= 0 ? "+" : "−"}{fmtBRLCompact(Math.abs(r.deltaMrr))}</strong></>} />
+      <Tile label={`MRR ${r.goalLabel}`} value={fmtBRLCompact(r.scenarioMrr)} sub={<>projeção atual {fmtBRLCompact(r.baseMrr)} · <strong className={r.deltaMrr > 0 ? "text-positive" : ""}>{r.deltaMrr === 0 ? "" : r.deltaMrr > 0 ? "+" : "−"}{fmtBRLCompact(Math.abs(r.deltaMrr))}</strong></>} />
       <Tile label="Meta" value={fmtInt(r.goal)} sub={`${r.goalLabel} · ${r.hitsGoal ? "meta atingida" : "ainda não atinge"}`} />
       <Tile label={r.hitsGoal ? "Folga sobre a meta" : "Falta para a meta"} value={fmtInt(Math.abs(r.scenarioGap))} tone={r.hitsGoal ? "good" : "bad"} sub={`antes: ${r.baseGap > 0 ? "faltavam" : "sobravam"} ${fmtInt(Math.abs(r.baseGap))}`} />
     </section>
