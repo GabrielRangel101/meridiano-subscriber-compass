@@ -29,7 +29,7 @@ describe("Sinergia e risco", () => {
     const v = cohortView([{ key: 'A', size: 100, firstStart: 0, retention: [100, 80.5, null, ...Array(16).fill(null)] }]);
     expect(v.rows).toHaveLength(13);
     expect(v.rows[0].age).toBe('M0');
-    expect(v.rows[1].values.A).toBeCloseTo(0.805);
-    expect(v.rows[2].values.A).toBeNull();
+    expect(v.rows[1].values['A']).toBeCloseTo(0.805);
+    expect(v.rows[2].values['A']).toBeNull();
   });
 });

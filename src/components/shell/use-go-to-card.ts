@@ -14,7 +14,7 @@ export function useGoToCard() {
       const tick = () => {
         const el = document.getElementById(cardId);
         const host = el?.closest<HTMLElement>("[data-view]");
-        if (!el || host?.dataset.view !== view || host.dataset.leaving === "true") {
+        if (!el || host?.dataset["view"] !== view) {
           if (++tries < 90) requestAnimationFrame(tick);
           return;
         }

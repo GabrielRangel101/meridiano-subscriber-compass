@@ -6,11 +6,11 @@ const listeners = new Set<() => void>();
 
 export function getTheme(): Theme {
   if (typeof document === "undefined") return "dark";
-  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  return document.documentElement.dataset["theme"] === "light" ? "light" : "dark";
 }
 
 export function setTheme(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
+  document.documentElement.dataset["theme"] = theme;
   try {
     localStorage.setItem(THEME_KEY, theme);
   } catch {
@@ -29,4 +29,4 @@ export function useTheme(): Theme {
 }
 
 /** Script inline do <head>: aplica o tema salvo antes da pintura; padrão escuro. */
-export const THEME_BOOT_SCRIPT = `try{var t=localStorage.getItem("${THEME_KEY}");document.documentElement.dataset.theme=t==="light"?"light":"dark"}catch(e){document.documentElement.dataset.theme="dark"}`;
+export const THEME_BOOT_SCRIPT = `try{var t=localStorage.getItem("${THEME_KEY}");document.documentElement.dataset["theme"]=t==="light"?"light":"dark"}catch(e){document.documentElement.dataset["theme"]="dark"}`;

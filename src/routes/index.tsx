@@ -8,7 +8,7 @@ import { parseView, useDashboardData, usePeriodData } from "@/lib/dashboard-data
 import type { PeriodN, ViewId } from "@/lib/dashboard-data";
 
 export const Route = createFileRoute("/")({
-  validateSearch: (search: Record<string, unknown>): { view: ViewId } => ({ view: parseView(search.view) }),
+  validateSearch: (search: Record<string, unknown>): { view?: ViewId } => ({ view: parseView(search["view"]) }),
   head: () => ({
     meta: [
       { title: "Dashboard · Gazeta Meridiano Subscription Intelligence" },
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/")({
 const VIEW_COMPONENTS = { geral: OverviewView, aquisicao: AcquisitionView, retencao: RetentionView, risco: RiskView } as const;
 
 function Index() {
-  const { view } = Route.useSearch();
+  const view = Route.useSearch().view ?? "geral";
   const data = useDashboardData();
   const [n, setN] = useState<PeriodN>(3);
   const period = usePeriodData(n);
