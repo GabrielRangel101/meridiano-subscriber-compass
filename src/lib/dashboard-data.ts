@@ -1,6 +1,7 @@
 // Camada de dados do dashboard: chama SOMENTE o motor (src/engine) e monta view-models de apresentação.
 import { useMemo } from "react";
 import { answer } from "@/engine/ask";
+import { explainAnswer, EXPLAIN_FOLLOWUP } from "@/engine/askexplain";
 import { growthAnswer } from "@/engine/askgrowth";
 import { priceAnswer } from "@/engine/askprice";
 import type { AiAnswer } from "@/engine/ask";
@@ -171,7 +172,11 @@ export function getAiAnswer(question: string): AiAnswer {
   if (cached) return cached;
   const { ds } = getDashboardData();
   // perguntas de preço que o roteador principal confundiria com a análise do reajuste
-  const result = growthAnswer(ds, question) ?? priceAnswer(ds, question) ?? answer(ds, question);
+  const explained = explainAnswer(ds, question);
+  let result = explained ?? growthAnswer(ds, question) ?? priceAnswer(ds, question) ?? answer(ds, question);
+  // em toda análise de card, oferece a explicação de "como é calculado" como próxima pergunta
+  const explainQ = !explained ? EXPLAIN_FOLLOWUP[result.intent] : undefined;
+  if (explainQ && !result.followUps.includes(explainQ)) result = { ...result, followUps: [explainQ, ...result.followUps].slice(0, 4) };
   if (answerCache.size >= 50) answerCache.delete(answerCache.keys().next().value ?? "");
   answerCache.set(question, result);
   return result;
