@@ -45,8 +45,8 @@ function ExchangeView({ ex, last, mobile, reduced, busy }: { ex: AiExchange; las
             </div>
           )}
           {a.cards.slice(0, 2).map((c) => (
-            <div key={c.id} className="rounded-lg border border-[hsl(188_86%_53%/0.25)] bg-white/5 px-2.5 py-2">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-[hsl(48_96%_60%)]">Nota do Meridiano · {a.basedOn[0] ?? "dashboard"}</p>
+            <div key={c.id} className="rounded-lg border border-[hsl(38_70%_55%/0.3)] bg-white/5 px-2.5 py-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[hsl(38_85%_62%)]">Nota do Meridiano · {a.basedOn[0] ?? "dashboard"}</p>
               <p className="mt-0.5 text-xs text-foreground">{c.title}</p>
             </div>
           ))}
@@ -90,7 +90,7 @@ export function AiPanel({ mobile }: { mobile: boolean }) {
       )}
     >
       <header className="flex shrink-0 items-center gap-2 border-b border-white/10 px-3 py-2.5">
-        <span className="rounded-full bg-[hsl(48_96%_60%)] px-2.5 py-1 text-[11px] font-bold text-[hsl(225_51%_8%)]">✦ Pergunte ao Meridiano</span>
+        <span className="rounded-full bg-[hsl(8_70%_45%)] px-2.5 py-1 text-[11px] font-bold text-white">✦ Pergunte ao Meridiano</span>
         <button type="button" onClick={() => aiStore.clear()} className="ml-auto inline-flex items-center gap-1 rounded px-1.5 py-1 text-[11px] text-muted-foreground hover:bg-white/10 hover:text-foreground">
           <Trash2 className="size-3.5" aria-hidden />Nova conversa
         </button>

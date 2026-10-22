@@ -40,6 +40,8 @@
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-cyan: var(--cyan);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
   --color-positive-fill: var(--positive-fill);
   --color-border-strong: var(--border-strong);
   --color-border: var(--border);
@@ -67,103 +69,107 @@
   --color-sidebar-ring: var(--ring);
 }
 
-/* Tema claro "vidro" (padrão) */
+/* Tema claro "papel de redação" (padrão): papel quente, tinta azul-petróleo, vermelhão como assinatura */
 :root {
-  --radius: 14px;
+  --radius: 10px;
   color-scheme: light;
-  --background: hsl(234 100% 96%); /* #ECEEFF */
-  --foreground: hsl(243 28% 14%);
-  --card: hsl(0 0% 100% / 0.72);
-  --card-surface: hsl(0 0% 100% / 0.72);
-  --card-foreground: hsl(243 28% 14%);
-  --popover: hsl(0 0% 100% / 0.94);
-  --popover-foreground: hsl(243 28% 14%);
+  --background: hsl(40 38% 92%);
+  --foreground: hsl(212 35% 12%);
+  --card: hsl(42 50% 98% / 0.92);
+  --card-surface: hsl(42 50% 98% / 0.92);
+  --card-foreground: hsl(212 35% 12%);
+  --popover: hsl(42 50% 98% / 0.97);
+  --popover-foreground: hsl(212 35% 12%);
 
-  --primary: hsl(243 75% 59%);
-  --primary-glow: hsl(262 83% 58%);
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(243 40% 96%);
-  --secondary-foreground: hsl(243 28% 14%);
-  --muted: hsl(240 30% 92%);
-  --muted-foreground: hsl(220 9% 43%); /* ~#6B7280, AA */
-  --accent: hsl(38 92% 50%);
-  --accent-foreground: hsl(243 28% 14%);
-  --cyan: hsl(189 94% 36%);
+  --primary: hsl(196 72% 23%);
+  --primary-glow: hsl(188 55% 32%);
+  --primary-foreground: hsl(42 50% 98%);
+  --secondary: hsl(40 28% 90%);
+  --secondary-foreground: hsl(212 35% 12%);
+  --muted: hsl(40 22% 87%);
+  --muted-foreground: hsl(212 14% 38%);
+  --accent: hsl(36 88% 44%);
+  --accent-foreground: hsl(212 35% 12%);
+  --brand: hsl(8 70% 45%);
+  --brand-foreground: hsl(0 0% 100%);
+  --cyan: hsl(176 55% 30%);
 
-  --positive: hsl(160 84% 30%);
-  --positive-fill: hsl(160 84% 39%);
-  --danger: hsl(347 77% 50%);
-  --warning: hsl(32 95% 38%);
-  --destructive: hsl(347 77% 50%);
+  --positive: hsl(158 62% 26%);
+  --positive-fill: hsl(158 52% 36%);
+  --danger: hsl(6 70% 44%);
+  --warning: hsl(32 90% 34%);
+  --destructive: hsl(6 70% 44%);
   --destructive-foreground: hsl(0 0% 100%);
 
-  --border: hsl(243 75% 59% / 0.10);
-  --border-strong: hsl(243 75% 59% / 0.4);
-  --input: hsl(243 47% 20% / 0.14);
-  --ring: hsl(243 75% 59%);
-  --chart-grid: hsl(243 47% 20% / 0.08);
+  --border: hsl(212 35% 12% / 0.12);
+  --border-strong: hsl(196 72% 23% / 0.45);
+  --input: hsl(212 35% 12% / 0.2);
+  --ring: hsl(196 72% 30%);
+  --chart-grid: hsl(212 35% 12% / 0.09);
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --app-bg: radial-gradient(38rem 30rem at 8% 10%, hsl(243 75% 59% / 0.16), transparent 70%), radial-gradient(34rem 28rem at 92% 18%, hsl(188 86% 53% / 0.16), transparent 70%), radial-gradient(36rem 30rem at 60% 100%, hsl(330 81% 60% / 0.12), transparent 70%), linear-gradient(135deg, #ECEEFF 0%, #F5EEFF 50%, #E6F3FF 100%);
+  --app-bg: radial-gradient(40rem 30rem at 10% 0%, hsl(36 80% 70% / 0.14), transparent 70%), radial-gradient(34rem 28rem at 100% 100%, hsl(196 60% 40% / 0.08), transparent 70%), linear-gradient(180deg, #F6F1E6 0%, #EEE7D8 100%);
 
-  --cat-1: hsl(243 75% 59%);
-  --cat-2: hsl(262 83% 58%);
-  --cat-3: hsl(38 92% 50%);
-  --cat-4: hsl(189 94% 43%);
-  --cat-5: hsl(330 81% 60%);
-  --cat-6: hsl(215 20% 55%);
+  --cat-1: hsl(196 70% 28%);
+  --cat-2: hsl(8 68% 50%);
+  --cat-3: hsl(38 84% 48%);
+  --cat-4: hsl(165 42% 38%);
+  --cat-5: hsl(330 32% 44%);
+  --cat-6: hsl(212 14% 52%);
 
-  --shadow-glass: inset 0 0 0 1px hsl(0 0% 100% / 0.7), 0 12px 32px -16px hsl(262 70% 45% / 0.22);
-  --shadow-highlight: 0 0 0 3px hsl(243 75% 59% / 0.3), var(--shadow-glass);
+  --shadow-glass: inset 0 1px 0 hsl(0 0% 100% / 0.6), 0 6px 18px -12px hsl(212 40% 12% / 0.35);
+  --shadow-highlight: 0 0 0 3px hsl(196 72% 23% / 0.3), var(--shadow-glass);
 }
 
-/* Tema escuro "command center" (opcional; sempre usado no Modo IA) */
+/* Tema escuro "tinta" (opcional; sempre usado na mesa de análise) */
 :root[data-theme="dark"], .ai-dark {
   color-scheme: dark;
-  --radius: 14px;
+  --radius: 10px;
 
-  --background: hsl(225 51% 8%); /* #0A0F1F */
-  --foreground: hsl(229 100% 95%); /* #E8ECFF */
-  --card: hsl(226 50% 13%); /* #111933 */
-  --card-surface: linear-gradient(180deg, hsl(226 46% 15%) 0%, hsl(226 50% 12%) 100%);
-  --card-foreground: hsl(229 100% 95%);
-  --popover: hsl(226 46% 14% / 0.94);
-  --popover-foreground: hsl(229 100% 95%);
+  --background: hsl(205 38% 8%);
+  --foreground: hsl(40 30% 92%);
+  --card: hsl(204 32% 12%);
+  --card-surface: linear-gradient(180deg, hsl(204 30% 14%) 0%, hsl(205 34% 11%) 100%);
+  --card-foreground: hsl(40 30% 92%);
+  --popover: hsl(204 30% 13% / 0.96);
+  --popover-foreground: hsl(40 30% 92%);
 
-  --primary: hsl(239 84% 67%); /* #6366F1 */
-  --primary-glow: hsl(258 90% 66%); /* #8B5CF6 */
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(226 40% 19%);
-  --secondary-foreground: hsl(229 100% 95%);
-  --muted: hsl(226 36% 19%);
-  --muted-foreground: hsl(228 31% 66%); /* #8E98C2 */
-  --accent: hsl(38 92% 50%); /* #F59E0B */
-  --accent-foreground: hsl(225 51% 8%);
-  --cyan: hsl(188 86% 53%); /* #22D3EE */
+  --primary: hsl(186 52% 52%);
+  --primary-glow: hsl(176 50% 46%);
+  --primary-foreground: hsl(205 38% 8%);
+  --secondary: hsl(204 26% 17%);
+  --secondary-foreground: hsl(40 30% 92%);
+  --muted: hsl(204 24% 18%);
+  --muted-foreground: hsl(205 16% 66%);
+  --accent: hsl(38 88% 56%);
+  --accent-foreground: hsl(205 38% 8%);
+  --brand: hsl(8 74% 58%);
+  --brand-foreground: hsl(0 0% 100%);
+  --cyan: hsl(176 50% 52%);
 
-  --positive: hsl(158 64% 52%); /* #34D399 */
-  --positive-fill: hsl(158 64% 52%);
-  --danger: hsl(351 95% 71%); /* #FB7185 */
-  --warning: hsl(38 92% 58%);
-  --destructive: hsl(351 95% 71%);
-  --destructive-foreground: hsl(225 51% 8%);
+  --positive: hsl(158 55% 52%);
+  --positive-fill: hsl(158 55% 52%);
+  --danger: hsl(6 85% 66%);
+  --warning: hsl(38 88% 60%);
+  --destructive: hsl(6 85% 66%);
+  --destructive-foreground: hsl(205 38% 8%);
 
-  --border: hsl(0 0% 100% / 0.07);
-  --border-strong: hsl(239 84% 67% / 0.5);
-  --input: hsl(0 0% 100% / 0.12);
-  --ring: hsl(239 84% 74%);
-  --chart-grid: hsl(0 0% 100% / 0.06);
-  --app-bg: linear-gradient(180deg, hsl(225 51% 8%), hsl(228 50% 6%));
+  --border: hsl(0 0% 100% / 0.08);
+  --border-strong: hsl(186 52% 52% / 0.5);
+  --input: hsl(0 0% 100% / 0.14);
+  --ring: hsl(186 52% 62%);
+  --chart-grid: hsl(0 0% 100% / 0.07);
+  --app-bg: linear-gradient(180deg, hsl(205 38% 8%), hsl(206 40% 6%));
 
-  --cat-1: hsl(239 84% 70%); /* índigo */
-  --cat-2: hsl(258 90% 72%); /* violeta */
-  --cat-3: hsl(38 92% 55%); /* âmbar */
-  --cat-4: hsl(188 86% 53%); /* ciano */
-  --cat-5: hsl(330 85% 70%); /* rosa */
-  --cat-6: hsl(225 22% 62%); /* ardósia */
+  --cat-1: hsl(186 55% 55%);
+  --cat-2: hsl(8 78% 66%);
+  --cat-3: hsl(40 88% 58%);
+  --cat-4: hsl(160 45% 55%);
+  --cat-5: hsl(330 40% 66%);
+  --cat-6: hsl(210 16% 62%);
 
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --shadow-glass: inset 0 1px 0 hsl(0 0% 100% / 0.04), 0 10px 30px -14px hsl(228 60% 2% / 0.8);
-  --shadow-highlight: 0 0 0 3px hsl(239 84% 67% / 0.55), var(--shadow-glass);
+  --shadow-glass: inset 0 1px 0 hsl(0 0% 100% / 0.04), 0 10px 30px -14px hsl(206 60% 2% / 0.8);
+  --shadow-highlight: 0 0 0 3px hsl(186 52% 52% / 0.55), var(--shadow-glass);
 }
 
 [id$="-card"], #kpi-section { scroll-margin: 12px; }
@@ -205,7 +211,7 @@
 
 @utility dash-card {
   background: var(--card-surface);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(6px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-glass);
@@ -228,8 +234,8 @@
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(40rem 32rem at 12% 8%, hsl(243 75% 59% / 0.09), transparent 70%),
-    radial-gradient(36rem 30rem at 92% 70%, hsl(38 92% 50% / 0.09), transparent 70%);
+    radial-gradient(40rem 32rem at 12% 8%, hsl(196 72% 23% / 0.07), transparent 70%),
+    radial-gradient(36rem 30rem at 92% 70%, hsl(8 70% 45% / 0.06), transparent 70%);
 }
 
 /* Isolated dark AI theme; dashboard tokens remain untouched. */
@@ -337,16 +343,16 @@
 @media (prefers-reduced-motion: reduce) { .ai-dots i,.ai-path-pulse { animation: none; } }
 
 /* ---------------- Modo IA como camada sobre o dashboard ---------------- */
-.ai-scrim { position: fixed; inset: 0; z-index: 40; background: hsl(245 44% 7% / 0.55); backdrop-filter: blur(2px); }
-html.ai-on [data-ai-target] { position: relative; z-index: 41; cursor: pointer; outline: 1.5px solid hsl(188 86% 60% / 0.7); outline-offset: 2px; animation: ai-glow 2.4s ease-in-out infinite; }
-html.ai-on [data-ai-target]::after { content: "✦ analisar"; position: absolute; top: 6px; right: 8px; z-index: 2; padding: 1px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; color: hsl(225 51% 8%); background: hsl(48 96% 60%); pointer-events: none; }
-html.ai-on [data-ai-target].ai-focused { z-index: 52; outline: 2px solid hsl(0 0% 100% / 0.9); animation: none; box-shadow: 0 0 0 6px hsl(188 86% 53% / 0.25), 0 0 48px hsl(258 90% 66% / 0.55); }
+.ai-scrim { position: fixed; inset: 0; z-index: 40; background: hsl(205 40% 6% / 0.62); backdrop-filter: blur(2px); }
+html.ai-on [data-ai-target] { position: relative; z-index: 41; cursor: pointer; outline: 1.5px solid hsl(8 74% 58% / 0.75); outline-offset: 2px; animation: ai-glow 2.4s ease-in-out infinite; }
+html.ai-on [data-ai-target]::after { content: "✦ analisar"; position: absolute; top: 6px; right: 8px; z-index: 2; padding: 1px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; color: hsl(0 0% 100%); background: hsl(8 70% 45%); pointer-events: none; }
+html.ai-on [data-ai-target].ai-focused { z-index: 52; outline: 2px solid hsl(0 0% 100% / 0.9); animation: none; box-shadow: 0 0 0 6px hsl(38 88% 56% / 0.25), 0 0 48px hsl(8 74% 58% / 0.4); }
 html.ai-on [data-ai-target].ai-focused::after { content: none; }
-@keyframes ai-glow { 0%, 100% { box-shadow: 0 0 0 0 hsl(188 86% 53% / 0); } 50% { box-shadow: 0 0 22px 2px hsl(188 86% 53% / 0.45); } }
-.ai-orb { background: conic-gradient(from 200deg, #6366F1, #8B5CF6, #22D3EE, #6366F1); box-shadow: 0 0 18px hsl(258 90% 66% / 0.55), inset 0 0 12px hsl(0 0% 100% / 0.35); animation: ai-orb 3s ease-in-out infinite; }
-@keyframes ai-orb { 0%, 100% { box-shadow: 0 0 14px hsl(258 90% 66% / 0.45), inset 0 0 12px hsl(0 0% 100% / 0.35); } 50% { box-shadow: 0 0 28px hsl(188 86% 53% / 0.7), inset 0 0 12px hsl(0 0% 100% / 0.45); } }
-.ai-gen-card { background: linear-gradient(145deg, #1B2A7A, #3A1F8F); border: 1px solid hsl(188 86% 53% / 0.25); box-shadow: 0 18px 44px -12px hsl(245 60% 5% / 0.7); color: var(--foreground); }
-.ai-panel { background: linear-gradient(180deg, hsl(232 55% 14% / 0.94), hsl(250 50% 12% / 0.94)); border: 1px solid hsl(188 86% 53% / 0.3); box-shadow: 0 0 0 1px hsl(258 90% 66% / 0.15), 0 20px 60px -20px hsl(245 60% 3% / 0.9); backdrop-filter: blur(16px); }
+@keyframes ai-glow { 0%, 100% { box-shadow: 0 0 0 0 hsl(8 74% 58% / 0); } 50% { box-shadow: 0 0 20px 2px hsl(8 74% 58% / 0.4); } }
+.ai-orb { background: conic-gradient(from 200deg, #11485E, #C8382D, #E0A93B, #11485E); box-shadow: 0 0 14px hsl(8 70% 45% / 0.45), inset 0 0 10px hsl(0 0% 100% / 0.3); animation: ai-orb 3s ease-in-out infinite; }
+@keyframes ai-orb { 0%, 100% { box-shadow: 0 0 12px hsl(8 70% 45% / 0.4), inset 0 0 10px hsl(0 0% 100% / 0.3); } 50% { box-shadow: 0 0 24px hsl(38 88% 56% / 0.6), inset 0 0 10px hsl(0 0% 100% / 0.4); } }
+.ai-gen-card { background: linear-gradient(160deg, #10303F, #0E1C26); border: 1px solid hsl(38 70% 55% / 0.35); box-shadow: 0 18px 44px -12px hsl(206 60% 3% / 0.7); color: var(--foreground); }
+.ai-panel { background: linear-gradient(180deg, hsl(204 36% 13% / 0.96), hsl(206 38% 10% / 0.96)); border: 1px solid hsl(38 70% 55% / 0.35); box-shadow: 0 0 0 1px hsl(8 70% 45% / 0.15), 0 20px 60px -20px hsl(206 60% 3% / 0.9); backdrop-filter: blur(16px); }
 .ai-thread-pulse { animation: ai-pulse 2.6s linear infinite; }
 .ai-gen-card .ai-chart { height: 180px; }
 .ai-gen-card .ai-donut { height: 150px; }

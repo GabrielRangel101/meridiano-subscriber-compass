@@ -6,7 +6,7 @@ import { aiStore, type GenItem } from "./ai-store";
 export function AiBadge({ area }: { area?: string }) {
   return (
     <span className="flex min-w-0 items-center gap-1.5">
-      <span className="shrink-0 rounded-full bg-[hsl(48_96%_60%)] px-1.5 py-0.5 text-[10px] font-bold text-[hsl(225_51%_8%)]">✦ Meridiano</span>
+      <span className="shrink-0 rounded-full bg-[hsl(8_70%_45%)] px-1.5 py-0.5 text-[10px] font-bold text-white">✦ Meridiano</span>
       {area && <span className="truncate text-[10px] uppercase tracking-wider text-muted-foreground">{area}</span>}
     </span>
   );
@@ -21,7 +21,7 @@ export function GenCardBody({ item, busy, compact = false }: { item: GenItem; bu
         <p className="text-xs leading-relaxed text-foreground">{a.text}</p>
         <div className="flex flex-wrap gap-1.5">
           {a.followUps.map((q) => (
-            <button key={q} type="button" disabled={busy} onPointerDown={(e) => e.stopPropagation()} onClick={() => aiStore.ask(q)} className="rounded-full border border-[hsl(188_86%_53%/0.35)] px-2 py-0.5 text-left text-[11px] text-foreground hover:bg-white/10 disabled:opacity-50">
+            <button key={q} type="button" disabled={busy} onPointerDown={(e) => e.stopPropagation()} onClick={() => aiStore.ask(q)} className="rounded-full border border-[hsl(38_70%_55%/0.4)] px-2 py-0.5 text-left text-[11px] text-foreground hover:bg-white/10 disabled:opacity-50">
               {q}
             </button>
           ))}

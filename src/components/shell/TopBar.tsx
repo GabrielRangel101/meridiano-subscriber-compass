@@ -1,19 +1,22 @@
-import { CalendarDays, ShieldCheck } from "lucide-react";
+import { CalendarDays, ShieldCheck, Sparkles } from "lucide-react";
+import { aiStore, useAi } from "@/components/ai/ai-store";
 import { InfoTip } from "@/components/dashboard/DashCard";
 import type { ViewId } from "@/lib/dashboard-data";
-import { NavPill } from "./NavPill";
+import { cn } from "@/lib/utils";
+import { NavTabs } from "./NavTabs";
 import { ThemeToggle } from "./ThemeToggle";
 
-const chip = "inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full border bg-card/70 px-3 text-[11px] text-foreground backdrop-blur";
+const chip = "inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border bg-card px-3 text-[11px] text-foreground";
 
 export function TopBar({ brand, monthLabel, view }: { brand: string; monthLabel: string; view: ViewId }) {
+  const { active } = useAi();
   return (
-    <header className="relative z-50 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2 sm:px-4 xl:h-[72px] xl:flex-nowrap xl:py-0">
+    <header className="relative z-50 flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-3 py-2 sm:px-4 xl:h-[68px] xl:flex-nowrap xl:py-0">
       <div className="mr-auto flex min-w-0 flex-col xl:mr-0 xl:flex-1">
-        <span className="truncate font-display text-xl font-medium leading-none tracking-tight text-foreground">{brand}</span>
-        <span className="mt-1 hidden truncate text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground sm:block">Subscription Intelligence</span>
+        <span className="truncate font-display text-2xl font-semibold leading-none tracking-tight text-foreground">{brand}</span>
+        <span className="mt-1 hidden truncate text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground sm:block">Subscription Intelligence · Edição {monthLabel}</span>
       </div>
-      <NavPill view={view} className="hidden xl:flex" />
+      <NavTabs view={view} className="hidden xl:flex" />
       <ThemeToggle className="xl:hidden" side="bottom" />
       <div className="order-last flex w-full min-w-0 flex-wrap items-center gap-2 xl:order-none xl:w-auto xl:flex-1 xl:flex-nowrap xl:justify-end">
         <span className={chip}>
@@ -25,6 +28,15 @@ export function TopBar({ brand, monthLabel, view }: { brand: string; monthLabel:
           LGPD
           <InfoTip label="Sobre os dados" text="Dados sintéticos gerados por simulação determinística (seed fixa), no navegador. Nenhuma informação real de assinantes. Funil: compras reais do dataset; etapas anteriores estimadas por taxas de conversão do canal." />
         </span>
+        <button
+          type="button"
+          aria-pressed={active}
+          onClick={() => aiStore.toggle()}
+          className={cn("hidden h-8 shrink-0 items-center gap-1.5 rounded-md px-3 text-xs font-semibold transition-colors xl:inline-flex", active ? "bg-foreground text-background" : "bg-brand text-brand-foreground hover:opacity-90")}
+        >
+          <Sparkles className="size-3.5" aria-hidden />
+          Mesa de análise
+        </button>
         <ThemeToggle className="hidden size-8 xl:grid" side="bottom" />
       </div>
     </header>

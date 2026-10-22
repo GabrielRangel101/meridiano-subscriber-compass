@@ -85,22 +85,22 @@ export function AiLayer() {
           <svg className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden>
             <defs>
               <linearGradient id="ai-thread" x1="0" x2="1">
-                <stop offset="0" stopColor="#22D3EE" />
-                <stop offset="1" stopColor="#8B5CF6" />
+                <stop offset="0" stopColor="#E0A93B" />
+                <stop offset="1" stopColor="#E0614F" />
               </linearGradient>
             </defs>
             {paths.map((p) => (
               <g key={p.key}>
                 <path d={p.d} stroke="url(#ai-thread)" strokeWidth={1.75} fill="none" opacity={0.85} />
-                {!reduced && <path className="ai-thread-pulse" d={p.d} stroke="#E0FBFF" strokeWidth={2.5} fill="none" strokeDasharray="10 240" strokeLinecap="round" />}
-                <circle cx={p.a[0]} cy={p.a[1]} r={3.5} fill="#22D3EE" />
-                <circle cx={p.b[0]} cy={p.b[1]} r={3.5} fill="#8B5CF6" />
+                {!reduced && <path className="ai-thread-pulse" d={p.d} stroke="#FFF3D6" strokeWidth={2.5} fill="none" strokeDasharray="10 240" strokeLinecap="round" />}
+                <circle cx={p.a[0]} cy={p.a[1]} r={3.5} fill="#E0A93B" />
+                <circle cx={p.b[0]} cy={p.b[1]} r={3.5} fill="#E0614F" />
               </g>
             ))}
           </svg>
 
           {focusRect && (
-            <div className="absolute -translate-x-1/2 rounded-full border border-white/20 bg-[hsl(245_44%_9%)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground shadow-lg" style={{ left: focusRect.x + focusRect.w / 2, top: Math.max(4, focusRect.y - 14) }}>
+            <div className="absolute -translate-x-1/2 rounded-full border border-white/20 bg-[hsl(205_38%_9%)] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-foreground shadow-lg" style={{ left: focusRect.x + focusRect.w / 2, top: Math.max(4, focusRect.y - 14) }}>
               Em análise · {items.length} {items.length === 1 ? "leitura" : "leituras"}
             </div>
           )}
