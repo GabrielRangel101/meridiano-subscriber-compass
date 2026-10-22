@@ -67,8 +67,57 @@
   --color-sidebar-ring: var(--ring);
 }
 
-/* Tema escuro "command center" (padrão) */
+/* Tema claro "vidro" (padrão) */
 :root {
+  --radius: 14px;
+  color-scheme: light;
+  --background: hsl(234 100% 96%); /* #ECEEFF */
+  --foreground: hsl(243 28% 14%);
+  --card: hsl(0 0% 100% / 0.72);
+  --card-surface: hsl(0 0% 100% / 0.72);
+  --card-foreground: hsl(243 28% 14%);
+  --popover: hsl(0 0% 100% / 0.94);
+  --popover-foreground: hsl(243 28% 14%);
+
+  --primary: hsl(243 75% 59%);
+  --primary-glow: hsl(262 83% 58%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(243 40% 96%);
+  --secondary-foreground: hsl(243 28% 14%);
+  --muted: hsl(240 30% 92%);
+  --muted-foreground: hsl(220 9% 43%); /* ~#6B7280, AA */
+  --accent: hsl(38 92% 50%);
+  --accent-foreground: hsl(243 28% 14%);
+  --cyan: hsl(189 94% 36%);
+
+  --positive: hsl(160 84% 30%);
+  --positive-fill: hsl(160 84% 39%);
+  --danger: hsl(347 77% 50%);
+  --warning: hsl(32 95% 38%);
+  --destructive: hsl(347 77% 50%);
+  --destructive-foreground: hsl(0 0% 100%);
+
+  --border: hsl(243 75% 59% / 0.10);
+  --border-strong: hsl(243 75% 59% / 0.4);
+  --input: hsl(243 47% 20% / 0.14);
+  --ring: hsl(243 75% 59%);
+  --chart-grid: hsl(243 47% 20% / 0.08);
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
+  --app-bg: radial-gradient(38rem 30rem at 8% 10%, hsl(243 75% 59% / 0.16), transparent 70%), radial-gradient(34rem 28rem at 92% 18%, hsl(188 86% 53% / 0.16), transparent 70%), radial-gradient(36rem 30rem at 60% 100%, hsl(330 81% 60% / 0.12), transparent 70%), linear-gradient(135deg, #ECEEFF 0%, #F5EEFF 50%, #E6F3FF 100%);
+
+  --cat-1: hsl(243 75% 59%);
+  --cat-2: hsl(262 83% 58%);
+  --cat-3: hsl(38 92% 50%);
+  --cat-4: hsl(189 94% 43%);
+  --cat-5: hsl(330 81% 60%);
+  --cat-6: hsl(215 20% 55%);
+
+  --shadow-glass: inset 0 0 0 1px hsl(0 0% 100% / 0.7), 0 12px 32px -16px hsl(262 70% 45% / 0.22);
+  --shadow-highlight: 0 0 0 3px hsl(243 75% 59% / 0.3), var(--shadow-glass);
+}
+
+/* Tema escuro "command center" (opcional; sempre usado no Modo IA) */
+:root[data-theme="dark"], .ai-dark {
   color-scheme: dark;
   --radius: 14px;
 
@@ -103,6 +152,7 @@
   --input: hsl(0 0% 100% / 0.12);
   --ring: hsl(239 84% 74%);
   --chart-grid: hsl(0 0% 100% / 0.06);
+  --app-bg: linear-gradient(180deg, hsl(225 51% 8%), hsl(228 50% 6%));
 
   --cat-1: hsl(239 84% 70%); /* índigo */
   --cat-2: hsl(258 90% 72%); /* violeta */
@@ -114,52 +164,6 @@
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
   --shadow-glass: inset 0 1px 0 hsl(0 0% 100% / 0.04), 0 10px 30px -14px hsl(228 60% 2% / 0.8);
   --shadow-highlight: 0 0 0 3px hsl(239 84% 67% / 0.55), var(--shadow-glass);
-}
-
-/* Tema claro opcional (tokens editoriais originais) */
-:root[data-theme="light"] {
-  color-scheme: light;
-  --background: hsl(43 27% 95%);
-  --foreground: hsl(243 28% 14%);
-  --card: hsl(0 0% 100% / 0.75);
-  --card-surface: hsl(0 0% 100% / 0.75);
-  --card-foreground: hsl(243 28% 14%);
-  --popover: hsl(0 0% 100% / 0.94);
-  --popover-foreground: hsl(243 28% 14%);
-
-  --primary: hsl(243 75% 59%);
-  --primary-glow: hsl(262 83% 58%);
-  --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(243 40% 96%);
-  --secondary-foreground: hsl(243 28% 14%);
-  --muted: hsl(40 18% 90%);
-  --muted-foreground: hsl(243 10% 40%);
-  --accent: hsl(38 92% 50%);
-  --accent-foreground: hsl(243 28% 14%);
-  --cyan: hsl(189 94% 36%);
-
-  --positive: hsl(160 84% 30%);
-  --positive-fill: hsl(160 84% 39%);
-  --danger: hsl(347 77% 50%);
-  --warning: hsl(32 95% 38%);
-  --destructive: hsl(347 77% 50%);
-  --destructive-foreground: hsl(0 0% 100%);
-
-  --border: hsl(243 47% 20% / 0.09);
-  --border-strong: hsl(243 75% 59% / 0.4);
-  --input: hsl(243 47% 20% / 0.14);
-  --ring: hsl(243 75% 59%);
-  --chart-grid: hsl(243 47% 20% / 0.08);
-
-  --cat-1: hsl(243 75% 59%);
-  --cat-2: hsl(262 83% 58%);
-  --cat-3: hsl(38 92% 50%);
-  --cat-4: hsl(189 94% 43%);
-  --cat-5: hsl(330 81% 60%);
-  --cat-6: hsl(215 20% 55%);
-
-  --shadow-glass: 0 1px 2px hsl(243 47% 20% / 0.04), 0 10px 28px -14px hsl(243 47% 20% / 0.14);
-  --shadow-highlight: 0 0 0 3px hsl(243 75% 59% / 0.3), var(--shadow-glass);
 }
 
 [id$="-card"], #kpi-section { scroll-margin: 12px; }
@@ -180,6 +184,7 @@
     font-family: var(--font-sans);
   }
   body {
+    background: var(--app-bg) fixed;
     background-color: var(--color-background);
     color: var(--color-foreground);
     -webkit-font-smoothing: antialiased;
@@ -200,6 +205,7 @@
 
 @utility dash-card {
   background: var(--card-surface);
+  backdrop-filter: blur(14px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-glass);
