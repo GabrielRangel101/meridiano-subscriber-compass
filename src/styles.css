@@ -190,7 +190,8 @@
     font-family: var(--font-sans);
   }
   body {
-    background: var(--app-bg) fixed;
+    background: var(--app-bg);
+    background-attachment: scroll;
     background-color: var(--color-background);
     color: var(--color-foreground);
     -webkit-font-smoothing: antialiased;
@@ -211,7 +212,7 @@
 
 @utility dash-card {
   background: var(--card-surface);
-  backdrop-filter: blur(6px);
+  /* sem backdrop-filter: com ~12 cards na tela ele trava o Chrome e o fundo já é quase opaco */
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow-glass);

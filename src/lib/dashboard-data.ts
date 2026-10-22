@@ -6,6 +6,7 @@ import { monthLabel } from "@/engine/calendar";
 import { generateDataset } from "@/engine/generate";
 import { atRisk, buildSeries, churnReasons, cohortRetention, composition, correlationMatrix, CRITICAL_RISK, editoriaHealth, funnelByChannel, kpi, lagCorrelation, peopleMap, projectActive, toWaffle } from "@/engine/metrics";
 import type { AtRiskRow, Cohort, CohortBy, CorrelationMatrix, Kpi, MonthPoint, SeriesKey } from "@/engine/metrics";
+import { fullFunnel, mrrBridge, planMix, unitEconomics } from "@/engine/growth";
 import { generateInsights } from "@/engine/insights";
 import type { Insight, Severity } from "@/engine/insights";
 import { fmtBRL, fmtBRLCompact, fmtInt, fmtPP, fmtPct, fmtSignedInt, fmtSignedPct } from "./format";
@@ -45,6 +46,7 @@ function compute() {
   const proj = projectActive(series, ds.meta.goalActive, ds.meta.goalMonth);
   const comp = composition(ds, m, "plan");
   const waffle = toWaffle(comp);
+  const plans = planMix(ds, m);
   // Each expensive engine entry point runs once, inside the shared memoized computation.
   const risk = atRisk(ds, m);
   const people = peopleMap(ds, m, 60);
@@ -122,6 +124,7 @@ function compute() {
     proj,
     comp,
     waffle,
+    plans,
     kpis,
     goalLabel: monthLabel(ds.meta.goalMonth).toLowerCase(),
     risk,
@@ -200,6 +203,10 @@ function computeWindow() {
   const reasonRows = [...reasons.rows].sort((a, b) => natureRank(a.nature) - natureRank(b.nature) || b.count - a.count);
 
   const funnel = funnelByChannel(ds, m0, m1);
+  // Funil ponta a ponta, ponte de MRR e unit economics (src/engine/growth.ts)
+  const journey = fullFunnel(ds, m0, m1);
+  const mrr = mrrBridge(ds, m0, m1);
+  const econ = unitEconomics(ds, m0, m1);
   const byOverall = [...funnel].sort((a, b) => b.overall - a.overall);
 
   // Volume × qualidade: compras no período e retenção em 6 meses por canal
@@ -241,6 +248,9 @@ function computeWindow() {
     rangeLabel: `${series[m0].label} – ${series[m1].label}`,
     reasons: { total: reasons.total, byNature, rows: reasonRows },
     funnel,
+    journey,
+    mrr,
+    econ,
     bestChannel: byOverall[0]?.channel ?? null,
     worstChannel: byOverall[byOverall.length - 1]?.channel ?? null,
     quality,
@@ -385,6 +395,7 @@ export const AI_TARGETS = {
   changes: { label: "Variação mês a mês", question: "Resumo dos principais alertas" },
   correlation: { label: "Rede de correlação", question: "Resumo dos principais alertas" },
   "base-bridge": { label: "Da base inicial à final", question: "Como está o churn?" },
+  "mrr-bridge": { label: "Ponte de MRR", question: "Como foi o reajuste de preço?" },
   price: { label: "Preço", question: "Como foi o reajuste de preço?" },
 } as const satisfies Record<string, { label: string; question: string }>;
 export type AiTargetId = keyof typeof AI_TARGETS;

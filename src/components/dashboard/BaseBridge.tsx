@@ -14,10 +14,11 @@ export function BaseBridge({ bridge, className }: { bridge: WindowData["bridge"]
   const steps = bridge.steps;
   const W = size.w;
   const H = Math.max(180, size.h);
-  const top = 22, bottom = 34;
+  const top = 22;
+  const slot = W / steps.length;
+  const bottom = slot < 90 ? 46 : 34;
   const maxV = Math.max(...steps.map((s) => Math.max(s.from, s.to)));
   const y = (v: number) => top + (1 - v / maxV) * (H - top - bottom);
-  const slot = W / steps.length;
   const bw = Math.min(64, slot * 0.6);
   const summary = (
     <>saldo líquido <strong className={bridge.net >= 0 ? "text-positive" : "text-danger"}>{fmtSignedInt(bridge.net)}</strong> · {WINDOW_LABEL}</>

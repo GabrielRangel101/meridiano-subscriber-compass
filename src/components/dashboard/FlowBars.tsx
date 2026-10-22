@@ -33,7 +33,7 @@ export function FlowBars({ series, events, className }: { series: MonthPoint[]; 
       <div className="relative min-h-0 flex-1" role="img" aria-label={`Gráfico de barras divergentes de ${series[0].label} a ${last.label}: novas assinaturas acima de zero, cancelamentos abaixo e linha de saldo líquido.`}>
         <EventPopover event={hover.e} x={hover.x} />
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={rows} stackOffset="sign" margin={{ top: 20, right: 8, bottom: 0, left: 0 }}>
+          <ComposedChart data={rows} stackOffset="sign" margin={{ top: 24, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
             <XAxis dataKey="label" tick={AXIS_TICK} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={18} />
             <YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} width={48} tickFormatter={(v: number) => fmtInt(Math.abs(v))} />
@@ -59,7 +59,7 @@ export function FlowBars({ series, events, className }: { series: MonthPoint[]; 
             />
             <Bar dataKey="newSubs" stackId="flow" fill="var(--positive-fill)" radius={[3, 3, 0, 0]} maxBarSize={22} isAnimationActive={!reduce} />
             <Bar dataKey="cancelledDown" stackId="flow" fill="var(--danger)" fillOpacity={0.85} radius={[3, 3, 0, 0]} maxBarSize={22} isAnimationActive={!reduce} />
-            <Line type="monotone" dataKey="netAdds" stroke="var(--accent)" strokeWidth={2} dot={{ r: 2, fill: "var(--accent)", strokeWidth: 0 }} activeDot={{ r: 4 }} isAnimationActive={!reduce} animationBegin={500} />
+            <Line type="monotone" dataKey="netAdds" stroke="var(--accent)" strokeWidth={2} dot={{ r: 2, fill: "var(--accent)", strokeWidth: 0 }} activeDot={{ r: 4 }} isAnimationActive={false} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>

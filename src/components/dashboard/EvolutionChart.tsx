@@ -43,7 +43,7 @@ export function EvolutionChart({ data, className }: { data: DashboardData; class
       <div className="relative min-h-0 flex-1" role="img" aria-label={`Gráfico de linha: assinantes ativos de ${series[0].label} a ${current.label}, com projeção até ${goalLabel} e meta de ${fmtInt(goal)}.`}>
         <EventPopover event={hover.e} x={hover.x} />
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart data={rows} margin={{ top: 22, right: 8, bottom: 0, left: 0 }}>
+          <ComposedChart data={rows} margin={{ top: 26, right: 8, bottom: 0, left: 0 }}>
             <defs>
               <linearGradient id="evo-fill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.35} />

@@ -20,7 +20,7 @@ function MarkerLabel({ viewBox, event, onHover }: MarkerLabelProps) {
   const color = KIND_COLOR[event.kind];
   return (
     <g
-      transform={`translate(${x}, ${y + 2})`}
+      transform={`translate(${x}, ${y - 12})`}
       tabIndex={0}
       role="button"
       aria-label={`${event.label}: ${event.description}`}
@@ -30,8 +30,8 @@ function MarkerLabel({ viewBox, event, onHover }: MarkerLabelProps) {
       onBlur={() => onHover(null)}
       style={{ cursor: "pointer", outline: "none" }}
     >
-      <circle r={9} fill="var(--card)" stroke={color} strokeWidth={1.75} />
-      <text textAnchor="middle" dy={3.5} fontSize={event.kind === "preço" ? 7 : 9} fontWeight={600} fill={color}>
+      <circle r={8} fill="var(--card)" stroke={color} strokeWidth={1.5} />
+      <text textAnchor="middle" dy={3.5} fontSize={event.kind === "preço" ? 6.5 : 8.5} fontWeight={600} fill={color}>
         {KIND_GLYPH[event.kind]}
       </text>
       <title>{`${event.label} — ${event.description}`}</title>
@@ -53,8 +53,8 @@ export function eventMarkers(
       key={`${e.label}-${e.month}`}
       x={xFor(e.month)}
       stroke={KIND_COLOR[e.kind]}
-      strokeOpacity={0.35}
-      strokeDasharray="2 4"
+      strokeOpacity={0.22}
+      strokeDasharray="2 5"
       ifOverflow="extendDomain"
       label={<MarkerLabel event={e} onHover={onHover} />}
     />
@@ -65,7 +65,7 @@ export function EventPopover({ event, x }: { event: EventMarker | null; x: numbe
   if (!event) return null;
   return (
     <div
-      className="glass pointer-events-none absolute top-8 z-10 w-60 -translate-x-1/2 rounded-xl px-3 py-2 text-xs shadow-lg"
+      className="glass pointer-events-none absolute top-6 z-10 w-60 -translate-x-1/2 rounded-xl px-3 py-2 text-xs shadow-lg"
       style={{ left: Math.max(130, x) }}
       role="status"
     >
