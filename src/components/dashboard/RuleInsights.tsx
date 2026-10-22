@@ -1,40 +1,65 @@
 import { useMemo, useState } from "react";
 import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
-import { useReducedMotion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import type { DashboardData } from "@/lib/dashboard-data";
-import { INSIGHT_TARGETS } from "@/lib/dashboard-data";
+import { INSIGHT_TARGETS, INSIGHT_VIEWS } from "@/lib/dashboard-data";
 import type { Insight, Severity } from "@/engine/insights";
+import { useGoToCard } from "@/components/shell/use-go-to-card";
 import { cn } from "@/lib/utils";
-import { Reveal } from "./Reveal";
+import { DashCard } from "./DashCard";
 
-const tones: Record<Severity, string> = { perigo: 'bg-danger/10 text-danger', atenção: 'bg-accent/10 text-warning', positivo: 'bg-positive/10 text-positive', info: 'bg-primary/10 text-primary' };
+export const SEVERITY_TONES: Record<Severity, string> = { perigo: "bg-danger/15 text-danger", atenção: "bg-accent/15 text-warning", positivo: "bg-positive/15 text-positive", info: "bg-primary/15 text-primary" };
 
-export function RuleInsights({ data }: { data: DashboardData }) {
-  const [severity, setSeverity] = useState<Severity | 'todos'>('todos');
-  const [topic, setTopic] = useState<Insight['topic'] | 'todos'>('todos');
+function Chip({ on, onClick, children, className }: { on: boolean; onClick: () => void; children: React.ReactNode; className?: string }) {
+  return (
+    <button type="button" aria-pressed={on} onClick={onClick} className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[11px] capitalize transition-colors", on ? "border-primary bg-primary/15 text-foreground" : "border-transparent text-muted-foreground hover:text-foreground", className)}>
+      {children}
+    </button>
+  );
+}
+
+export function RuleInsights({ data, className }: { data: DashboardData; className?: string }) {
+  const [severity, setSeverity] = useState<Severity | "todos">("todos");
+  const [topic, setTopic] = useState<Insight["topic"] | "todos">("todos");
   const [expanded, setExpanded] = useState(false);
-  const reduce = useReducedMotion();
-  const filtered = useMemo(() => data.insights.filter((i) => (severity === 'todos' || i.severity === severity) && (topic === 'todos' || i.topic === topic)), [data.insights, severity, topic]);
-  function reveal(insight: Insight) {
-    const card = document.getElementById(INSIGHT_TARGETS[insight.topic]);
-    if (!card) return;
-    card.scrollIntoView({ behavior: reduce ? 'instant' : 'smooth', block: 'center' });
-    card.classList.remove('insight-highlight');
-    void card.offsetWidth;
-    card.classList.add('insight-highlight');
-    window.setTimeout(() => card.classList.remove('insight-highlight'), 1200);
-  }
-  return <Reveal index={15} className="min-w-0 lg:col-span-12" aria-labelledby="insights-title">
-    <div className="flex flex-wrap items-baseline justify-between gap-2"><h3 id="insights-title" className="font-display text-xl font-medium">Insights do motor de regras</h3><span className="text-xs text-muted-foreground">{filtered.length} achados</span></div>
-    <div className="mt-4 flex flex-wrap gap-1.5" role="group" aria-label="Filtrar por severidade"><Button size="sm" variant={severity === 'todos' ? 'default' : 'ghost'} aria-pressed={severity === 'todos'} onClick={() => { setSeverity('todos'); setExpanded(false); }}>Todos ({data.insights.length})</Button>{data.severityCounts.map((s) => <Button key={s.key} size="sm" variant="ghost" aria-pressed={severity === s.key} className={cn('capitalize', severity === s.key && tones[s.key])} onClick={() => { setSeverity(s.key); setExpanded(false); }}>{s.key} ({s.count})</Button>)}</div>
-    <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Filtrar por tema"><Button size="sm" variant={topic === 'todos' ? 'secondary' : 'ghost'} aria-pressed={topic === 'todos'} onClick={() => { setTopic('todos'); setExpanded(false); }}>Todos os temas</Button>{data.topics.map((t) => <Button size="sm" key={t.key} variant={topic === t.key ? 'secondary' : 'ghost'} aria-pressed={topic === t.key} className="capitalize" onClick={() => { setTopic(t.key); setExpanded(false); }}>{t.key} ({t.count})</Button>)}</div>
-    <ul className="mt-4 divide-y">{(expanded ? filtered : filtered.slice(0,6)).map((i) => <li key={i.id} className="py-4">
-      <Button variant="ghost" className="h-auto w-full items-start justify-start whitespace-normal p-0 text-left hover:bg-transparent" onClick={() => reveal(i)} aria-label={`Ver seção relacionada: ${i.title}`}>
-        <div className="min-w-0 flex-1"><div className="mb-2 flex flex-wrap items-center gap-2"><span className={cn('rounded-full px-2 py-0.5 text-[11px] font-semibold capitalize', tones[i.severity])}>{i.severity}</span><span className="text-xs font-normal capitalize text-muted-foreground">{i.topic}</span>{i.displayValue && <strong className="ml-auto font-display text-lg text-foreground">{i.displayValue}</strong>}</div><h4 className="font-display text-lg font-medium">{i.title}</h4><p className="mt-1 text-sm font-normal leading-relaxed text-muted-foreground">{i.text}</p></div><ArrowUpRight className="mt-2 shrink-0 text-primary" />
-      </Button>
-    </li>)}</ul>
-    {filtered.length === 0 && <p className="py-8 text-center text-sm text-muted-foreground">Nenhum achado neste filtro.</p>}
-    {filtered.length > 6 && <div className="mt-2 flex justify-center"><Button variant="secondary" onClick={() => setExpanded(!expanded)}>{expanded ? <ChevronUp /> : <ChevronDown />}{expanded ? 'Ver menos' : 'Ver todos'}</Button></div>}
-  </Reveal>;
+  const goTo = useGoToCard();
+  const filtered = useMemo(() => data.insights.filter((i) => (severity === "todos" || i.severity === severity) && (topic === "todos" || i.topic === topic)), [data.insights, severity, topic]);
+  const pickSeverity = (s: Severity | "todos") => { setSeverity(s); setExpanded(false); };
+  const pickTopic = (t: Insight["topic"] | "todos") => { setTopic(t); setExpanded(false); };
+
+  return (
+    <DashCard id="insights-card" title="Insights do motor de regras" info="Achados automáticos do motor de regras. Clique num achado para abrir o card relacionado." summary={`${filtered.length} achados`} className={className} bodyClassName="gap-1.5">
+      <div className="flex shrink-0 gap-1 overflow-x-auto pb-0.5" role="group" aria-label="Filtrar por severidade">
+        <Chip on={severity === "todos"} onClick={() => pickSeverity("todos")}>Todos ({data.insights.length})</Chip>
+        {data.severityCounts.map((s) => <Chip key={s.key} on={severity === s.key} onClick={() => pickSeverity(s.key)} className={severity === s.key ? SEVERITY_TONES[s.key] : undefined}>{s.key} ({s.count})</Chip>)}
+      </div>
+      <div className="flex shrink-0 gap-1 overflow-x-auto pb-0.5" role="group" aria-label="Filtrar por tema">
+        <Chip on={topic === "todos"} onClick={() => pickTopic("todos")}>Todos os temas</Chip>
+        {data.topics.map((t) => <Chip key={t.key} on={topic === t.key} onClick={() => pickTopic(t.key)}>{t.key} ({t.count})</Chip>)}
+      </div>
+      <ul className="min-h-0 flex-1 divide-y overflow-y-auto pr-1">
+        {(expanded ? filtered : filtered.slice(0, 6)).map((i) => (
+          <li key={i.id}>
+            <button type="button" className="flex w-full items-start gap-2 rounded py-1.5 text-left hover:bg-secondary/60" onClick={() => goTo(INSIGHT_VIEWS[i.topic], INSIGHT_TARGETS[i.topic])} aria-label={`Ver card relacionado: ${i.title}`}>
+              <span className={cn("mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold capitalize", SEVERITY_TONES[i.severity])}>{i.severity}</span>
+              <span className="min-w-0 flex-1">
+                <span className="flex items-baseline gap-2">
+                  <span className="truncate text-xs font-semibold text-foreground">{i.title}</span>
+                  {i.displayValue && <strong className="ml-auto shrink-0 text-xs tabular-nums text-foreground">{i.displayValue}</strong>}
+                </span>
+                <span className="line-clamp-2 text-[11px] leading-snug text-muted-foreground">{i.text}</span>
+              </span>
+              <ArrowUpRight className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden />
+            </button>
+          </li>
+        ))}
+        {filtered.length === 0 && <li className="py-6 text-center text-xs text-muted-foreground">Nenhum achado neste filtro.</li>}
+      </ul>
+      {filtered.length > 6 && (
+        <button type="button" className="mx-auto flex shrink-0 items-center gap-1 rounded px-2 py-0.5 text-[11px] font-medium text-primary hover:bg-secondary" onClick={() => setExpanded(!expanded)}>
+          {expanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+          {expanded ? "Ver menos" : "Ver todos"}
+        </button>
+      )}
+    </DashCard>
+  );
 }
