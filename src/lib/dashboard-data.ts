@@ -1,6 +1,7 @@
 // Camada de dados do dashboard: chama SOMENTE o motor (src/engine) e monta view-models de apresentação.
 import { useMemo } from "react";
 import { answer } from "@/engine/ask";
+import { growthAnswer } from "@/engine/askgrowth";
 import { priceAnswer } from "@/engine/askprice";
 import type { AiAnswer } from "@/engine/ask";
 import { monthLabel } from "@/engine/calendar";
@@ -170,7 +171,7 @@ export function getAiAnswer(question: string): AiAnswer {
   if (cached) return cached;
   const { ds } = getDashboardData();
   // perguntas de preço que o roteador principal confundiria com a análise do reajuste
-  const result = priceAnswer(ds, question) ?? answer(ds, question);
+  const result = growthAnswer(ds, question) ?? priceAnswer(ds, question) ?? answer(ds, question);
   if (answerCache.size >= 50) answerCache.delete(answerCache.keys().next().value ?? "");
   answerCache.set(question, result);
   return result;
