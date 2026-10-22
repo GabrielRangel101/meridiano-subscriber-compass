@@ -33,7 +33,7 @@ export function InsightsCompact({ data, className }: { data: DashboardData; clas
       className={className}
     >
       <ul className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
-        {data.insights.map((i, idx) => {
+        {data.insights.slice(0, 10).map((i, idx) => {
           const featured = idx < FEATURED;
           return (
             <li key={i.id} className="min-w-0">
