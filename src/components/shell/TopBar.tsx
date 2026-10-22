@@ -16,7 +16,7 @@ export function TopBar({ brand, monthLabel, period, onPeriod }: { brand: string;
       </div>
       <ThemeToggle className="xl:hidden" side="bottom" />
       <AiMode />
-      <div className="order-last flex w-full min-w-0 items-center gap-2 overflow-x-auto xl:order-none xl:w-auto xl:overflow-visible">
+      <div className="order-last flex w-full min-w-0 flex-wrap items-center gap-2 xl:order-none xl:w-auto xl:flex-nowrap">
         <PeriodSelector value={period} onChange={onPeriod} />
         <span className={chip}>
           <CalendarDays className="size-3.5 text-primary" aria-hidden />

@@ -35,7 +35,7 @@ export function FlowBars({ series, events, className }: { series: MonthPoint[]; 
           <ComposedChart data={rows} stackOffset="sign" margin={{ top: 20, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
             <XAxis dataKey="label" tick={AXIS_TICK} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={18} />
-            <YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} width={40} tickFormatter={(v: number) => fmtInt(Math.abs(v))} />
+            <YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} width={48} tickFormatter={(v: number) => fmtInt(Math.abs(v))} />
             <ReferenceLine y={0} stroke="var(--foreground)" strokeOpacity={0.4} />
             {eventMarkers(events, monthLabel, (e, x) => setHover({ e, x: x ?? 0 }))}
             <Tooltip

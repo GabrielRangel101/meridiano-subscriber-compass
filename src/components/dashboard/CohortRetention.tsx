@@ -30,7 +30,7 @@ export function CohortRetention({ data, className }: { data: DashboardData; clas
           <LineChart data={view.rows} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
             <XAxis dataKey="age" tick={AXIS_TICK} tickLine={false} axisLine={false} />
-            <YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} width={40} domain={[0, 1]} tickFormatter={(v: number) => fmtPct(v, 0)} />
+            <YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} width={48} domain={[0, 1]} tickFormatter={(v: number) => fmtPct(v, 0)} />
             <Tooltip
               cursor={{ stroke: "var(--primary)", strokeOpacity: 0.3 }}
               content={({ active, payload, label }) => {

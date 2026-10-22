@@ -61,7 +61,7 @@ export function DashCard({
   const hid = useId();
   return (
     <section id={id} aria-labelledby={hid} className={cn("dash-card flex min-h-0 min-w-0 flex-col gap-2 p-3", className)}>
-      <header className="flex min-h-6 shrink-0 items-center gap-1.5">
+      <header className="flex min-h-6 shrink-0 flex-wrap items-center gap-1.5">
         <SectionLabel id={hid}>{title}</SectionLabel>
         {info && <InfoTip text={info} label={`Sobre: ${title}`} />}
         <div className="ml-auto flex min-w-0 items-center gap-2">

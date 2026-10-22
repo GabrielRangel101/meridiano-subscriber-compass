@@ -33,7 +33,7 @@ export function RuleInsights({ data, className }: { data: DashboardData; classNa
         {data.severityCounts.map((s) => <Chip key={s.key} on={severity === s.key} onClick={() => pickSeverity(s.key)} className={severity === s.key ? SEVERITY_TONES[s.key] : undefined}>{s.key} ({s.count})</Chip>)}
       </div>
       <div className="flex shrink-0 gap-1 overflow-x-auto pb-0.5" role="group" aria-label="Filtrar por tema">
-        <Chip on={topic === "todos"} onClick={() => pickTopic("todos")}>Todos os temas</Chip>
+        <Chip on={topic === "todos"} onClick={() => pickTopic("todos")} className="normal-case">Todos os temas</Chip>
         {data.topics.map((t) => <Chip key={t.key} on={topic === t.key} onClick={() => pickTopic(t.key)}>{t.key} ({t.count})</Chip>)}
       </div>
       <ul className="min-h-0 flex-1 divide-y overflow-y-auto pr-1">

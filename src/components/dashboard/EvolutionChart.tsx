@@ -51,7 +51,7 @@ export function EvolutionChart({ data, className }: { data: DashboardData; class
             </defs>
             <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
             <XAxis dataKey="label" tick={AXIS_TICK} tickLine={false} axisLine={false} interval="preserveStartEnd" minTickGap={18} />
-            <YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} width={40} tickFormatter={fmtCompact} domain={[(min: number) => Math.floor((min * 0.95) / 500) * 500, (max: number) => Math.max(max, goal) * 1.02]} />
+            <YAxis tick={AXIS_TICK} tickLine={false} axisLine={false} width={48} tickFormatter={fmtCompact} domain={[(min: number) => Math.floor((min * 0.95) / 500) * 500, (max: number) => Math.max(max, goal) * 1.02]} />
             <Tooltip
               cursor={{ stroke: "var(--primary)", strokeOpacity: 0.3 }}
               content={({ active, payload, label }) => {

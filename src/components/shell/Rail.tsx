@@ -9,7 +9,7 @@ import { VIEWS } from "./views";
 export function Rail({ view }: { view: ViewId }) {
   return (
     <nav aria-label="Views do dashboard" className="hidden w-16 shrink-0 flex-col items-center gap-1 border-r bg-card/40 py-3 xl:flex">
-      <span className="bg-gradient-primary mb-3 grid size-9 place-items-center rounded-lg font-display text-base text-primary-foreground" aria-hidden>G</span>
+      <span className="bg-gradient-primary mb-3 grid size-9 place-items-center rounded-lg text-base font-semibold text-primary-foreground" aria-hidden>G</span>
       {VIEWS.map((v) => {
         const on = v.id === view;
         const Icon = v.icon;
