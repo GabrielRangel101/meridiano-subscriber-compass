@@ -1,23 +1,20 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { MotionConfig } from "framer-motion";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { EvolutionChart } from "@/components/dashboard/EvolutionChart";
-import { FlowBars } from "@/components/dashboard/FlowBars";
-import { PeriodSection } from "@/components/dashboard/PeriodSection";
-import { DashboardFooter } from "@/components/dashboard/DashboardFooter";
-import { KpiCard } from "@/components/dashboard/KpiCard";
-import { WaffleCard } from "@/components/dashboard/WaffleCard";
-import { useDashboardData } from "@/lib/dashboard-data";
-import { SynergySection } from "@/components/dashboard/SynergySection";
+import { AppShell } from "@/components/shell/AppShell";
+import { AcquisitionView, OverviewView, RetentionView, RiskView } from "@/components/views/DashboardViews";
+import { parseView, useDashboardData, usePeriodData } from "@/lib/dashboard-data";
+import type { PeriodN, ViewId } from "@/lib/dashboard-data";
 
 export const Route = createFileRoute("/")({
+  validateSearch: (search: Record<string, unknown>): { view: ViewId } => ({ view: parseView(search.view) }),
   head: () => ({
     meta: [
-      { title: "Visão geral · Gazeta Meridiano Subscription Intelligence" },
-      { name: "description", content: "Painel de assinaturas digitais da Gazeta Meridiano: base ativa, churn, MRR, correlações, assinantes em risco e insights de regras com dados sintéticos." },
-      { property: "og:title", content: "Visão geral · Gazeta Meridiano Subscription Intelligence" },
-      { property: "og:description", content: "Base ativa, receita, sinergia entre métricas, risco em 90 dias e insights de um jornal fictício." },
+      { title: "Dashboard · Gazeta Meridiano Subscription Intelligence" },
+      { name: "description", content: "Dashboard de assinaturas digitais da Gazeta Meridiano: visão geral, aquisição, retenção por coorte, risco de saída e sinergia entre métricas, com dados sintéticos." },
+      { property: "og:title", content: "Dashboard · Gazeta Meridiano Subscription Intelligence" },
+      { property: "og:description", content: "Command center de assinaturas de um jornal fictício: KPIs, funil, coortes, risco em 90 dias e insights." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -25,32 +22,25 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const VIEW_COMPONENTS = { geral: OverviewView, aquisicao: AcquisitionView, retencao: RetentionView, risco: RiskView } as const;
+
 function Index() {
+  const { view } = Route.useSearch();
   const data = useDashboardData();
-  const { ds, current, kpis, comp, waffle, series } = data;
+  const [n, setN] = useState<PeriodN>(3);
+  const period = usePeriodData(n);
+  const View = VIEW_COMPONENTS[view];
 
   return (
     <MotionConfig reducedMotion="user">
       <TooltipProvider delayDuration={150}>
-        <div className="paper-blobs" aria-hidden />
-        <main className="mx-auto flex max-w-[1440px] flex-col gap-6 px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
-          <DashboardHeader brand={ds.meta.brand} monthLabel={current.label} />
-
-          <section id="kpi-section" aria-label="Indicadores principais" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {kpis.map((k, i) => (
-              <KpiCard key={k.id} kpi={k} index={i} />
-            ))}
-          </section>
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-            <EvolutionChart data={data} index={5} />
-            <WaffleCard comp={comp} waffle={waffle} monthLabel={current.label} index={6} />
-            <FlowBars series={series} events={ds.meta.events} index={7} />
-            <PeriodSection index={8} />
-            <SynergySection data={data} />
-          </div>
-          <DashboardFooter />
-        </main>
+        <AppShell view={view} brand={data.ds.meta.brand} monthLabel={data.current.label} period={n} onPeriod={setN}>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div key={view} data-view={view} className="xl:h-full" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
+              <View data={data} period={period} />
+            </motion.div>
+          </AnimatePresence>
+        </AppShell>
       </TooltipProvider>
     </MotionConfig>
   );
