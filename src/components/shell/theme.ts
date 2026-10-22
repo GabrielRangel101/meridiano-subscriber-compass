@@ -5,8 +5,8 @@ export const THEME_KEY = "gm-theme";
 const listeners = new Set<() => void>();
 
 export function getTheme(): Theme {
-  if (typeof document === "undefined") return "dark";
-  return document.documentElement.dataset["theme"] === "light" ? "light" : "dark";
+  if (typeof document === "undefined") return "light";
+  return document.documentElement.dataset["theme"] === "dark" ? "dark" : "light";
 }
 
 export function setTheme(theme: Theme) {
@@ -25,8 +25,8 @@ function subscribe(l: () => void) {
 }
 
 export function useTheme(): Theme {
-  return useSyncExternalStore(subscribe, getTheme, () => "dark");
+  return useSyncExternalStore(subscribe, getTheme, () => "light");
 }
 
-/** Script inline do <head>: aplica o tema salvo antes da pintura; padrão escuro. */
-export const THEME_BOOT_SCRIPT = `try{var t=localStorage.getItem("${THEME_KEY}");document.documentElement.dataset["theme"]=t==="light"?"light":"dark"}catch(e){document.documentElement.dataset["theme"]="dark"}`;
+/** Script inline do <head>: aplica o tema salvo antes da pintura; padrão claro. */
+export const THEME_BOOT_SCRIPT = `try{var t=localStorage.getItem("${THEME_KEY}");document.documentElement.dataset.theme=t==="dark"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}`;

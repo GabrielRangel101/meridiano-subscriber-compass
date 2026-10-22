@@ -6,7 +6,7 @@ import { DashCard } from "./DashCard";
 export function MonthlyChanges({ changes, className }: { changes: DashboardData["changes"]; className?: string }) {
   const max = Math.max(...changes.map((c) => Math.abs(c.value)), 0.001);
   return (
-    <DashCard title="Variação mês a mês" info="Em relação ao mês anterior, ordenado por magnitude. Churn em p.p., NPS em pontos, demais em %. Verde = favorável, vermelho = desfavorável." className={className}>
+    <DashCard ai="changes" title="Variação mês a mês" info="Em relação ao mês anterior, ordenado por magnitude. Churn em p.p., NPS em pontos, demais em %. Verde = favorável, vermelho = desfavorável." className={className}>
       <ul className="flex min-h-0 flex-1 flex-col justify-between gap-1 overflow-y-auto">
         {changes.map((c) => {
           const Icon = c.dir === "up" ? ArrowUpRight : c.dir === "down" ? ArrowDownRight : ArrowRight;

@@ -27,7 +27,7 @@ export function RuleInsights({ data, className }: { data: DashboardData; classNa
   const pickTopic = (t: Insight["topic"] | "todos") => { setTopic(t); setExpanded(false); };
 
   return (
-    <DashCard id="insights-card" title="Insights do motor de regras" info="Achados automáticos do motor de regras. Clique num achado para abrir o card relacionado." summary={`${filtered.length} achados`} className={className} bodyClassName="gap-1.5">
+    <DashCard id="insights-card" ai="insights-full" title="Insights do motor de regras" info="Achados automáticos do motor de regras. Clique num achado para abrir o card relacionado." summary={`${filtered.length} achados`} className={className} bodyClassName="gap-1.5">
       <div className="flex shrink-0 gap-1 overflow-x-auto pb-0.5" role="group" aria-label="Filtrar por severidade">
         <Chip on={severity === "todos"} onClick={() => pickSeverity("todos")}>Todos ({data.insights.length})</Chip>
         {data.severityCounts.map((s) => <Chip key={s.key} on={severity === s.key} onClick={() => pickSeverity(s.key)} className={severity === s.key ? SEVERITY_TONES[s.key] : undefined}>{s.key} ({s.count})</Chip>)}

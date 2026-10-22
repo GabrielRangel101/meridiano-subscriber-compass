@@ -2,6 +2,8 @@ import { useId, type ReactNode } from "react";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { aiStore, useAiTarget } from "@/components/ai/ai-store";
+import type { AiTargetId } from "@/lib/dashboard-data";
 
 export function InfoTip({ text, label = "Mais informações" }: { text: ReactNode; label?: string }) {
   return (
@@ -16,13 +18,14 @@ export function InfoTip({ text, label = "Mais informações" }: { text: ReactNod
   );
 }
 
-/** Botão "✦" de perguntar à IA sobre o card — ação chega na 3C-2. */
-export function AskButton({ title }: { title: string }) {
+/** Botão "✦": liga o Modo IA já focando este card. */
+export function AskButton({ title, ai }: { title: string; ai?: AiTargetId }) {
   return (
     <button
       type="button"
-      aria-label={`Perguntar ao Modo IA sobre ${title} (em breve)`}
-      title="Perguntar ao Modo IA (em breve)"
+      onClick={() => aiStore.open(ai)}
+      aria-label={`Analisar ${title} no Modo IA`}
+      title="Analisar no Modo IA"
       className="inline-flex size-5 shrink-0 items-center justify-center rounded-md text-[11px] text-muted-foreground transition-colors hover:bg-secondary hover:text-primary"
     >
       ✦
@@ -41,6 +44,7 @@ export function SectionLabel({ id, children }: { id?: string; children: ReactNod
 /** Card denso do dashboard: cabeçalho de uma linha + corpo que ocupa a área útil. */
 export function DashCard({
   id,
+  ai,
   title,
   info,
   summary,
@@ -50,6 +54,7 @@ export function DashCard({
   children,
 }: {
   id?: string;
+  ai?: AiTargetId;
   title: string;
   info?: ReactNode;
   summary?: ReactNode;
@@ -59,15 +64,16 @@ export function DashCard({
   children: ReactNode;
 }) {
   const hid = useId();
+  const target = useAiTarget(ai);
   return (
-    <section id={id} aria-labelledby={hid} className={cn("dash-card flex min-h-0 min-w-0 flex-col gap-2 p-3", className)}>
+    <section id={id} aria-labelledby={hid} {...target.props} className={cn("dash-card flex min-h-0 min-w-0 flex-col gap-2 p-3", className)}>
       <header className="flex min-h-6 shrink-0 flex-wrap items-center gap-1.5">
         <SectionLabel id={hid}>{title}</SectionLabel>
         {info && <InfoTip text={info} label={`Sobre: ${title}`} />}
         <div className="ml-auto flex min-w-0 items-center gap-2">
           {summary && <span className="min-w-0 truncate text-xs tabular-nums text-muted-foreground">{summary}</span>}
           {actions}
-          <AskButton title={title} />
+          <AskButton title={title} ai={ai} />
         </div>
       </header>
       <div className={cn("flex min-h-0 flex-1 flex-col", bodyClassName)}>{children}</div>

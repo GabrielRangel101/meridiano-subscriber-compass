@@ -19,6 +19,7 @@ export function FlowBars({ series, events, className }: { series: MonthPoint[]; 
 
   return (
     <DashCard
+      ai="flow-bars"
       title="Novas × cancelamentos"
       info="24 meses · novas assinaturas acima de zero, cancelamentos abaixo e linha de saldo líquido."
       summary={<>saldo <strong className={last.netAdds >= 0 ? "text-positive" : "text-danger"}>{fmtSignedInt(last.netAdds)}</strong></>}

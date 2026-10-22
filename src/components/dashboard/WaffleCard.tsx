@@ -3,11 +3,13 @@ import { useMotionPreference } from "@/hooks/use-motion-preference";
 import { useMemo, useState } from "react";
 import type { CompositionRow } from "@/engine/metrics";
 import { fmtInt, fmtPct } from "@/lib/format";
+import type { AiTargetId } from "@/lib/dashboard-data";
 import { cn } from "@/lib/utils";
 import { DashCard } from "./DashCard";
 
 export function WaffleCard({
   id,
+  ai,
   title,
   info,
   comp,
@@ -16,6 +18,7 @@ export function WaffleCard({
   className,
 }: {
   id?: string;
+  ai?: AiTargetId;
   title: string;
   info: string;
   comp: CompositionRow[];
@@ -31,7 +34,7 @@ export function WaffleCard({
   const color = (k: string) => colors[k] ?? "var(--cat-6)";
 
   return (
-    <DashCard id={id} title={title} info={info} summary={fmtInt(total)} className={className} bodyClassName="gap-2">
+    <DashCard id={id} ai={ai} title={title} info={info} summary={fmtInt(total)} className={className} bodyClassName="gap-2">
       <div className="flex min-h-0 flex-1 items-center justify-center">
         <div className="grid aspect-square h-full max-h-full max-w-full grid-cols-10 gap-[3px]" role="img" aria-label={`Gráfico waffle de 100 células: ${summary}.`}>
           {cells.map((key, i) => (

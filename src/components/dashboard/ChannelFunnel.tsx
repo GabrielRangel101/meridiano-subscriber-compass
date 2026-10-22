@@ -15,7 +15,7 @@ const ROW = "grid grid-cols-3 items-center gap-x-3 gap-y-1 md:grid-cols-[11rem_r
 
 export function FunnelCard({ rows, best, worst, rangeLabel, className }: { rows: FunnelRow[]; best: string | null; worst: string | null; rangeLabel: string; className?: string }) {
   return (
-    <DashCard id="funnel-card" title="Funil por canal" info={`Visualizações de paywall → inícios de checkout → compras · ${rangeLabel}. Compras são reais do dataset; etapas anteriores estimadas pelas taxas de conversão do canal.`} summary={rangeLabel} className={className}>
+    <DashCard id="funnel-card" ai="funnel" title="Funil por canal" info={`Visualizações de paywall → inícios de checkout → compras · ${rangeLabel}. Compras são reais do dataset; etapas anteriores estimadas pelas taxas de conversão do canal.`} summary={rangeLabel} className={className}>
       <ChannelFunnel rows={rows} best={best} worst={worst} />
     </DashCard>
   );

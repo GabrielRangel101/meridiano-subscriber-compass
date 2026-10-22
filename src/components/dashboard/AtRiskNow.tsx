@@ -12,6 +12,7 @@ export function AtRiskNow({ data, className }: { data: DashboardData; className?
   ];
   return (
     <DashCard
+      ai="at-risk"
       title="Em risco agora"
       info={`Assinantes com risco de cancelar em 90 dias ≥ ${data.criticalRisk}% e os cinco maiores riscos da base ativa.`}
       actions={<Link to="/" search={{ view: "risco" }} className="text-[11px] font-medium text-primary hover:underline">ver mapa</Link>}

@@ -125,7 +125,7 @@ function compute() {
     kpis,
     goalLabel: monthLabel(ds.meta.goalMonth).toLowerCase(),
     risk,
-    topRisk: risk.top.slice(0, 5),
+    topRisk: diverseTopRisk(risk.top, 5),
     channelComp,
     channelWaffle,
     cohorts,
@@ -321,3 +321,46 @@ export function formatInsightValue(i: Insight): string | null {
   if (["churn", "pagamento"].includes(i.topic) || i.id === "penhasco-promo") return fmtPct(i.value);
   return fmtInt(i.value);
 }
+
+/** Maior risco de cada gatilho distinto, completado pelos próximos maiores; ordenado por risco. */
+export function diverseTopRisk(top: AtRiskRow[], n: number): AtRiskRow[] {
+  const picked: AtRiskRow[] = [];
+  const seen = new Set<string>();
+  for (const r of top) {
+    if (picked.length >= n) break;
+    if (!seen.has(r.driver)) { seen.add(r.driver); picked.push(r); }
+  }
+  for (const r of top) {
+    if (picked.length >= n) break;
+    if (!picked.includes(r)) picked.push(r);
+  }
+  return picked.sort((a, b) => b.risk - a.risk || b.mrr - a.mrr);
+}
+
+// ------------------------------------------------------------------ Modo IA: card analisável → pergunta
+export const AI_TARGETS = {
+  "kpi-active": { label: "Assinantes ativos", question: "Vamos bater a meta de dezembro?" },
+  "kpi-churn": { label: "Churn mensal", question: "Como está o churn?" },
+  "kpi-mrr": { label: "MRR", question: "Qual a composição por plano?" },
+  "kpi-arpu": { label: "Ticket médio", question: "Qual a composição por plano?" },
+  "kpi-nps": { label: "NPS", question: "Como está o NPS?" },
+  evolution: { label: "Evolução de assinantes", question: "Vamos bater a meta de dezembro?" },
+  "flow-bars": { label: "Novas × cancelamentos", question: "Como está o churn?" },
+  "waffle-plans": { label: "Planos", question: "Qual a composição por plano?" },
+  reasons: { label: "Motivos de cancelamento", question: "Por que os assinantes cancelam?" },
+  funnel: { label: "Funil por canal", question: "Qual canal retém pior?" },
+  "acq-sankey": { label: "Fluxo de aquisição", question: "Qual canal retém pior?" },
+  "waffle-channels": { label: "Canais", question: "Qual canal retém pior?" },
+  cohort: { label: "Retenção por coorte", question: "Compare as safras de campanha" },
+  editorias: { label: "Saúde por editoria", question: "Como estão as editorias?" },
+  "at-risk": { label: "Em risco agora", question: "Quem está em risco de cancelar?" },
+  "risk-map": { label: "Mapa de assinantes em risco", question: "Quem está em risco de cancelar?" },
+  "risk-panel": { label: "Detalhe e estatísticas", question: "Quem está em risco de cancelar?" },
+  insights: { label: "Insights", question: "Resumo dos principais alertas" },
+  "insights-full": { label: "Insights do motor de regras", question: "Resumo dos principais alertas" },
+  changes: { label: "Variação mês a mês", question: "Resumo dos principais alertas" },
+  correlation: { label: "Rede de correlação", question: "Resumo dos principais alertas" },
+  "flow-sankey": { label: "Fluxo de assinantes", question: "Resumo dos principais alertas" },
+  price: { label: "Preço", question: "Como foi o reajuste de preço?" },
+} as const satisfies Record<string, { label: string; question: string }>;
+export type AiTargetId = keyof typeof AI_TARGETS;

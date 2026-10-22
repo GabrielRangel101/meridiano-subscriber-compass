@@ -24,6 +24,7 @@ export function CorrelationNetwork({ data, className }: { data: DashboardData; c
   return (
     <DashCard
       id="correlation-card"
+      ai="correlation"
       title="Rede de correlação"
       info="Pearson entre oito métricas (n meses). Arestas a partir de |r| ≥ 0,35; azul = positiva, vermelho = negativa. Em níveis, séries com tendência parecem correlacionadas sem estarem (correlação espúria) — prefira variações mês a mês."
       summary={`n = ${cm.n}`}

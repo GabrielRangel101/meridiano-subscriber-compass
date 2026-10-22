@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppShell } from "@/components/shell/AppShell";
+import { AiLayer } from "@/components/ai/AiLayer";
 import { AcquisitionView, OverviewView, RetentionView, RiskView } from "@/components/views/DashboardViews";
 import { parseView, useDashboardData, usePeriodData } from "@/lib/dashboard-data";
 import type { PeriodN, ViewId } from "@/lib/dashboard-data";
@@ -41,6 +42,7 @@ function Index() {
             </motion.div>
           </AnimatePresence>
         </AppShell>
+        <AiLayer />
       </TooltipProvider>
     </MotionConfig>
   );
