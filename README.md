@@ -1,14 +1,28 @@
 # Meridiano Subscriber Compass
 
-Dashboard de **inteligência de assinaturas digitais** da *Gazeta Meridiano*, um jornal **fictício**. Todos os dados são **100% sintéticos**, gerados no navegador por uma simulação determinística (seed fixa), sem nenhuma informação real de assinantes (LGPD).
+Dashboard de **inteligência de assinaturas digitais (B2C)** da *Gazeta Meridiano*, um jornal **fictício**. Todos os dados são **100% sintéticos**, gerados no navegador por uma simulação determinística (seed fixa), sem nenhuma informação real de assinantes (LGPD).
 
-Projeto de portfólio de Gabriel Rangel: dashboard web com motor de métricas próprio, motor de insights por regras e uma "mesa de análise" que responde perguntas sobre o painel.
+Projeto de portfólio de **Gabriel Rangel**: dashboard web com motor de métricas próprio, motor de insights por regras, simulador "e se" e uma mesa de análise que responde perguntas de negócio sobre o painel.
 
-## O que tem aqui
-- **Motor de dados** (`src/engine/`): geração do dataset, métricas, retenção por coorte (Kaplan-Meier, trata censura à direita), correlação em variações mês a mês (evita correlação espúria), projeção até a meta, risco de cancelamento por assinante e regras de insight com severidade.
-- **Dashboard** em 4 visões: Visão geral, Aquisição, Retenção e Risco e sinergia.
-- **Mesa de análise** (Modo IA): clique num card e o painel gera leituras ligadas ao card em foco, com legendas e sugestões de próxima pergunta. As respostas vêm do motor determinístico; **a IA nunca calcula números**, só escolhe, ordena e redige.
-- Testes (vitest) cobrindo o motor, o roteador de perguntas e as legendas.
+**Demo:** https://meridiano-subscriber-compass.lovable.app
+
+## O que responde
+- **Aquisição:** funil de ponta a ponta (visitantes → início da compra → revisão → cartão → compra) por canal, com o maior vazamento e quantas assinaturas seriam recuperadas; CAC, LTV de 12 meses, LTV/CAC e payback por canal.
+- **Receita:** ponte de MRR (novas, fim de promoção, reajuste, upgrades, cancelamentos) e mix de planos (base × receita).
+- **Retenção:** churn por natureza e motivo, curva de permanência por safra (Kaplan-Meier, trata censura à direita) e risco de cancelamento por assinante.
+- **Simulador:** três alavancas (churn voluntário, recuperação de falha de pagamento, aquisição) sobre a mesma projeção do dashboard, com o que bastaria sozinho para bater a meta.
+- **Notas por mês** nos gráficos, **Pauta do dia** (achados priorizados) e **busca Ctrl/⌘+K**.
+
+## Mesa de análise (Modo IA)
+Clique num card e o painel gera leituras ligadas a ele, com sugestões de próxima pergunta. É um roteador de intenções sobre um motor determinístico: **a IA nunca calcula números**, só escolhe, ordena e redige. Responde perguntas como "qual o CAC por canal?", "vale a pena mídia paga?", "onde perco mais no funil?", "e se o churn cair 1 ponto?" e "baixar o preço melhora o churn?" (limite do efeito e custo, sem fingir causalidade).
+
+## Arquitetura
+- `src/engine/`: funções puras sobre o dataset (geração, métricas, funil, unit economics, what-if, notas, insights, roteadores de perguntas).
+- `src/components/`: dashboard, simulador, painel de IA e barra de comandos.
+- Testes (vitest) cobrindo o motor, os roteadores de perguntas e as legendas.
+
+## Limites assumidos
+CAC e taxas de visitante, revisão e cartão são premissas sintéticas por canal. Não há teste de preço nos dados, então a elasticidade não é medida.
 
 ## Rodar localmente
 ```bash
@@ -17,8 +31,5 @@ bun dev       # ou npm run dev
 bun run test  # vitest
 ```
 
-## Inspiração e créditos
-A interação da mesa de análise (dashboard que escurece, card em foco, cards gerados ligados por linhas e painel de conversa) foi inspirada no dashboard de RH com "Modo IA" de **Iago Cruz**, compartilhado no LinkedIn. Domínio, dados, motor de métricas e insights, gráficos e código deste projeto são próprios.
-
 ## Stack
-TanStack Start + React + Vite, Tailwind + shadcn/ui, Recharts, framer-motion. Gerado e iterado com Lovable; mantido via GitHub.
+TanStack Start + React + Vite, Tailwind + shadcn/ui, Recharts, framer-motion.
