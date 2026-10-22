@@ -1,7 +1,5 @@
-- [x] Conferir 2B em 1440px e 390px.
-- [x] Acrescentar rede de correlação e variações memoizadas.
-- [x] Acrescentar mapa de risco, detalhes e insights com filtros/âncoras.
-- [x] Testar regras, interações e disposição nos dois tamanhos.
-- [x] Copiar ask.ts literalmente e testar as doze intenções.
-- [x] Ligar Modo IA com canvas, conversa e renderizadores locais.
-- [x] Validar fluxo completo em 1440px e 390px.
+- [ ] 3C-1: app shell (rail, top bar, abas móveis) e views por ?view=.
+- [ ] 3C-1: tema escuro padrão + claro opcional persistido.
+- [ ] 3C-1: cards densos e views Visão geral, Aquisição, Retenção, Risco e sinergia.
+- [ ] 3C-1: navegação dos insights troca de view e pulsa o card.
+- [ ] 3C-1: testes + verificação 1440×900, 1920×1080, 390px.
