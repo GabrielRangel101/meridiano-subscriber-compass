@@ -10,7 +10,7 @@ export interface TooltipRow {
 export function GlassTooltip({ title, rows, footer }: { title: string; rows: TooltipRow[]; footer?: ReactNode }) {
   return (
     <div className="glass min-w-44 rounded-xl px-3 py-2.5 text-xs shadow-lg">
-      <p className="mb-1.5 font-display text-sm font-medium text-foreground">{title}</p>
+      <p className="mb-1.5 text-xs font-semibold text-foreground">{title}</p>
       <ul className="space-y-1">
         {rows.map((r) => (
           <li key={r.label} className="flex items-center justify-between gap-4">
