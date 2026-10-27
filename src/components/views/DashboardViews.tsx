@@ -31,7 +31,7 @@ const GRID = "grid grid-cols-1 gap-3 md:grid-cols-2 xl:h-full xl:grid-cols-12";
 
 export function OverviewView({ data, period }: ViewProps) {
   return (
-    <div className={`${GRID} xl:grid-rows-[112px_minmax(380px,1.15fr)_minmax(280px,1fr)]`}>
+    <div className={`${GRID} xl:grid-rows-[112px_minmax(420px,1.15fr)_minmax(280px,1fr)]`}>
       <section id="kpi-section" aria-label="Indicadores principais" className="grid grid-cols-1 gap-3 rounded-[14px] sm:grid-cols-2 md:col-span-2 lg:grid-cols-3 xl:col-span-12 xl:grid-cols-5">
         {data.kpis.map((k) => <KpiCard key={k.id} kpi={k} />)}
       </section>
