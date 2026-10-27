@@ -8,7 +8,7 @@ export function AppShell({ view, brand, monthLabel, children }: { view: ViewId; 
   return (
     <div className="flex min-h-dvh flex-col xl:h-dvh xl:overflow-hidden">
       <TopBar brand={brand} monthLabel={monthLabel} view={view} />
-      <main className="min-h-0 flex-1 px-3 pb-28 pt-3 sm:px-4 xl:overflow-hidden xl:pb-3">{children}</main>
+      <main className="min-h-0 flex-1 px-3 pb-28 pt-3 sm:px-4 xl:overflow-y-auto xl:pb-3">{children}</main>
       <div className="fixed inset-x-0 bottom-3 z-50 flex justify-center pb-[env(safe-area-inset-bottom)] xl:hidden">
         <NavPill view={view} side="top" />
       </div>
