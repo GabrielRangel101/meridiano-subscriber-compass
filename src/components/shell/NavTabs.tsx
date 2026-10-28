@@ -20,7 +20,7 @@ export function NavTabs({ view, className }: { view: ViewId; className?: string 
             aria-disabled={active || undefined}
             tabIndex={active ? -1 : undefined}
             onClick={(e) => active && e.preventDefault()}
-            className={cn("relative pb-1 font-display text-[15px] transition-colors", on ? "font-semibold text-foreground" : "text-muted-foreground hover:text-foreground", active && "pointer-events-none opacity-50")}
+            className={cn("relative whitespace-nowrap pb-1 font-display text-[15px] transition-colors", on ? "font-semibold text-foreground" : "text-muted-foreground hover:text-foreground", active && "pointer-events-none opacity-50")}
           >
             {v.label}
             {on && <span className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-brand" aria-hidden />}

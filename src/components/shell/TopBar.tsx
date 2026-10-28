@@ -20,14 +20,14 @@ export function TopBar({ brand, monthLabel, view }: { brand: string; monthLabel:
           <span className="mt-1 hidden truncate text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground sm:block">Subscription Intelligence · Edição {monthLabel}</span>
         </div>
       </div>
-      <NavTabs view={view} className="hidden xl:flex" />
+      <NavTabs view={view} className="hidden shrink-0 xl:flex" />
       <ThemeToggle className="xl:hidden" side="bottom" />
       <div className="order-last flex w-full min-w-0 flex-wrap items-center gap-2 xl:order-none xl:w-auto xl:flex-1 xl:flex-nowrap xl:justify-end">
-        <span className={cn(chip, "hidden 2xl:inline-flex")}>
+        <span className={cn(chip, "hidden min-[1800px]:inline-flex")}>
           <CalendarDays className="size-3.5 text-primary" aria-hidden />
           Ref. <strong className="font-semibold">{monthLabel}</strong>
         </span>
-        <a href="https://www.linkedin.com/in/gabriel-rangel-a954ba26a/" target="_blank" rel="noreferrer" title="Autor do projeto" className={cn(chip, "hidden text-muted-foreground hover:text-foreground sm:inline-flex xl:hidden 2xl:inline-flex")}>
+        <a href="https://www.linkedin.com/in/gabriel-rangel-a954ba26a/" target="_blank" rel="noreferrer" title="Autor do projeto" className={cn(chip, "hidden text-muted-foreground hover:text-foreground sm:inline-flex xl:hidden min-[1800px]:inline-flex")}>
           por <strong className="font-semibold text-foreground">Gabriel Rangel</strong>
         </a>
         <span className={chip}>
@@ -37,8 +37,8 @@ export function TopBar({ brand, monthLabel, view }: { brand: string; monthLabel:
         </span>
         <button type="button" onClick={() => commandStore.toggle()} aria-label="Abrir barra de comandos" className={cn(chip, "hidden gap-2 text-muted-foreground hover:text-foreground sm:inline-flex")}>
           <Search className="size-3.5" aria-hidden />
-          <span className="hidden 2xl:inline">Buscar</span>
-          <kbd className="hidden rounded border px-1 text-[10px] 2xl:inline">Ctrl K</kbd>
+          <span className="hidden min-[1800px]:inline">Buscar</span>
+          <kbd className="hidden rounded border px-1 text-[10px] min-[1800px]:inline">Ctrl K</kbd>
         </button>
         <button
           type="button"
