@@ -7,11 +7,11 @@ import { fmtRisk } from "./avatar";
 
 export function SubscriberDetail({ person, onClose, compact = false }: { person: AtRiskRow; onClose?: () => void; compact?: boolean }) {
   return (
-    <div className={compact ? "glass max-w-full rounded-lg p-2.5 text-[11px]" : "min-w-0"} aria-label={compact ? `Resumo de ${person.name}` : "Detalhe do assinante"}>
+    <div className={compact ? "glass max-w-full rounded-lg p-2.5 text-[0.6875rem]" : "min-w-0"} aria-label={compact ? `Resumo de ${person.name}` : "Detalhe do assinante"}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <h4 className="truncate text-sm font-semibold">{person.name}</h4>
-          <p className="text-[11px] font-medium" style={{ color: DRIVER_COLORS[person.driver] }}>{person.driver}</p>
+          <p className="text-[0.6875rem] font-medium" style={{ color: DRIVER_COLORS[person.driver] }}>{person.driver}</p>
         </div>
         {onClose && <Button size="icon" variant="ghost" className="size-6" aria-label="Fechar detalhe" onClick={onClose}><X /></Button>}
       </div>
@@ -20,7 +20,7 @@ export function SubscriberDetail({ person, onClose, compact = false }: { person:
           ["Plano", person.plan], ["Canal", person.channel], ["Editoria", person.interest], ["Tempo de casa", `${fmtInt(person.tenureMonths)} meses`], ["Engajamento", `${fmtInt(person.engagement)} / 100`], ["Risco em 90 dias", fmtRisk(person.risk)], ["MRR", fmtBRL(person.mrr)], ["Gatilho", person.driver],
         ].map(([label, value]) => (
           <div key={label} className="min-w-0">
-            <dt className="text-[10px] text-muted-foreground">{label}</dt>
+            <dt className="text-[0.625rem] text-muted-foreground">{label}</dt>
             <dd className="truncate font-medium" title={value}>{value}</dd>
           </div>
         ))}

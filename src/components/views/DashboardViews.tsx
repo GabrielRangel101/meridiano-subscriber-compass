@@ -31,7 +31,7 @@ const GRID = "grid grid-cols-1 gap-3 md:grid-cols-2 xl:h-full xl:grid-cols-12";
 
 export function OverviewView({ data, period }: ViewProps) {
   return (
-    <div className={`${GRID} xl:grid-rows-[112px_minmax(420px,1.15fr)_minmax(280px,1fr)]`}>
+    <div className={`${GRID} xl:grid-rows-[7rem_minmax(26.25rem,1.15fr)_minmax(17.5rem,1fr)]`}>
       <section id="kpi-section" aria-label="Indicadores principais" className="grid grid-cols-1 gap-3 rounded-[14px] sm:grid-cols-2 md:col-span-2 lg:grid-cols-3 xl:col-span-12 xl:grid-cols-5">
         {data.kpis.map((k) => <KpiCard key={k.id} kpi={k} />)}
       </section>
@@ -47,9 +47,9 @@ export function OverviewView({ data, period }: ViewProps) {
 
 export function AcquisitionView({ data, period }: ViewProps) {
   return (
-    <div className={`${GRID} xl:grid-rows-[minmax(460px,1.05fr)_minmax(360px,1fr)]`}>
-      <FunnelCard journey={period.journey} rangeLabel={period.rangeLabel} className="h-[520px] md:col-span-2 xl:col-span-12 xl:h-auto" />
-      <UnitEconomics rows={period.econ} className="h-[380px] md:col-span-2 xl:col-span-8 xl:h-auto" />
+    <div className={`${GRID} xl:grid-rows-[minmax(28.75rem,1.05fr)_minmax(22.5rem,1fr)]`}>
+      <FunnelCard journey={period.journey} rangeLabel={period.rangeLabel} className="md:col-span-2 md:h-[520px] xl:col-span-12 xl:h-auto" />
+      <UnitEconomics rows={period.econ} className="md:col-span-2 md:h-[380px] xl:col-span-8 xl:h-auto" />
       <WaffleCard ai="waffle-channels" title="Canais" info={`Base ativa em ${data.current.label} por canal de aquisição · cada quadrado = 1%`} comp={data.channelComp} waffle={data.channelWaffle} colors={CHANNEL_COLORS} className="h-[380px] md:col-span-2 xl:col-span-4 xl:h-auto" />
     </div>
   );
@@ -57,7 +57,7 @@ export function AcquisitionView({ data, period }: ViewProps) {
 
 export function RetentionView({ data, period }: ViewProps) {
   return (
-    <div className={`${GRID} xl:grid-rows-[minmax(340px,1fr)_minmax(340px,1fr)]`}>
+    <div className={`${GRID} xl:grid-rows-[minmax(21.25rem,1fr)_minmax(21.25rem,1fr)]`}>
       <CohortRetention data={data} className="h-[360px] md:col-span-2 xl:col-span-6 xl:h-auto" />
       <EditoriaHealth data={data} className="h-[320px] xl:col-span-3 xl:h-auto" />
       <MonthlyChanges changes={data.changes} className="h-[340px] xl:col-span-3 xl:h-auto" />
@@ -71,7 +71,7 @@ export function RetentionView({ data, period }: ViewProps) {
 export function RiskView({ data }: ViewProps) {
   const [selected, setSelected] = useState<AtRiskRow | null>(null);
   return (
-    <div className={`${GRID} xl:grid-rows-[minmax(440px,1fr)_minmax(480px,1fr)]`}>
+    <div className={`${GRID} xl:grid-rows-[minmax(27.5rem,1fr)_minmax(30rem,1fr)]`}>
       <RiskMap data={data} selected={selected} onSelect={setSelected} className="h-[440px] md:col-span-2 xl:col-span-8 xl:h-auto" />
       <RiskPanel data={data} selected={selected} onClose={() => setSelected(null)} className="md:col-span-2 xl:col-span-4" />
       <CorrelationNetwork data={data} className="h-[440px] md:col-span-2 xl:col-span-6 xl:h-auto" />

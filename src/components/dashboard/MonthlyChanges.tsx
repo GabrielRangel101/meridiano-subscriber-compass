@@ -15,7 +15,7 @@ export function MonthlyChanges({ changes, className }: { changes: DashboardData[
           return (
             <li key={c.key} className="min-w-0">
               <div className="flex items-baseline justify-between gap-2 text-xs">
-                <span className="truncate capitalize text-foreground">{c.label} <span className="text-[10px] normal-case text-muted-foreground">({c.unit})</span></span>
+                <span className="truncate capitalize text-foreground">{c.label} <span className="text-[0.625rem] normal-case text-muted-foreground">({c.unit})</span></span>
                 <span className={cn("flex shrink-0 items-center gap-0.5 font-semibold tabular-nums", tone)}>
                   <Icon className="size-3.5" aria-hidden />
                   {c.formatted}

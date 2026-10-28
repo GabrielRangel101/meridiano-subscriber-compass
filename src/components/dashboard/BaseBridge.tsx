@@ -42,7 +42,7 @@ export function BaseBridge({ bridge, className }: { bridge: WindowData["bridge"]
                     {s.kind === "total" ? fmtInt(s.value) : fmtSignedInt(s.value)}
                   </text>
                   <foreignObject x={i * slot + 2} y={H - bottom + 4} width={slot - 4} height={bottom - 4}>
-                    <div className="text-center text-[10px] leading-tight text-muted-foreground">{s.label}</div>
+                    <div className="text-center text-[0.625rem] leading-tight text-muted-foreground">{s.label}</div>
                   </foreignObject>
                 </g>
               );

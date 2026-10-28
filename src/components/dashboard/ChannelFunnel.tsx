@@ -62,12 +62,12 @@ function FunnelStages({ journey }: { journey: FullFunnel }) {
         const isWeak = i > 0 && i === journey.weakestStep.step + 1;
         return (
           <li key={s.label} className="grid grid-cols-[6.5rem_minmax(0,1fr)_3.75rem_3rem] items-center gap-2 sm:grid-cols-[8rem_minmax(0,1fr)_4rem_3.25rem]">
-            <span className="truncate text-xs text-foreground" title={s.label}>{s.label}</span>
+            <span className="text-xs leading-tight text-foreground sm:truncate" title={s.label}>{s.label}</span>
             <div className="h-5 overflow-hidden rounded-sm bg-muted/40">
               <div className="h-full rounded-sm transition-[width] duration-500" style={{ width: `${logWidth(s.value, min, max)}%`, background: STAGE_FILL[i], opacity: i === 0 ? 0.55 : 1 }} />
             </div>
             <span className="text-right text-xs font-semibold tabular-nums text-foreground">{fmtInt(s.value)}</span>
-            <span className={cn("text-right text-[11px] tabular-nums", isWeak ? "font-semibold text-danger" : "text-muted-foreground")} title={i === 0 ? undefined : `${FUNNEL_STEPS[i - 1]}: ${fmtPct(s.fromPrev ?? 0, 1)}`}>
+            <span className={cn("text-right text-[0.6875rem] tabular-nums", isWeak ? "font-semibold text-danger" : "text-muted-foreground")} title={i === 0 ? undefined : `${FUNNEL_STEPS[i - 1]}: ${fmtPct(s.fromPrev ?? 0, 1)}`}>
               {i === 0 ? "" : `↓ ${pct(s.fromPrev ?? 0)}`}
             </span>
           </li>
@@ -79,11 +79,41 @@ function FunnelStages({ journey }: { journey: FullFunnel }) {
 
 const COLS = "grid-cols-[minmax(0,1.5fr)_repeat(5,minmax(0,1fr))]";
 
+const STEP_SHORT = ["Visita→início", "Início→revisão", "Revisão→cartão", "Cartão→compra", "Visita→compra"];
+
+/** Celular: um cartão por canal, com as 5 taxas em grade (a tabela de 6 colunas não cabe em 390 px). */
+function ChannelCards({ journey, bench }: { journey: FullFunnel; bench: number[] }) {
+  return (
+    <ul className="divide-y md:hidden" aria-label="Conversão por canal em cada etapa">
+      {journey.channels.map((c) => (
+        <li key={c.channel} className="py-2">
+          <div className="mb-1.5 flex items-center gap-1.5 text-xs text-foreground">
+            <span className="size-2 shrink-0 rounded-full" style={{ background: CHANNEL_COLORS[c.channel] ?? "var(--cat-6)" }} aria-hidden />
+            <span className="min-w-0 flex-1 font-medium">{c.channel}</span>
+            <span className="text-[0.6875rem] text-muted-foreground">visita→compra</span>
+            <span className={cn("rounded px-1.5 py-0.5 text-xs font-semibold tabular-nums", rateTone(c.overall, bench[4]))}>{fmtPct(c.overall, 2)}</span>
+          </div>
+          <div className="grid grid-cols-4 gap-1.5">
+            {c.rates.map((r, i) => (
+              <div key={i} className="min-w-0 text-center">
+                <div className={cn("rounded px-1 py-0.5 text-xs tabular-nums", rateTone(r, bench[i]))}>{i === 0 ? fmtPct(r, 2) : fmtPct(r, 0)}</div>
+                <div className="mt-0.5 text-[0.625rem] leading-tight text-muted-foreground">{STEP_SHORT[i]}</div>
+              </div>
+            ))}
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function ChannelMatrix({ journey }: { journey: FullFunnel }) {
   const bench = [...journey.total.slice(1).map((s) => s.fromPrev ?? 0), journey.total[4].fromTop];
   return (
-    <div className="flex min-h-0 flex-col" role="table" aria-label="Conversão por canal em cada etapa">
-      <div className={cn("grid shrink-0 gap-1 pb-1 text-[10px] uppercase leading-tight tracking-wider text-muted-foreground", COLS)} role="row">
+    <>
+    <ChannelCards journey={journey} bench={bench} />
+    <div className="hidden min-h-0 flex-col md:flex" role="table" aria-label="Conversão por canal em cada etapa">
+      <div className={cn("grid shrink-0 gap-1 pb-1 text-[0.625rem] uppercase leading-tight tracking-wider text-muted-foreground", COLS)} role="row">
         <span role="columnheader">Canal</span>
         {FUNNEL_STEPS.map((s) => <span key={s} className="text-right" role="columnheader">{s.replace(" → ", "→")}</span>)}
         <span className="text-right" role="columnheader">Visita→compra</span>
@@ -104,5 +134,6 @@ function ChannelMatrix({ journey }: { journey: FullFunnel }) {
         ))}
       </ul>
     </div>
+    </>
   );
 }

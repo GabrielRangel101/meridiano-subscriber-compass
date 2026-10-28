@@ -11,18 +11,18 @@ export function KpiCard({ kpi }: { kpi: KpiView }) {
   const ai = `kpi-${kpi.id}` as AiTargetId;
   const target = useAiTarget(ai);
   return (
-    <article {...target.props} className="dash-card grid h-[112px] min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-x-2 p-3 2xl:grid-cols-[minmax(0,1fr)_4.5rem]" aria-labelledby={headingId}>
+    <article {...target.props} className="dash-card grid h-28 min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-x-2 p-3 2xl:grid-cols-[minmax(0,1fr)_4.5rem]" aria-labelledby={headingId}>
       <div className="flex min-w-0 flex-col">
         <div className="flex min-w-0 items-center gap-1">
-          <h3 id={headingId} className="truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          <h3 id={headingId} className="truncate text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             {kpi.label}
           </h3>
           {kpi.caption && <InfoTip text={kpi.caption} label={`Sobre: ${kpi.label}`} />}
         </div>
-        <p className="mt-1.5 truncate text-[24px] font-semibold 2xl:text-[30px] leading-none tracking-tight text-foreground">
+        <p className="mt-1.5 truncate text-[1.5rem] font-semibold 2xl:text-[1.875rem] leading-none tracking-tight text-foreground">
           <AnimatedNumber value={kpi.value} format={kpi.format} />
         </p>
-        <div className="mt-auto flex min-w-0 flex-col text-[11px] [&>span]:truncate">
+        <div className="mt-auto flex min-w-0 flex-col text-[0.6875rem] [&>span]:truncate">
           <DeltaBadge delta={kpi.mom} />
           {kpi.yoy && <DeltaBadge delta={kpi.yoy} subtle />}
         </div>

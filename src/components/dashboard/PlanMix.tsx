@@ -39,7 +39,7 @@ export function PlanMix({ rows, month, className }: { rows: PlanMixRow[]; month:
 
 function Bar({ label, value, max, color, faded }: { label: string; value: number; max: number; color: string; faded?: boolean }) {
   return (
-    <div className="grid grid-cols-[2rem_minmax(0,1fr)_2.75rem] items-center gap-1.5 text-[10px] text-muted-foreground">
+    <div className="grid grid-cols-[2rem_minmax(0,1fr)_2.75rem] items-center gap-1.5 text-[0.625rem] text-muted-foreground">
       <span>{label}</span>
       <span className="h-2 overflow-hidden rounded-sm bg-muted/40">
         <span className="block h-full rounded-sm transition-[width] duration-500" style={{ width: `${(value / max) * 100}%`, background: color, opacity: faded ? 0.45 : 1 }} />

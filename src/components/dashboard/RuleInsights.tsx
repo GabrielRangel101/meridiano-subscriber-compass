@@ -11,7 +11,7 @@ export const SEVERITY_TONES: Record<Severity, string> = { perigo: "bg-danger/15 
 
 function Chip({ on, onClick, children, className }: { on: boolean; onClick: () => void; children: React.ReactNode; className?: string }) {
   return (
-    <button type="button" aria-pressed={on} onClick={onClick} className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[11px] capitalize transition-colors", on ? "border-primary bg-primary/15 text-foreground" : "border-transparent text-muted-foreground hover:text-foreground", className)}>
+    <button type="button" aria-pressed={on} onClick={onClick} className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[0.6875rem] capitalize transition-colors", on ? "border-primary bg-primary/15 text-foreground" : "border-transparent text-muted-foreground hover:text-foreground", className)}>
       {children}
     </button>
   );
@@ -40,13 +40,13 @@ export function RuleInsights({ data, className }: { data: DashboardData; classNa
         {(expanded ? filtered : filtered.slice(0, 6)).map((i) => (
           <li key={i.id}>
             <button type="button" className="flex w-full items-start gap-2 rounded py-1.5 text-left hover:bg-secondary/60" onClick={() => goTo(INSIGHT_VIEWS[i.topic], INSIGHT_TARGETS[i.topic])} aria-label={`Ver card relacionado: ${i.title}`}>
-              <span className={cn("mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold capitalize", SEVERITY_TONES[i.severity])}>{i.severity}</span>
+              <span className={cn("mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[0.625rem] font-semibold capitalize", SEVERITY_TONES[i.severity])}>{i.severity}</span>
               <span className="min-w-0 flex-1">
                 <span className="flex items-baseline gap-2">
                   <span className="truncate text-xs font-semibold text-foreground">{i.title}</span>
                   {i.displayValue && <strong className="ml-auto shrink-0 text-xs tabular-nums text-foreground">{i.displayValue}</strong>}
                 </span>
-                <span className="line-clamp-2 text-[11px] leading-snug text-muted-foreground">{i.text}</span>
+                <span className="line-clamp-2 text-[0.6875rem] leading-snug text-muted-foreground">{i.text}</span>
               </span>
               <ArrowUpRight className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden />
             </button>
@@ -55,7 +55,7 @@ export function RuleInsights({ data, className }: { data: DashboardData; classNa
         {filtered.length === 0 && <li className="py-6 text-center text-xs text-muted-foreground">Nenhum achado neste filtro.</li>}
       </ul>
       {filtered.length > 6 && (
-        <button type="button" className="mx-auto flex shrink-0 items-center gap-1 rounded px-2 py-0.5 text-[11px] font-medium text-primary hover:bg-secondary" onClick={() => setExpanded(!expanded)}>
+        <button type="button" className="mx-auto flex shrink-0 items-center gap-1 rounded px-2 py-0.5 text-[0.6875rem] font-medium text-primary hover:bg-secondary" onClick={() => setExpanded(!expanded)}>
           {expanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
           {expanded ? "Ver menos" : "Ver todos"}
         </button>

@@ -26,7 +26,7 @@ export function AskButton({ title, ai }: { title: string; ai?: AiTargetId }) {
       onClick={() => aiStore.open(ai)}
       aria-label={`Analisar ${title} na mesa de análise`}
       title="Analisar na mesa de análise"
-      className="inline-flex size-5 shrink-0 items-center justify-center rounded-md text-[11px] text-muted-foreground transition-colors hover:bg-secondary hover:text-primary"
+      className="inline-flex size-5 shrink-0 items-center justify-center rounded-md text-[0.6875rem] text-muted-foreground transition-colors hover:bg-secondary hover:text-primary"
     >
       ✦
     </button>
@@ -35,7 +35,7 @@ export function AskButton({ title, ai }: { title: string; ai?: AiTargetId }) {
 
 export function SectionLabel({ id, children }: { id?: string; children: ReactNode }) {
   return (
-    <h2 id={id} className="truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+    <h2 id={id} className="truncate text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
       {children}
     </h2>
   );
@@ -93,7 +93,7 @@ export function Segmented<T extends string>({ value, options, onChange, label }:
           aria-checked={o.value === value}
           onClick={() => onChange(o.value)}
           className={cn(
-            "rounded px-2 py-0.5 text-[11px] font-medium transition-colors",
+            "rounded px-2 py-0.5 text-[0.6875rem] font-medium transition-colors",
             o.value === value ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
           )}
         >

@@ -77,11 +77,11 @@ export function EventPopover({ event, x }: { event: EventMarker | null; x: numbe
 
 export function EventLegend() {
   return (
-    <ul className="flex flex-wrap gap-2 text-[11px] text-muted-foreground" aria-label="Legenda dos marcadores de evento">
+    <ul className="flex flex-wrap gap-2 text-[0.6875rem] text-muted-foreground" aria-label="Legenda dos marcadores de evento">
       {(Object.keys(KIND_COLOR) as EventMarker["kind"][]).map((k) => (
         <li key={k} className="inline-flex items-center gap-1">
           <span
-            className="inline-flex size-4 items-center justify-center rounded-full border text-[8px] font-semibold"
+            className="inline-flex size-4 items-center justify-center rounded-full border text-[0.5rem] font-semibold"
             style={{ borderColor: KIND_COLOR[k], color: KIND_COLOR[k] }}
             aria-hidden
           >

@@ -46,7 +46,7 @@ export function MrrBridge({ bridge, className }: { bridge: MrrBridgeData; classN
                     {s.kind === "total" ? fmtBRLCompact(s.value) : signed(s.value)}
                   </text>
                   <foreignObject x={i * slot + 2} y={H - bottom + 4} width={Math.max(0, slot - 4)} height={bottom - 4}>
-                    <div className="text-center text-[10px] leading-tight text-muted-foreground">{s.label}</div>
+                    <div className="text-center text-[0.625rem] leading-tight text-muted-foreground">{s.label}</div>
                   </foreignObject>
                 </g>
               );

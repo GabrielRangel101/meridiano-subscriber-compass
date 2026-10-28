@@ -59,7 +59,7 @@ export function WaffleCard({
               onMouseLeave={() => setFocus(null)}
               onFocus={() => setFocus(c.key)}
               onBlur={() => setFocus(null)}
-              className={cn("flex w-full min-w-0 items-center justify-between gap-2 rounded px-1 py-0.5 text-left text-[11px] transition-colors hover:bg-secondary", focus === c.key && "bg-secondary")}
+              className={cn("flex w-full min-w-0 items-center justify-between gap-2 rounded px-1 py-0.5 text-left text-[0.6875rem] transition-colors hover:bg-secondary", focus === c.key && "bg-secondary")}
             >
               <span className="flex min-w-0 items-center gap-1.5 text-foreground">
                 <span className="size-2 shrink-0 rounded-[2px]" style={{ background: color(c.key) }} aria-hidden />

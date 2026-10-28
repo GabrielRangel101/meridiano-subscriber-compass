@@ -78,7 +78,7 @@ function Levers({ result, params, set, setAll, className }: { result: WhatIfResu
         <Chip onClick={closeGoal} disabled={result.hitsGoal || result.extraLiftToGoal === null}>Fechar a meta com aquisição</Chip>
         <Chip onClick={() => setAll(NO_CHANGE)}>Zerar</Chip>
       </div>
-      <div className="mt-auto hidden space-y-1.5 rounded-lg bg-secondary/50 p-3 text-[11px] leading-relaxed text-muted-foreground xl:block">
+      <div className="mt-auto hidden space-y-1.5 rounded-lg bg-secondary/50 p-3 text-[0.6875rem] leading-relaxed text-muted-foreground xl:block">
         <p className="font-semibold text-foreground">Como usar</p>
         <p><strong className="text-foreground">Churn voluntário:</strong> quantos pontos você corta do cancelamento por decisão do cliente (preço, pouco uso, concorrente).</p>
         <p><strong className="text-foreground">Falhas de pagamento:</strong> parcela dos cartões recusados que você recupera com nova tentativa ou aviso antes do vencimento.</p>
@@ -97,14 +97,14 @@ function Lever({ label, value, hint, min, max, step, current, onChange }: { labe
         <strong className="font-display text-xl tabular-nums text-brand">{value}</strong>
       </div>
       <Slider min={min} max={max} step={step} value={[Math.min(max, current)]} onValueChange={(v) => onChange(v[0] ?? 0)} aria-label={label} />
-      <p className="mt-1.5 text-[11px] text-muted-foreground">{hint}</p>
+      <p className="mt-1.5 text-[0.6875rem] text-muted-foreground">{hint}</p>
     </div>
   );
 }
 
 function Chip({ onClick, disabled, children }: { onClick: () => void; disabled?: boolean; children: React.ReactNode }) {
   return (
-    <button type="button" onClick={onClick} disabled={disabled} className="rounded-full border px-3 py-1 text-[11px] font-medium text-foreground transition-colors hover:border-primary hover:bg-primary/10 disabled:pointer-events-none disabled:opacity-40">
+    <button type="button" onClick={onClick} disabled={disabled} className="rounded-full border px-3 py-1 text-[0.6875rem] font-medium text-foreground transition-colors hover:border-primary hover:bg-primary/10 disabled:pointer-events-none disabled:opacity-40">
       {children}
     </button>
   );
@@ -113,9 +113,9 @@ function Chip({ onClick, disabled, children }: { onClick: () => void; disabled?:
 function Tile({ label, value, sub, tone }: { label: string; value: string; sub?: React.ReactNode; tone?: "good" | "bad" }) {
   return (
     <div className="dash-card flex min-w-0 flex-col justify-between gap-1 p-3">
-      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</span>
+      <span className="text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</span>
       <span className={cn("font-display text-2xl tabular-nums", tone === "good" ? "text-positive" : tone === "bad" ? "text-danger" : "text-foreground")}>{value}</span>
-      {sub && <span className="text-[11px] text-muted-foreground">{sub}</span>}
+      {sub && <span className="text-[0.6875rem] text-muted-foreground">{sub}</span>}
     </div>
   );
 }
@@ -137,7 +137,7 @@ function PathChart({ result: r, now, className }: { result: WhatIfResult; now: s
   const hi = Math.ceil((Math.max(r.goal, ...rows.map((x) => x.scenario)) * 1.015) / 50) * 50;
   return (
     <DashCard title="Caminho até a meta" info="Linha tracejada: projeção atual (a mesma do gráfico de evolução). Linha cheia: cenário com as alavancas." summary={`${r.goalLabel}: ${fmtInt(r.scenarioActive)} vs meta ${fmtInt(r.goal)}`} className={className}>
-      <div className="flex shrink-0 gap-3 text-[11px] text-muted-foreground">
+      <div className="flex shrink-0 gap-3 text-[0.6875rem] text-muted-foreground">
         <span className="inline-flex items-center gap-1"><span className="h-0.5 w-4 rounded bg-primary" aria-hidden />cenário</span>
         <span className="inline-flex items-center gap-1"><span className="h-0 w-4 border-t-2 border-dashed border-muted-foreground" aria-hidden />projeção atual</span>
         <span className="inline-flex items-center gap-1"><span className="h-0 w-4 border-t-2 border-dashed border-accent" aria-hidden />meta</span>
@@ -169,7 +169,7 @@ function Required({ result: r, set }: { result: WhatIfResult; set: (p: Partial<W
   const q = r.required;
   const cell = (title: string, text: string | null, apply: () => void) => (
     <button type="button" disabled={text === null} onClick={apply} className="dash-card min-w-0 p-3 text-left transition-colors hover:border-primary disabled:cursor-not-allowed disabled:opacity-60">
-      <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{title}</span>
+      <span className="block text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">{title}</span>
       <span className="mt-1 block font-display text-lg tabular-nums text-foreground">{text ?? "não fecha sozinho"}</span>
     </button>
   );
@@ -184,7 +184,7 @@ function Required({ result: r, set }: { result: WhatIfResult; set: (p: Partial<W
         {cell("Só com falhas de pagamento", q.paymentRecovery === null ? null : `${pct0(q.paymentRecovery)} recuperadas`, () => q.paymentRecovery !== null && set({ paymentRecovery: q.paymentRecovery }))}
         {cell("Só com aquisição", q.acquisitionLift === null ? null : `+${pct0(q.acquisitionLift)}`, () => q.acquisitionLift !== null && set({ acquisitionLift: Math.min(1, q.acquisitionLift) }))}
       </div>
-      <p className="text-[10px] text-muted-foreground">Clique em um bloco para aplicar. Simulação sobre dados sintéticos; efeito acumulado mês a mês com o churn atual de {fmtPct(r.base.churn, 1)}.</p>
+      <p className="text-[0.625rem] text-muted-foreground">Clique em um bloco para aplicar. Simulação sobre dados sintéticos; efeito acumulado mês a mês com o churn atual de {fmtPct(r.base.churn, 1)}.</p>
     </section>
   );
 }

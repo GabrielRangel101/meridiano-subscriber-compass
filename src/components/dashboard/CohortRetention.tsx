@@ -46,7 +46,7 @@ export function CohortRetention({ data, className }: { data: DashboardData; clas
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <ul className="flex max-h-10 shrink-0 flex-wrap gap-x-3 gap-y-0.5 overflow-y-auto text-[11px] text-muted-foreground" aria-label="Legenda das coortes">
+      <ul className="flex max-h-10 shrink-0 flex-wrap gap-x-3 gap-y-0.5 overflow-y-auto text-[0.6875rem] text-muted-foreground" aria-label="Legenda das coortes">
         {view.keys.map((k, i) => (
           <li key={k}>
             <button type="button" className="flex items-center gap-1 hover:text-foreground" onMouseEnter={() => setFocus(k)} onMouseLeave={() => setFocus(null)} onFocus={() => setFocus(k)} onBlur={() => setFocus(null)} title={`${fmtInt(view.sizes[k])} assinantes`}>

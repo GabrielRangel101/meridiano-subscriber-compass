@@ -32,7 +32,7 @@ export function CorrelationNetwork({ data, className }: { data: DashboardData; c
       className={className}
     >
       <div className="relative min-h-0 flex-1">
-        {mode === "level" && <p className="absolute left-0 top-0 max-w-[45%] text-[11px] leading-snug text-warning">Níveis com tendência podem gerar correlação espúria</p>}
+        {mode === "level" && <p className="absolute left-0 top-0 max-w-[45%] text-[0.6875rem] leading-snug text-warning">Níveis com tendência podem gerar correlação espúria</p>}
         <svg viewBox="0 0 480 400" className="h-full w-full" aria-label="Rede de correlação entre oito métricas" role="group">
           {cm.edges.map((e) => {
             const a = points[e.i], b = points[e.j];
@@ -55,9 +55,9 @@ export function CorrelationNetwork({ data, className }: { data: DashboardData; c
             </g>
           ))}
         </svg>
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 truncate text-center text-[11px] font-medium text-foreground" aria-live="polite">{edge}</div>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 truncate text-center text-[0.6875rem] font-medium text-foreground" aria-live="polite">{edge}</div>
       </div>
-      <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-0.5 border-t pt-1.5 text-[11px] text-muted-foreground">
+      <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-0.5 border-t pt-1.5 text-[0.6875rem] text-muted-foreground">
         <span className="flex items-center gap-1"><span className="h-0.5 w-3 bg-primary" />Positiva</span>
         <span className="flex items-center gap-1"><span className="h-0.5 w-3 bg-danger" />Negativa</span>
         {cm.strongest && <span className="text-foreground">Mais forte: {METRIC_LABELS[cm.strongest.a]} × {METRIC_LABELS[cm.strongest.b]} <strong className="text-primary">r = {decimal(cm.strongest.r)}</strong></span>}

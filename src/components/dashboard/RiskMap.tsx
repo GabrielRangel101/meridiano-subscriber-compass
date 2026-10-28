@@ -88,13 +88,13 @@ export function RiskPanel({ data, selected, onClose, className }: { data: Dashbo
       <dl className="grid shrink-0 grid-cols-2 gap-2">
         {stats.map((s) => (
           <div key={s.label} className="min-w-0 rounded-lg border bg-background/30 px-2.5 py-1.5">
-            <dt className="truncate text-[10px] uppercase tracking-wider text-muted-foreground">{s.label}</dt>
+            <dt className="truncate text-[0.625rem] uppercase tracking-wider text-muted-foreground">{s.label}</dt>
             <dd className={`truncate text-base font-semibold tabular-nums ${s.tone}`} title={s.value}>{s.value}</dd>
-            <dd className="truncate text-[10px] text-muted-foreground">{s.note}</dd>
+            <dd className="truncate text-[0.625rem] text-muted-foreground">{s.note}</dd>
           </div>
         ))}
       </dl>
-      <ul className="flex shrink-0 flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground" aria-label="Gatilhos na amostra">
+      <ul className="flex shrink-0 flex-wrap gap-x-3 gap-y-1 text-[0.6875rem] text-muted-foreground" aria-label="Gatilhos na amostra">
         {data.drivers.map((d) => <li key={d.key} className="flex items-center gap-1"><span className="size-2 rounded-full" style={{ background: d.color }} />{d.key} <strong className="text-foreground">{d.count}</strong></li>)}
       </ul>
       <div className="min-h-0 flex-1 border-t pt-2">

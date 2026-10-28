@@ -28,7 +28,7 @@ export function ReasonsBars({ reasons }: { reasons: Reasons }) {
           </p>
           <ul>
             {reasons.rows.filter((r) => r.nature === n.nature).map((r) => (
-              <li key={r.reason} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_2.75rem] items-center gap-2 py-px text-[11px] leading-5" title={`${r.reason}: ${fmtInt(r.count)} cancelamentos (${fmtPct(r.share, 1)})`}>
+              <li key={r.reason} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)_2.75rem] items-center gap-2 py-px text-[0.6875rem] leading-5" title={`${r.reason}: ${fmtInt(r.count)} cancelamentos (${fmtPct(r.share, 1)})`}>
                 <span className="truncate text-muted-foreground">{r.reason}</span>
                 <span className="h-2 overflow-hidden rounded-sm bg-muted/40">
                   <span className="block h-full rounded-sm transition-[width] duration-500" style={{ width: `${(r.share / max) * 100}%`, background: natureColor(n.nature) }} />

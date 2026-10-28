@@ -108,7 +108,7 @@ export function CommandBar() {
             placeholder="Ir para uma aba ou card, ou perguntar ao Meridiano…"
             className="min-w-0 flex-1 bg-transparent py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground"
           />
-          <kbd className="rounded border px-1.5 py-0.5 text-[10px] text-muted-foreground">Esc</kbd>
+          <kbd className="rounded border px-1.5 py-0.5 text-[0.625rem] text-muted-foreground">Esc</kbd>
         </div>
         <ul id="command-list" role="listbox" className="min-h-0 flex-1 overflow-y-auto p-1.5">
           {results.length === 0 && <li className="px-3 py-6 text-center text-xs text-muted-foreground">Nada encontrado. Pressione Enter para perguntar ao Meridiano.</li>}
@@ -118,7 +118,7 @@ export function CommandBar() {
             const Icon = r.group === "Perguntar" ? MessageCircle : r.group === "Pauta do dia" ? Sparkles : LayoutDashboard;
             return (
               <li key={r.key} role="presentation">
-                {header && <p className="px-2 pb-1 pt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">{header}</p>}
+                {header && <p className="px-2 pb-1 pt-2 text-[0.625rem] font-bold uppercase tracking-[0.16em] text-muted-foreground">{header}</p>}
                 <button
                   id={`cmd-${r.key}`}
                   type="button"
@@ -130,7 +130,7 @@ export function CommandBar() {
                 >
                   <Icon className="size-4 shrink-0 text-muted-foreground" aria-hidden />
                   <span className="min-w-0 flex-1 truncate">{r.label}</span>
-                  {r.hint && <span className="shrink-0 text-[11px] text-muted-foreground">{r.hint}</span>}
+                  {r.hint && <span className="shrink-0 text-[0.6875rem] text-muted-foreground">{r.hint}</span>}
                   {i === idx && <CornerDownLeft className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />}
                 </button>
               </li>

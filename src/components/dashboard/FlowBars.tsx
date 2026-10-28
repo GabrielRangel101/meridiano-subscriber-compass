@@ -27,7 +27,7 @@ export function FlowBars({ series, events, className }: { series: MonthPoint[]; 
       summary={<>saldo <strong className={last.netAdds >= 0 ? "text-positive" : "text-danger"}>{fmtSignedInt(last.netAdds)}</strong></>}
       className={className}
     >
-      <div className="flex shrink-0 flex-wrap items-center gap-3 text-[11px] text-muted-foreground">
+      <div className="flex shrink-0 flex-wrap items-center gap-3 text-[0.6875rem] text-muted-foreground">
         <span className="inline-flex items-center gap-1"><span className="size-2 rounded-sm bg-positive-fill" aria-hidden />Novas</span>
         <span className="inline-flex items-center gap-1"><span className="size-2 rounded-sm bg-danger" aria-hidden />Cancelamentos</span>
         <span className="inline-flex items-center gap-1"><span className="h-0.5 w-3 rounded bg-accent" aria-hidden />Saldo</span>

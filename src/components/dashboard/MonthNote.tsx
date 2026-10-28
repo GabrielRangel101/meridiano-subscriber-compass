@@ -37,7 +37,7 @@ export function MonthNotePanel({ note, onClose, className }: { note: NonNullable
       <header className="flex items-start gap-2">
         <span className={cn("mt-1 size-2 shrink-0 rounded-full", TONE[note.tone])} aria-hidden />
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-brand">Nota do Meridiano</p>
+          <p className="text-[0.625rem] font-bold uppercase tracking-wider text-brand">Nota do Meridiano</p>
           <p className="font-display text-sm font-semibold leading-snug text-foreground">{note.headline}</p>
         </div>
         <button type="button" aria-label="Fechar nota" onClick={onClose} className="grid size-5 shrink-0 place-items-center rounded text-muted-foreground hover:bg-secondary hover:text-foreground">
@@ -47,7 +47,7 @@ export function MonthNotePanel({ note, onClose, className }: { note: NonNullable
       <ul className="mt-2 space-y-1 leading-snug text-muted-foreground">
         {note.lines.map((l) => <li key={l} className="text-foreground/90">{l}</li>)}
       </ul>
-      <button type="button" onClick={() => { aiStore.open(); aiStore.ask(note.ask, `Sobre ${note.label}`); }} className="mt-2 rounded-full border px-2.5 py-1 text-[11px] font-medium text-primary hover:border-primary hover:bg-primary/10">
+      <button type="button" onClick={() => { aiStore.open(); aiStore.ask(note.ask, `Sobre ${note.label}`); }} className="mt-2 rounded-full border px-2.5 py-1 text-[0.6875rem] font-medium text-primary hover:border-primary hover:bg-primary/10">
         ✦ Aprofundar na mesa de análise
       </button>
     </aside>

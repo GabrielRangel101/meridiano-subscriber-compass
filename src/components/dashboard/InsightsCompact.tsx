@@ -29,7 +29,7 @@ export function InsightsCompact({ data, className }: { data: DashboardData; clas
           ))}
         </span>
       }
-      actions={<Link to="/" search={{ view: "risco" }} className="text-[11px] font-medium text-primary hover:underline">ver todos</Link>}
+      actions={<Link to="/" search={{ view: "risco" }} className="text-[0.6875rem] font-medium text-primary hover:underline">ver todos</Link>}
       className={className}
     >
       <ul className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
@@ -46,10 +46,10 @@ export function InsightsCompact({ data, className }: { data: DashboardData; clas
                 <span className={cn("w-1 shrink-0 rounded-full", BAR[i.severity])} aria-hidden />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-baseline justify-between gap-2">
-                    <span className={cn("min-w-0 truncate text-foreground", featured ? "text-[13px] font-semibold" : "text-xs")}>{i.title}</span>
+                    <span className={cn("min-w-0 truncate text-foreground", featured ? "text-[0.8125rem] font-semibold" : "text-xs")}>{i.title}</span>
                     {i.displayValue && <strong className={cn("shrink-0 tabular-nums", featured ? "text-sm text-foreground" : "text-xs text-muted-foreground")}>{i.displayValue}</strong>}
                   </span>
-                  {featured && <span className="mt-0.5 line-clamp-2 text-[11px] leading-snug text-muted-foreground">{i.text}</span>}
+                  {featured && <span className="mt-0.5 line-clamp-2 text-[0.6875rem] leading-snug text-muted-foreground">{i.text}</span>}
                 </span>
               </button>
             </li>

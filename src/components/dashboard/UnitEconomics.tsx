@@ -26,7 +26,8 @@ export function UnitEconomics({ rows, className }: { rows: UnitRow[]; className?
       summary={`novas assinaturas ${WINDOW_LABEL} · CAC = premissa`}
       className={className}
     >
-      <div className={cn("grid shrink-0 gap-2 pb-1 text-[10px] uppercase tracking-wider text-muted-foreground", COLS)}>
+      <UnitCards rows={rows} maxRatio={maxRatio} />
+      <div className={cn("hidden shrink-0 gap-2 pb-1 text-[0.625rem] uppercase tracking-wider text-muted-foreground md:grid", COLS)}>
         <span>Canal</span>
         <span>Novas</span>
         <span className="text-right">CAC</span>
@@ -35,7 +36,7 @@ export function UnitEconomics({ rows, className }: { rows: UnitRow[]; className?
         <span>LTV / CAC</span>
         <span className="text-right">Payback</span>
       </div>
-      <ul className="flex min-h-0 flex-1 flex-col justify-around divide-y overflow-y-auto">
+      <ul className="hidden min-h-0 flex-1 flex-col justify-around divide-y overflow-y-auto md:flex">
         {rows.map((r) => (
           <li key={r.channel} className={cn("grid flex-1 items-center gap-2 text-xs", COLS)}>
             <span className="flex min-w-0 items-center gap-1.5 text-foreground">
@@ -55,7 +56,7 @@ export function UnitEconomics({ rows, className }: { rows: UnitRow[]; className?
               <span className="h-2.5 min-w-0 flex-1 overflow-hidden rounded-sm bg-muted/40">
                 <span className="block h-full rounded-sm" style={{ width: `${r.ltvCac === null ? 0 : Math.min(100, (r.ltvCac / maxRatio) * 100)}%`, background: r.tone ? BAR[r.tone] : "var(--cat-6)" }} />
               </span>
-              <span className={cn("w-12 shrink-0 rounded-full border px-1.5 py-0.5 text-center text-[11px] font-semibold tabular-nums", r.tone ? TONE[r.tone] : "border-border text-muted-foreground")}>
+              <span className={cn("w-12 shrink-0 rounded-full border px-1.5 py-0.5 text-center text-[0.6875rem] font-semibold tabular-nums", r.tone ? TONE[r.tone] : "border-border text-muted-foreground")}>
                 {r.ltvCac === null ? "—" : `${r.ltvCac.toFixed(1).replace(".", ",")}x`}
               </span>
             </span>
@@ -64,5 +65,40 @@ export function UnitEconomics({ rows, className }: { rows: UnitRow[]; className?
         ))}
       </ul>
     </DashCard>
+  );
+}
+
+/** Celular: um cartão por canal (nome + barra e selo de LTV/CAC, depois as 5 métricas em grade). */
+function UnitCards({ rows, maxRatio }: { rows: UnitRow[]; maxRatio: number }) {
+  const stat = (label: string, value: string) => (
+    <div className="min-w-0 text-center">
+      <div className="text-xs font-medium tabular-nums text-foreground">{value}</div>
+      <div className="mt-0.5 text-[0.625rem] leading-tight text-muted-foreground">{label}</div>
+    </div>
+  );
+  return (
+    <ul className="divide-y md:hidden" aria-label="Eficiência por canal">
+      {rows.map((r) => (
+        <li key={r.channel} className="py-2">
+          <div className="mb-1.5 flex items-center gap-2 text-xs text-foreground">
+            <span className="size-2 shrink-0 rounded-full" style={{ background: CHANNEL_COLORS[r.channel] ?? "var(--cat-6)" }} aria-hidden />
+            <span className="min-w-0 flex-1 font-medium">{r.channel}</span>
+            <span className="h-2 w-16 shrink-0 overflow-hidden rounded-sm bg-muted/40" aria-hidden>
+              <span className="block h-full rounded-sm" style={{ width: `${r.ltvCac === null ? 0 : Math.min(100, (r.ltvCac / maxRatio) * 100)}%`, background: r.tone ? BAR[r.tone] : "var(--cat-6)" }} />
+            </span>
+            <span className={cn("w-12 shrink-0 rounded-full border px-1.5 py-0.5 text-center text-[0.6875rem] font-semibold tabular-nums", r.tone ? TONE[r.tone] : "border-border text-muted-foreground")}>
+              {r.ltvCac === null ? "—" : `${r.ltvCac.toFixed(1).replace(".", ",")}x`}
+            </span>
+          </div>
+          <div className="grid grid-cols-5 gap-1">
+            {stat("novas", fmtInt(r.newSubs))}
+            {stat("CAC", fmtBRL(r.cac, 0))}
+            {stat("ret. 6m", r.retention6 === null ? "—" : fmtPct(r.retention6, 0))}
+            {stat("LTV 12m", r.ltv12 === null ? "—" : fmtBRL(r.ltv12, 0))}
+            {stat("payback", r.payback === null ? "—" : `${r.payback.toFixed(1).replace(".", ",")} m`)}
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 }

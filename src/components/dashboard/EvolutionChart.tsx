@@ -88,7 +88,7 @@ export function EvolutionChart({ data, className }: { data: DashboardData; class
         <MiniStat
           label="Falta p/ meta"
           value={proj.gap > 0 ? fmtInt(proj.gap) : "Superada"}
-          badge={<span className={cn("rounded-full px-1.5 py-0.5 text-[10px] font-semibold", proj.onTrack ? "bg-positive/15 text-positive" : "bg-danger/15 text-danger")}>{proj.onTrack ? "✓ no caminho" : "↓ abaixo"}</span>}
+          badge={<span className={cn("rounded-full px-1.5 py-0.5 text-[0.625rem] font-semibold", proj.onTrack ? "bg-positive/15 text-positive" : "bg-danger/15 text-danger")}>{proj.onTrack ? "✓ no caminho" : "↓ abaixo"}</span>}
         />
         <MiniStat label="Saldo necessário/mês" value={fmtSignedInt(proj.requiredNetAdds)} hint={`atual ${fmtSignedInt(proj.currentNetAdds)}`} />
       </dl>
@@ -99,11 +99,11 @@ export function EvolutionChart({ data, className }: { data: DashboardData; class
 function MiniStat({ label, value, hint, badge }: { label: string; value: string; hint?: string; badge?: React.ReactNode }) {
   return (
     <div className="min-w-0 rounded-lg border bg-background/30 px-2.5 py-1.5">
-      <dt className="truncate text-[10px] uppercase tracking-wider text-muted-foreground">{label}</dt>
+      <dt className="truncate text-[0.625rem] uppercase tracking-wider text-muted-foreground">{label}</dt>
       <dd className="flex min-w-0 flex-wrap items-baseline gap-x-1.5">
         <span className="text-base font-semibold tabular-nums text-foreground">{value}</span>
         {badge}
-        {hint && <span className="truncate text-[10px] tabular-nums text-muted-foreground">{hint}</span>}
+        {hint && <span className="truncate text-[0.625rem] tabular-nums text-muted-foreground">{hint}</span>}
       </dd>
     </div>
   );
