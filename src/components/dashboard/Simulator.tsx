@@ -174,7 +174,7 @@ function Required({ result: r, set }: { result: WhatIfResult; set: (p: Partial<W
     </button>
   );
   const headline = r.hitsGoal
-    ? `Com esse cenário a meta de ${r.goalLabel} fecha, com folga de ${fmtInt(-r.scenarioGap)} assinantes.`
+    ? r.scenarioGap === 0 ? `Com esse cenário a meta de ${r.goalLabel} fecha exatamente.` : `Com esse cenário a meta de ${r.goalLabel} fecha, com folga de ${fmtInt(Math.abs(r.scenarioGap))} assinantes.`
     : `Esse cenário traz ${fmtSignedInt(r.deltaActive)} assinantes, mas ainda faltam ${fmtInt(r.scenarioGap)} para a meta.${r.extraLiftToGoal !== null ? ` Para fechar, a aquisição teria que subir mais ${pct0(r.extraLiftToGoal)}.` : " Só alavanca de retenção não resolve: é preciso mais aquisição."}`;
   return (
     <section aria-label="O que bastaria para bater a meta" className="shrink-0 space-y-2">
