@@ -35,7 +35,7 @@ export function TopBar({ brand, monthLabel, view }: { brand: string; monthLabel:
           <CalendarDays className="size-3.5 text-primary" aria-hidden />
           Ref. <strong className="font-semibold">{monthLabel}</strong>
         </span>
-        <a href="https://www.linkedin.com/in/gabriel-rangel-a954ba26a/" target="_blank" rel="noreferrer" title="Gabriel Rangel · autor do projeto (LinkedIn)" aria-label="Gabriel Rangel, autor do projeto, no LinkedIn" className={cn(chip, "hidden px-0 text-muted-foreground hover:text-foreground sm:inline-flex sm:w-8 sm:justify-center min-[1800px]:w-auto min-[1800px]:px-3")}>
+        <a href="https://www.linkedin.com/in/gabriel-rangel-a954ba26a/" target="_blank" rel="noreferrer" title="Gabriel Rangel · autor do projeto (LinkedIn)" aria-label="Gabriel Rangel, autor do projeto, no LinkedIn" className={cn(chip, "hidden px-2 text-muted-foreground hover:text-foreground sm:inline-flex min-[1800px]:px-3")}>
           <LinkedinMark />
           <span className="hidden min-[1800px]:inline">por <strong className="font-semibold text-foreground">Gabriel Rangel</strong></span>
         </a>
