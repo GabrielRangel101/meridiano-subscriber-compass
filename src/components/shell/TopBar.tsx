@@ -27,6 +27,9 @@ export function TopBar({ brand, monthLabel, view }: { brand: string; monthLabel:
           <CalendarDays className="size-3.5 text-primary" aria-hidden />
           Ref. <strong className="font-semibold">{monthLabel}</strong>
         </span>
+        <a href="https://www.linkedin.com/in/gabriel-rangel-a954ba26a/" target="_blank" rel="noreferrer" title="Autor do projeto" className={cn(chip, "hidden text-muted-foreground hover:text-foreground sm:inline-flex xl:hidden 2xl:inline-flex")}>
+          por <strong className="font-semibold text-foreground">Gabriel Rangel</strong>
+        </a>
         <span className={chip}>
           <ShieldCheck className="size-3.5 text-positive" aria-hidden />
           LGPD

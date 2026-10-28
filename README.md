@@ -96,4 +96,4 @@ TanStack Start, React 19, Vite, TypeScript, Tailwind CSS, shadcn/ui (Radix), Rec
 
 ## Autor
 
-**Gabriel Rangel**, analista de dados e automação com IA. Mais projetos em [gabriel-rangel.vercel.app](https://gabriel-rangel.vercel.app).
+**Gabriel Rangel**, analista de dados e automação com IA. [LinkedIn](https://www.linkedin.com/in/gabriel-rangel-a954ba26a/) · [GitHub](https://github.com/GabrielRangel101). Mais projetos em [gabriel-rangel.vercel.app](https://gabriel-rangel.vercel.app).
