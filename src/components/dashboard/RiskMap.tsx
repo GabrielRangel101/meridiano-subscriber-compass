@@ -44,7 +44,7 @@ export function RiskMap({ data, selected, onSelect, className }: { data: Dashboa
 
   return (
     <DashCard id="risk-card" ai="risk-map" title="Mapa de assinantes em risco" info="Amostra de assinantes por engajamento (eixo X) e risco de cancelar em 90 dias (eixo Y). Tamanho = MRR; borda = gatilho principal. Clique num avatar para ver o detalhe." summary={`${data.people.length} assinantes · 90 dias`} className={className}>
-      <div ref={ref} className="relative min-h-[360px] flex-1 xl:min-h-0" onMouseLeave={() => setHover(null)}>
+      <div ref={ref} className="relative min-h-[360px] flex-1 overflow-hidden xl:min-h-0" onMouseLeave={() => setHover(null)}>
         <svg width={width} height={height} className="absolute inset-0" role="group" aria-label="Assinantes por engajamento e risco de cancelar em 90 dias">
           <rect x={PAD.left} y={PAD.top} width={width - PAD.left - PAD.right} height={criticalY - PAD.top} fill="var(--danger)" opacity={0.08} />
           <text x={width - PAD.right - 4} y={PAD.top + 14} textAnchor="end" fill="var(--danger)" fontSize={11}>Zona crítica ≥ {data.criticalRisk}%</text>
